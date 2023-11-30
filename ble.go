@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+const VictronManufacturerId = 0x2e1
+
 type Config interface {
 	Name() string
 	LogDebug() bool
@@ -17,8 +19,9 @@ type Config interface {
 }
 
 type DeviceConfig interface {
+	Name() string
 	MacAddress() string
-	EncryptionKey() string
+	EncryptionKey() []byte
 }
 
 type BleStruct struct {
@@ -42,18 +45,12 @@ func New(cfg Config) (*BleStruct, error) {
 		//clean up connection on exit
 		defer api.Exit()
 
-		if cfg.LogDebug() {
-			log.Printf("ble[%s]: get adapterId=%s", ble.Name(), adapterID)
-		}
 		a, err := adapter.GetAdapter(adapterID)
 		if err != nil {
 			log.Printf("ble[%s]: error while getting adapter: %s", ble.Name(), err)
 			return
 		}
 
-		if cfg.LogDebug() {
-			log.Printf("ble[%s]: flush devices", ble.Name())
-		}
 		err = a.FlushDevices()
 		if err != nil {
 			log.Printf("ble[%s]: error during flush: %s", ble.Name(), err)
@@ -64,9 +61,11 @@ func New(cfg Config) (*BleStruct, error) {
 			log.Printf("ble[%s]: start discovery", ble.Name())
 		}
 
-		discovery, cancel, err := api.Discover(a, nil)
+		discoveryFilter := adapter.NewDiscoveryFilter()
+		discoveryFilter.DuplicateData = true
+		discovery, cancel, err := api.Discover(a, &discoveryFilter)
 		if err != nil {
-			log.Printf("ble[%s]: error during discovery: %s", ble.Name(), err)
+			log.Printf("ble[%s]: cannot start discovery: %s", ble.Name(), err)
 		}
 		defer cancel()
 
@@ -78,31 +77,28 @@ func New(cfg Config) (*BleStruct, error) {
 
 				dev, err := device.NewDevice1(ev.Path)
 				if err != nil {
-					log.Printf("ble[%s]: %s: %s", ble.Name(), ev.Path, err)
+					log.Printf("ble[%s]: error with path %s: %s", ble.Name(), ev.Path, err)
 					continue
 				}
 
-				if !ble.getDevice(dev.Properties.Address) {
+				if cfg.LogDebug() {
+					log.Printf("ble[%s] device recovered: path=%s, name=%s, addr=%x, rssi=%d",
+						ble.Name(), ev.Path,
+						dev.Properties.Name, dev.Properties.Address, dev.Properties.RSSI,
+					)
+				}
+
+				deviceConfig := ble.getDeviceConfig(dev.Properties.Address)
+				if deviceConfig == nil {
 					continue
 				}
 
-				log.Printf("ble[%s] device recovered: %s", ble.Name(), ev.Path)
-
-				if dev == nil {
-					log.Printf("ble[%s]: device %s not found", ble.Name(), ev.Path)
-					continue
-				}
-
-				log.Printf("ble[%s]: name=%s addr=%s rssi=%d", ble.Name(), dev.Properties.Name, dev.Properties.Address, dev.Properties.RSSI)
-
-				log.Printf("ble[%s]: addr=%s manufacturerData=%x", ble.Name(), dev.Properties.Address, dev.Properties.ManufacturerData)
-
-				go func(ev *adapter.DeviceDiscovered) {
-					err = connectDevice(dev)
+				go func() {
+					err = ble.connectDevice(dev, deviceConfig)
 					if err != nil {
-						log.Printf("ble[%s]: beacon %s failed: %s", ble.Name(), ev.Path, err)
+						log.Printf("ble[%s]: device %s failed: %s", ble.Name(), ev.Path, err)
 					}
-				}(ev)
+				}()
 			}
 		}()
 
@@ -113,32 +109,79 @@ func New(cfg Config) (*BleStruct, error) {
 	return ble, nil
 }
 
-func connectDevice(dev *device.Device1) error {
-	log.Printf("")
-
+func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConfig) error {
 	propUpdates, err := dev.WatchProperties()
 	if err != nil {
 		return fmt.Errorf("cannot watch props: %s", err)
 	}
 
-	for pu := range propUpdates {
-		log.Printf("dev=%s, received prop update: %#v", dev.Properties.Name, pu)
-	}
+	defer func() {
+		if err := dev.UnwatchProperties(propUpdates); err != nil {
+			log.Printf("error during unwatch: %s", err)
+		}
+	}()
 
-	if err := dev.UnwatchProperties(propUpdates); err != nil {
-		log.Printf("error during unwatch: %s", err)
+	for pu := range propUpdates {
+		if pu.Name == "ManufacturerData" {
+			ble.handleNewManufacturerData(deviceConfig, dev.Properties.ManufacturerData)
+		}
 	}
 
 	return nil
 }
 
-func (ble *BleStruct) getDevice(bluezAddr string) bool {
+func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, data map[uint16]interface{}) {
+	if ble.cfg.LogDebug() {
+		log.Printf("ble[%s]->%s: handle data=%#v",
+			ble.cfg.Name(), deviceConfig.Name(), data,
+		)
+	}
+
+	var rawBytes []uint8
+
+	if md, ok := data[VictronManufacturerId]; !ok {
+		log.Printf("ble[%s]->%s: invalid manufacturer data record",
+			ble.cfg.Name(), deviceConfig.Name(),
+		)
+		return
+	} else {
+		rawBytes = md.([]uint8)
+	}
+
+	log.Printf("ble[%s]->%s: handle rawBytes=%x",
+		ble.cfg.Name(), deviceConfig.Name(), rawBytes,
+	)
+
+	if len(rawBytes) < 4 {
+		log.Printf("ble[%s]->%s: len(rawBytes) is to low",
+			ble.cfg.Name(), deviceConfig.Name(),
+		)
+		return
+	}
+
+	// map rawBytes:
+	// 00 - 03 : unknown
+	// 04 - 04 : record type
+	// 05 - 06 : Nonce/Data counter in LSB order
+	// 07 - 07 : first byte of encryption key
+
+	recordType := rawBytes[4]
+	nonce := rawBytes[5:6]
+	firstByteOfEncryptionKey := rawBytes[7]
+
+	log.Printf("ble[%s]->%s: recordType=%x, nonce=%x, firstByteOfEncryptionKey=%x",
+		ble.cfg.Name(), deviceConfig.Name(), recordType, nonce, firstByteOfEncryptionKey,
+	)
+
+}
+
+func (ble *BleStruct) getDeviceConfig(bluezAddr string) DeviceConfig {
 	for _, d := range ble.cfg.Devices() {
 		if d.MacAddress() == bluezAddrToOurAddr(bluezAddr) {
-			return true
+			return d
 		}
 	}
-	return false
+	return nil
 }
 
 // input: D4:9D:D2:92:62:02
