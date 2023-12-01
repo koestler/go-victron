@@ -3,6 +3,7 @@ package ble
 import (
 	"bytes"
 	"context"
+	"encoding/hex"
 	"fmt"
 	"github.com/muka/go-bluetooth/api"
 	"github.com/muka/go-bluetooth/bluez/profile/adapter"
@@ -21,7 +22,7 @@ type Config interface {
 
 type DeviceConfig interface {
 	Name() string
-	MacAddress() string
+	MacAddress() []byte
 	EncryptionKey() []byte
 }
 
@@ -182,7 +183,7 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 
 func (ble *BleStruct) getDeviceConfig(bluezAddr string) DeviceConfig {
 	for _, d := range ble.cfg.Devices() {
-		if d.MacAddress() == bluezAddrToOurAddr(bluezAddr) {
+		if bytes.Equal(d.MacAddress(), bluezAddrBytes(bluezAddr)) {
 			return d
 		}
 	}
@@ -190,9 +191,13 @@ func (ble *BleStruct) getDeviceConfig(bluezAddr string) DeviceConfig {
 }
 
 // input: D4:9D:D2:92:62:02
-// output d49dd2926202
-func bluezAddrToOurAddr(i string) string {
-	return strings.ToLower(strings.ReplaceAll(i, ":", ""))
+// output []byte{0x, 0xd4, 0x9d, 0xd2, 0x92, 0x62, 0x02}
+func bluezAddrBytes(i string) []byte {
+	b, err := hex.DecodeString(strings.ReplaceAll(i, ":", ""))
+	if err != nil {
+		log.Printf("cannot decode %s, got: %s", i, err)
+	}
+	return b
 }
 
 func (ble *BleStruct) Name() string {
