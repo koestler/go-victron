@@ -166,11 +166,14 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	}
 
 	// map rawBytes:
-	// 00 - 03 : unknown
+	// 00 - 01 : prefix
+	// 02 - 03 : model id
 	// 04 - 04 : record type
 	// 05 - 06 : Nonce/Data counter in LSB order
 	// 07 - 07 : first byte of encryption key
 
+	prefix := rawBytes[0:1]
+	modelId := rawBytes[2:3]
 	recordType := rawBytes[4]
 	nonce := rawBytes[5:6]
 	firstByteOfEncryptionKey := rawBytes[7]
