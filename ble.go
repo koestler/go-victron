@@ -3,8 +3,11 @@ package ble
 import (
 	"bytes"
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
 	"encoding/hex"
 	"fmt"
+	"github.com/koestler/go-iotdevice/victronDefinitions"
 	"github.com/muka/go-bluetooth/api"
 	"github.com/muka/go-bluetooth/bluez/profile/adapter"
 	"github.com/muka/go-bluetooth/bluez/profile/device"
@@ -77,15 +80,16 @@ func New(cfg Config) (*BleStruct, error) {
 					continue
 				}
 
-				dev, err := device.NewDevice1(ev.Path)
+				devicePath := ev.Path
+				dev, err := device.NewDevice1(devicePath)
 				if err != nil {
-					log.Printf("ble[%s]: error with path %s: %s", ble.Name(), ev.Path, err)
+					log.Printf("ble[%s]: error with path %s: %s", ble.Name(), devicePath, err)
 					continue
 				}
 
 				if cfg.LogDebug() {
-					log.Printf("ble[%s] device recovered: path=%s, name=%s, addr=%x, rssi=%d",
-						ble.Name(), ev.Path,
+					log.Printf("ble[%s]: device recovered: path=%s, name=%s, addr=%x, rssi=%d",
+						ble.Name(), devicePath,
 						dev.Properties.Name, dev.Properties.Address, dev.Properties.RSSI,
 					)
 				}
@@ -96,9 +100,13 @@ func New(cfg Config) (*BleStruct, error) {
 				}
 
 				go func() {
-					err = ble.connectDevice(dev, deviceConfig)
-					if err != nil {
-						log.Printf("ble[%s]: device %s failed: %s", ble.Name(), ev.Path, err)
+					defer func() {
+						if r := recover(); r != nil {
+							log.Printf("ble[%s]: device %s panicked: %s", ble.Name(), deviceConfig.Name(), r)
+						}
+					}()
+					if err = ble.connectDevice(dev, deviceConfig); err != nil {
+						log.Printf("ble[%s]: device %s failed: %s", ble.Name(), deviceConfig.Name(), err)
 					}
 				}()
 			}
@@ -118,8 +126,15 @@ func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConf
 	}
 
 	defer func() {
+		// unwatch properties calls recover
+		if r := recover(); r != nil {
+			panic(r)
+		}
+
 		if err := dev.UnwatchProperties(propUpdates); err != nil {
 			log.Printf("error during unwatch: %s", err)
+		} else {
+			log.Printf("unwatch ok")
 		}
 	}()
 
@@ -128,6 +143,7 @@ func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConf
 	for pu := range propUpdates {
 		if pu.Name == "ManufacturerData" {
 			data := dev.Properties.ManufacturerData
+
 			var rawBytes []uint8
 			if md, ok := data[VictronManufacturerId]; !ok {
 				log.Printf("ble[%s]->%s: invalid manufacturer data record",
@@ -167,19 +183,46 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 
 	// map rawBytes:
 	// 00 - 01 : prefix
-	// 02 - 03 : model id
+	// 02 - 03 : product id
 	// 04 - 04 : record type
 	// 05 - 06 : Nonce/Data counter in LSB order
 	// 07 - 07 : first byte of encryption key
+	// 08 -    : encrypted data
 
-	prefix := rawBytes[0:1]
-	modelId := rawBytes[2:3]
+	prefix := rawBytes[0:2]
+	productId := uint16(rawBytes[2]) | uint16(rawBytes[3])<<8
+	product := victronDefinitions.VeProduct(productId)
 	recordType := rawBytes[4]
-	nonce := rawBytes[5:6]
-	firstByteOfEncryptionKey := rawBytes[7]
+	nonce := rawBytes[5:7] // used ad iv for encryption; is only 16 bits
 
-	log.Printf("ble[%s]->%s: recordType=%x, nonce=%x, firstByteOfEncryptionKey=%x",
-		ble.cfg.Name(), deviceConfig.Name(), recordType, nonce, firstByteOfEncryptionKey,
+	firstByteOfEncryptionKey := rawBytes[7]
+	encryptedBytes := rawBytes[8:]
+
+	log.Printf("ble[%s]->%s: prefix=%x productId=%x productString=%s recordType=%x, nonce=%x, firstByteOfEncryptionKey=%x",
+		ble.cfg.Name(), deviceConfig.Name(), prefix, productId, product.String(), recordType, nonce, firstByteOfEncryptionKey,
+	)
+
+	// decrypt rawBytes using aes-ctr algorithm
+	// encryption key of config is fixed to 32 hex chars, so 16 bytes, so 128-bit AES is used here
+	block, err := aes.NewCipher(deviceConfig.EncryptionKey())
+	if err != nil {
+		log.Printf("ble[%s]->%s: cannot create aes cipher: %s",
+			ble.cfg.Name(), deviceConfig.Name(), err,
+		)
+		return
+	}
+
+	decryptedBytes := make([]byte, len(encryptedBytes))
+
+	// iv needs to be 16 bytes for 128-bit AES, use nonce and pad with 0
+	iv := make([]byte, 14, 16)
+	iv = append(iv, nonce...)
+
+	ctrStream := cipher.NewCTR(block, iv)
+	ctrStream.XORKeyStream(decryptedBytes, encryptedBytes)
+
+	log.Printf("ble[%s]->%s: handle decryptedBytes=%#v",
+		ble.cfg.Name(), deviceConfig.Name(), decryptedBytes,
 	)
 
 }
