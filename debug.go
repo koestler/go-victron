@@ -5,12 +5,16 @@ import (
 	"log"
 )
 
+func (ble *BleStruct) printf(format string, v ...interface{}) {
+	s := fmt.Sprintf(format, v...)
+	log.Printf("ble[%s]: %s", ble.cfg.Name(), s)
+}
+
 func (ble *BleStruct) debugPrintf(format string, v ...interface{}) {
 	// check if debug output is enabled
 	if !ble.cfg.LogDebug() {
 		return
 	}
 
-	s := fmt.Sprintf(format, v...)
-	log.Printf("ble[%s]: %s", ble.cfg.Name(), s)
+	ble.printf(format, v...)
 }

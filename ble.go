@@ -87,6 +87,11 @@ func New(cfg Config) (*BleStruct, error) {
 					continue
 				}
 
+				// filter out all non victoron energy devices
+				if _, ok := dev.Properties.ManufacturerData[VictronManufacturerId]; !ok {
+					continue
+				}
+
 				if cfg.LogDebug() {
 					log.Printf("ble[%s]: device recovered: path=%s, name=%s, addr=%x, rssi=%d",
 						ble.Name(), devicePath,
@@ -169,12 +174,12 @@ func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConf
 
 func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBytes []uint8) {
 	if ble.cfg.LogDebug() {
-		log.Printf("ble[%s]->%s: handle rawBytes=%x",
-			ble.cfg.Name(), deviceConfig.Name(), rawBytes,
+		log.Printf("ble[%s]->%s: handle len=%d, rawBytes=%x",
+			ble.cfg.Name(), deviceConfig.Name(), len(rawBytes), rawBytes,
 		)
 	}
 
-	if len(rawBytes) < 4 {
+	if len(rawBytes) < 9 {
 		log.Printf("ble[%s]->%s: len(rawBytes) is to low",
 			ble.cfg.Name(), deviceConfig.Name(),
 		)
@@ -198,8 +203,12 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	firstByteOfEncryptionKey := rawBytes[7]
 	encryptedBytes := rawBytes[8:]
 
-	log.Printf("ble[%s]->%s: prefix=%x productId=%x productString=%s recordType=%x, nonce=%x, firstByteOfEncryptionKey=%x",
+	log.Printf("ble[%s]->%s: prefix=%x productId=%x productString=%s recordType=%x, nonce=%d, firstByteOfEncryptionKey=%x",
 		ble.cfg.Name(), deviceConfig.Name(), prefix, productId, product.String(), recordType, nonce, firstByteOfEncryptionKey,
+	)
+
+	log.Printf("ble[%s]->%s: encryptedBytes=%x, len=%d",
+		ble.cfg.Name(), deviceConfig.Name(), encryptedBytes, len(encryptedBytes),
 	)
 
 	// decrypt rawBytes using aes-ctr algorithm
@@ -212,19 +221,51 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 		return
 	}
 
-	decryptedBytes := make([]byte, len(encryptedBytes))
+	paddedEncryptedBytes := PKCS7Padding(encryptedBytes, block.BlockSize())
 
-	// iv needs to be 16 bytes for 128-bit AES, use nonce and pad with 0
-	iv := make([]byte, 14, 16)
-	iv = append(iv, nonce...)
-
-	ctrStream := cipher.NewCTR(block, iv)
-	ctrStream.XORKeyStream(decryptedBytes, encryptedBytes)
-
-	log.Printf("ble[%s]->%s: handle decryptedBytes=%#v",
-		ble.cfg.Name(), deviceConfig.Name(), decryptedBytes,
+	log.Printf("ble[%s]->%s: paddedEncryptedBytes=%x, len=%d",
+		ble.cfg.Name(), deviceConfig.Name(), paddedEncryptedBytes, len(paddedEncryptedBytes),
 	)
 
+	decryptedBytes := make([]byte, len(paddedEncryptedBytes))
+
+	// iv needs to be 16 bytes for 128-bit AES, use nonce and pad with 0
+	ivNumber := uint16(nonce[0]) | uint16(nonce[1])<<8
+
+	ivBytes := make([]byte, 14, 16)
+	ivBytes = append(ivBytes, nonce...)
+
+	log.Printf("ble[%s]->%s: iv=%d ivBytes=%x, len=%d",
+		ble.cfg.Name(), deviceConfig.Name(),
+		ivNumber, ivBytes, len(ivBytes),
+	)
+
+	ctrStream := cipher.NewCTR(block, ivBytes)
+	ctrStream.XORKeyStream(decryptedBytes, paddedEncryptedBytes)
+
+	log.Printf("ble[%s]->%s: decryptedBytes=%x, len=%d",
+		ble.cfg.Name(), deviceConfig.Name(), decryptedBytes, len(decryptedBytes),
+	)
+
+	// handle decryptedBytes
+	switch recordType {
+	case 0x01:
+		// solar charger
+		record, err := DecodeSolarChargeRecord(decryptedBytes)
+		if err != nil {
+			log.Printf("ble[%s]->%s: cannot decode solar charger record: %s",
+				ble.cfg.Name(), deviceConfig.Name(), err,
+			)
+			return
+		}
+		log.Printf("ble[%s]->%s: solar charger record=%#v", ble.cfg.Name(), deviceConfig.Name(), record)
+	}
+}
+
+func PKCS7Padding(ciphertext []byte, blocksize int) []byte {
+	padding := blocksize - len(ciphertext)%blocksize
+	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(ciphertext, padtext...)
 }
 
 func (ble *BleStruct) getDeviceConfig(bluezAddr string) DeviceConfig {
