@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/aes"
 	"crypto/cipher"
+	"encoding/binary"
 	"encoding/hex"
 	"fmt"
 	"github.com/koestler/go-iotdevice/victronDefinitions"
@@ -12,6 +13,7 @@ import (
 	"github.com/muka/go-bluetooth/bluez/profile/adapter"
 	"github.com/muka/go-bluetooth/bluez/profile/device"
 	"log"
+	"runtime/debug"
 	"strings"
 )
 
@@ -107,7 +109,8 @@ func New(cfg Config) (*BleStruct, error) {
 				go func() {
 					defer func() {
 						if r := recover(); r != nil {
-							log.Printf("ble[%s]: device %s panicked: %s", ble.Name(), deviceConfig.Name(), r)
+							log.Printf("ble[%s]: device %s panicked: %s %s", ble.Name(), deviceConfig.Name(), r, debug.Stack())
+
 						}
 					}()
 					if err = ble.connectDevice(dev, deviceConfig); err != nil {
@@ -195,10 +198,11 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	// 08 -    : encrypted data
 
 	prefix := rawBytes[0:2]
-	productId := uint16(rawBytes[2]) | uint16(rawBytes[3])<<8
+	productId := binary.LittleEndian.Uint16(rawBytes[2:4])
 	product := victronDefinitions.VeProduct(productId)
 	recordType := rawBytes[4]
 	nonce := rawBytes[5:7] // used ad iv for encryption; is only 16 bits
+	iv := binary.LittleEndian.Uint16(nonce)
 
 	firstByteOfEncryptionKey := rawBytes[7]
 	encryptedBytes := rawBytes[8:]
@@ -230,14 +234,12 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	decryptedBytes := make([]byte, len(paddedEncryptedBytes))
 
 	// iv needs to be 16 bytes for 128-bit AES, use nonce and pad with 0
-	ivNumber := uint16(nonce[0]) | uint16(nonce[1])<<8
-
-	ivBytes := make([]byte, 14, 16)
-	ivBytes = append(ivBytes, nonce...)
+	ivBytes := make([]byte, 16)
+	binary.LittleEndian.PutUint16(ivBytes, iv)
 
 	log.Printf("ble[%s]->%s: iv=%d ivBytes=%x, len=%d",
 		ble.cfg.Name(), deviceConfig.Name(),
-		ivNumber, ivBytes, len(ivBytes),
+		iv, ivBytes, len(ivBytes),
 	)
 
 	ctrStream := cipher.NewCTR(block, ivBytes)

@@ -1,6 +1,9 @@
 package ble
 
-import "fmt"
+import (
+	"encoding/binary"
+	"fmt"
+)
 
 type SolarChargerRecord struct {
 	DeviceState    uint
@@ -23,26 +26,26 @@ type SolarChargerRecord struct {
 // 80         | 9          | Load current          | 0.1A    | 0x1FF
 
 func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
-	if len(inp) < 0x0B+1 {
+	if len(inp) < 12 {
 		err = fmt.Errorf("inp too short")
 		return
 	}
 
 	ret.DeviceState = uint(inp[0])
 	ret.ChargerError = uint(inp[1])
-	if v := uint16(inp[2])<<8 | uint16(inp[3]); v != 0x7FFF {
+	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
 		ret.BatteryVoltage = float64(v) / 100
 	}
-	if v := uint16(inp[4])<<8 | uint16(inp[5]); v != 0x7FFF {
+	if v := binary.LittleEndian.Uint16(inp[4:6]); v != 0x7FFF {
 		ret.BatteryCurrent = float64(v) / 10
 	}
-	if v := uint16(inp[6])<<8 | uint16(inp[7]); v != 0xFFFF {
+	if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
 		ret.YieldToday = float64(v) / 100
 	}
-	if v := uint16(inp[8])<<8 | uint16(inp[9]); v != 0xFFFF {
+	if v := binary.LittleEndian.Uint16(inp[8:10]); v != 0xFFFF {
 		ret.PvPower = float64(v)
 	}
-	if v := uint16(inp[10])<<1 | uint16(inp[11])>>7; v != 0x1FF {
+	if v := binary.LittleEndian.Uint16(inp[10:12]); v != 0x1FF {
 		ret.LoadCurrent = float64(v) / 10
 	}
 
