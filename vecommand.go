@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"github.com/koestler/go-iotdevice/victronDefinitions"
 	"log"
 	"strconv"
 )
@@ -49,7 +50,7 @@ func (vd *Vedirect) VeCommandPing() (err error) {
 	return nil
 }
 
-func (vd *Vedirect) VeCommandDeviceId() (deviceId VeProduct, err error) {
+func (vd *Vedirect) VeCommandDeviceId() (deviceId victronDefinitions.VeProduct, err error) {
 	vd.debugPrintf("vedirect: VeCommandDeviceId begin")
 
 	rawValue, err := vd.VeCommand(VeCommandDeviceId, 0)
@@ -58,7 +59,7 @@ func (vd *Vedirect) VeCommandDeviceId() (deviceId VeProduct, err error) {
 		return 0, err
 	}
 
-	deviceId = VeProduct(littleEndianBytesToUint(rawValue))
+	deviceId = victronDefinitions.VeProduct(littleEndianBytesToUint(rawValue))
 	if len(deviceId.String()) < 1 {
 		vd.debugPrintf("vedirect: VeCommandDeviceId end unknown deviceId=%x", rawValue)
 		return 0, fmt.Errorf("unknownw deviceId=%x", rawValue)
