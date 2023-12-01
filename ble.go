@@ -1,6 +1,7 @@
 package ble
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/muka/go-bluetooth/api"
@@ -121,36 +122,40 @@ func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConf
 		}
 	}()
 
+	var lastRawBytes []uint8
+
 	for pu := range propUpdates {
 		if pu.Name == "ManufacturerData" {
-			ble.handleNewManufacturerData(deviceConfig, dev.Properties.ManufacturerData)
+			data := dev.Properties.ManufacturerData
+			var rawBytes []uint8
+			if md, ok := data[VictronManufacturerId]; !ok {
+				log.Printf("ble[%s]->%s: invalid manufacturer data record",
+					ble.cfg.Name(), deviceConfig.Name(),
+				)
+				continue
+			} else {
+				rawBytes = md.([]uint8)
+			}
+
+			if bytes.Equal(rawBytes, lastRawBytes) {
+				continue
+			}
+
+			ble.handleNewManufacturerData(deviceConfig, rawBytes)
+
+			lastRawBytes = rawBytes
 		}
 	}
 
 	return nil
 }
 
-func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, data map[uint16]interface{}) {
+func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBytes []uint8) {
 	if ble.cfg.LogDebug() {
-		log.Printf("ble[%s]->%s: handle data=%#v",
-			ble.cfg.Name(), deviceConfig.Name(), data,
+		log.Printf("ble[%s]->%s: handle rawBytes=%x",
+			ble.cfg.Name(), deviceConfig.Name(), rawBytes,
 		)
 	}
-
-	var rawBytes []uint8
-
-	if md, ok := data[VictronManufacturerId]; !ok {
-		log.Printf("ble[%s]->%s: invalid manufacturer data record",
-			ble.cfg.Name(), deviceConfig.Name(),
-		)
-		return
-	} else {
-		rawBytes = md.([]uint8)
-	}
-
-	log.Printf("ble[%s]->%s: handle rawBytes=%x",
-		ble.cfg.Name(), deviceConfig.Name(), rawBytes,
-	)
 
 	if len(rawBytes) < 4 {
 		log.Printf("ble[%s]->%s: len(rawBytes) is to low",
