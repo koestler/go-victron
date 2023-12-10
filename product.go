@@ -156,288 +156,155 @@ const (
 	VeProductSmartShunt2000A_50mV                   VeProduct = 0xA38B
 )
 
+func GetVeProductMap() map[VeProduct]string {
+	return map[VeProduct]string{
+		VeProductBMV700:                                 "BMV-700",
+		VeProductBMV702:                                 "BMV-702",
+		VeProductBMV700H:                                "BMV-700H",
+		VeProductBlueSolarMPPT70_15:                     "BlueSolar MPPT 70|15",
+		VeProductBlueSolarMPPT75_50:                     "BlueSolar MPPT 75|50",
+		VeProductBlueSolarMPPT150_35:                    "BlueSolar MPPT 150|35",
+		VeProductBlueSolarMPPT75_15:                     "BlueSolar MPPT 75|15",
+		VeProductBlueSolarMPPT100_15:                    "BlueSolar MPPT 100|15",
+		VeProductBlueSolarMPPT100_30:                    "BlueSolar MPPT 100|30",
+		VeProductBlueSolarMPPT100_50:                    "BlueSolar MPPT 100|50",
+		VeProductBlueSolarMPPT150_70:                    "BlueSolar MPPT 150|70",
+		VeProductBlueSolarMPPT150_100:                   "BlueSolar MPPT 150|100",
+		VeProductBlueSolarMPPT100_50rev2:                "BlueSolar MPPT 100|50 rev2",
+		VeProductBlueSolarMPPT100_30rev2:                "BlueSolar MPPT 100|30 rev2",
+		VeProductBlueSolarMPPT150_35rev2:                "BlueSolar MPPT 150|35 rev2",
+		VeProductBlueSolarMPPT75_10:                     "BlueSolar MPPT 75|10",
+		VeProductBlueSolarMPPT150_45:                    "BlueSolar MPPT 150|45",
+		VeProductBlueSolarMPPT150_60:                    "BlueSolar MPPT 150|60",
+		VeProductBlueSolarMPPT150_85:                    "BlueSolar MPPT 150|85",
+		VeProductSmartSolarMPPT250_100:                  "SmartSolar MPPT 250|100",
+		VeProductSmartSolarMPPT150_100:                  "SmartSolar MPPT 150|100",
+		VeProductSmartSolarMPPT150_85:                   "SmartSolar MPPT 150|85",
+		VeProductSmartSolarMPPT75_15:                    "SmartSolar MPPT 75|15",
+		VeProductSmartSolarMPPT75_10:                    "SmartSolar MPPT 75|10",
+		VeProductSmartSolarMPPT100_15:                   "SmartSolar MPPT 100|15",
+		VeProductSmartSolarMPPT100_30:                   "SmartSolar MPPT 100|30",
+		VeProductSmartSolarMPPT100_50:                   "SmartSolar MPPT 100|50",
+		VeProductSmartSolarMPPT150_35:                   "SmartSolar MPPT 150|35",
+		VeProductSmartSolarMPPT150_100rev2:              "SmartSolar MPPT 150|100 rev2",
+		VeProductSmartSolarMPPT150_85rev2:               "SmartSolar MPPT 150|85 rev2",
+		VeProductSmartSolarMPPT250_70:                   "SmartSolar MPPT 250|70",
+		VeProductSmartSolarMPPT250_85:                   "SmartSolar MPPT 250|85",
+		VeProductSmartSolarMPPT250_60:                   "SmartSolar MPPT 250|60",
+		VeProductSmartSolarMPPT250_45:                   "SmartSolar MPPT 250|45",
+		VeProductSmartSolarMPPT100_20:                   "SmartSolar MPPT 100|20",
+		VeProductSmartSolarMPPT100_2048V:                "SmartSolar MPPT 100|20 48V",
+		VeProductSmartSolarMPPT150_45:                   "SmartSolar MPPT 150|45",
+		VeProductSmartSolarMPPT150_60:                   "SmartSolar MPPT 150|60",
+		VeProductSmartSolarMPPT150_70:                   "SmartSolar MPPT 150|70",
+		VeProductSmartSolarMPPT250_85rev2:               "SmartSolar MPPT 250|85 rev2",
+		VeProductSmartSolarMPPT250_100rev2:              "SmartSolar MPPT 250|100 rev2",
+		VeProductBlueSolarMPPT100_20:                    "BlueSolar MPPT 100|20",
+		VeProductBlueSolarMPPT100_2048V:                 "BlueSolar MPPT 100|20 48V",
+		VeProductSmartSolarMPPT250_60rev2:               "SmartSolar MPPT 250|60 rev2",
+		VeProductSmartSolarMPPT250_70rev2:               "SmartSolar MPPT 250|70 rev2",
+		VeProductSmartSolarMPPT150_45rev2:               "SmartSolar MPPT 150|45 rev2",
+		VeProductSmartSolarMPPT150_60rev2:               "SmartSolar MPPT 150|60 rev2",
+		VeProductSmartSolarMPPT150_70rev2:               "SmartSolar MPPT 150|70 rev2",
+		VeProductSmartSolarMPPT150_85rev3:               "SmartSolar MPPT 150|85 rev3",
+		VeProductSmartSolarMPPT150_100rev3:              "SmartSolar MPPT 150|100 rev3",
+		VeProductBlueSolarMPPT150_45rev2:                "BlueSolar MPPT 150|45 rev2",
+		VeProductBlueSolarMPPT150_60rev2:                "BlueSolar MPPT 150|60 rev2",
+		VeProductBlueSolarMPPT150_70rev2:                "BlueSolar MPPT 150|70 rev2",
+		VeProductSmartSolarMPPTVECan150_70:              "SmartSolar MPPT VE.Can 150/70",
+		VeProductSmartSolarMPPTVECan150_45:              "SmartSolar MPPT VE.Can 150/45",
+		VeProductSmartSolarMPPTVECan150_60:              "SmartSolar MPPT VE.Can 150/60",
+		VeProductSmartSolarMPPTVECan150_85:              "SmartSolar MPPT VE.Can 150/85",
+		VeProductSmartSolarMPPTVECan150_100:             "SmartSolar MPPT VE.Can 150/100",
+		VeProductSmartSolarMPPTVECan250_45:              "SmartSolar MPPT VE.Can 250/45",
+		VeProductSmartSolarMPPTVECan250_60:              "SmartSolar MPPT VE.Can 250/60",
+		VeProductSmartSolarMPPTVECan250_70:              "SmartSolar MPPT VE.Can 250/70",
+		VeProductSmartSolarMPPTVECan250_85:              "SmartSolar MPPT VE.Can 250/85",
+		VeProductSmartSolarMPPTVECan250_100:             "SmartSolar MPPT VE.Can 250/100",
+		VeProductSmartSolarMPPTVECan150_70rev2:          "SmartSolar MPPT VE.Can 150/70 rev2",
+		VeProductSmartSolarMPPTVECan150_85rev2:          "SmartSolar MPPT VE.Can 150/85 rev2",
+		VeProductSmartSolarMPPTVECan150_100rev2:         "SmartSolar MPPT VE.Can 150/100 rev2",
+		VeProductBlueSolarMPPTVECan150_100:              "BlueSolar MPPT VE.Can 150/100",
+		VeProductBlueSolarMPPTVECan250_70:               "BlueSolar MPPT VE.Can 250/70",
+		VeProductBlueSolarMPPTVECan250_100:              "BlueSolar MPPT VE.Can 250/100",
+		VeProductSmartSolarMPPTVECan250_70rev2:          "SmartSolar MPPT VE.Can 250/70 rev2",
+		VeProductSmartSolarMPPTVECan250_100rev2:         "SmartSolar MPPT VE.Can 250/100 rev2",
+		VeProductSmartSolarMPPTVECan250_85rev2:          "SmartSolar MPPT VE.Can 250/85 rev2",
+		VeProductPhoenixInverter12V250VA230V:            "Phoenix Inverter 12V 250VA 230V",
+		VeProductPhoenixInverter24V250VA230V:            "Phoenix Inverter 24V 250VA 230V",
+		VeProductPhoenixInverter48V250VA230V:            "Phoenix Inverter 48V 250VA 230V",
+		VeProductPhoenixInverter12V250VA120V:            "Phoenix Inverter 12V 250VA 120V",
+		VeProductPhoenixInverter24V250VA120V:            "Phoenix Inverter 24V 250VA 120V",
+		VeProductPhoenixInverter48V250VA120V:            "Phoenix Inverter 48V 250VA 120V",
+		VeProductPhoenixInverter12V375VA230V:            "Phoenix Inverter 12V 375VA 230V",
+		VeProductPhoenixInverter24V375VA230V:            "Phoenix Inverter 24V 375VA 230V",
+		VeProductPhoenixInverter48V375VA230V:            "Phoenix Inverter 48V 375VA 230V",
+		VeProductPhoenixInverter12V375VA120V:            "Phoenix Inverter 12V 375VA 120V",
+		VeProductPhoenixInverter24V375VA120V:            "Phoenix Inverter 24V 375VA 120V",
+		VeProductPhoenixInverter48V375VA120V:            "Phoenix Inverter 48V 375VA 120V",
+		VeProductPhoenixInverter12V500VA230V:            "Phoenix Inverter 12V 500VA 230V",
+		VeProductPhoenixInverter24V500VA230V:            "Phoenix Inverter 24V 500VA 230V",
+		VeProductPhoenixInverter48V500VA230V:            "Phoenix Inverter 48V 500VA 230V",
+		VeProductPhoenixInverter12V500VA120V:            "Phoenix Inverter 12V 500VA 120V",
+		VeProductPhoenixInverter24V500VA120V:            "Phoenix Inverter 24V 500VA 120V",
+		VeProductPhoenixInverter48V500VA120V:            "Phoenix Inverter 48V 500VA 120V",
+		VeProductPhoenixInverter12V800VA230V:            "Phoenix Inverter 12V 800VA 230V",
+		VeProductPhoenixInverter24V800VA230V:            "Phoenix Inverter 24V 800VA 230V",
+		VeProductPhoenixInverter48V800VA230V:            "Phoenix Inverter 48V 800VA 230V",
+		VeProductPhoenixInverter12V800VA120V:            "Phoenix Inverter 12V 800VA 120V",
+		VeProductPhoenixInverter24V800VA120V:            "Phoenix Inverter 24V 800VA 120V",
+		VeProductPhoenixInverter48V800VA120V:            "Phoenix Inverter 48V 800VA 120V",
+		VeProductPhoenixInverter12V1200VA230V:           "Phoenix Inverter 12V 1200VA 230V",
+		VeProductPhoenixInverter24V1200VA230V:           "Phoenix Inverter 24V 1200VA 230V",
+		VeProductPhoenixInverter48V1200VA230V:           "Phoenix Inverter 48V 1200VA 230V",
+		VeProductPhoenixInverter12V1200VA120V:           "Phoenix Inverter 12V 1200VA 120V",
+		VeProductPhoenixInverter24V1200VA120V:           "Phoenix Inverter 24V 1200VA 120V",
+		VeProductPhoenixInverter48V1200VA120V:           "Phoenix Inverter 48V 1200VA 120V",
+		VeProductPhoenixInverter12V1600VA230V:           "Phoenix Inverter 12V 1600VA 230V",
+		VeProductPhoenixInverter24V1600VA230V:           "Phoenix Inverter 24V 1600VA 230V",
+		VeProductPhoenixInverter48V1600VA230V:           "Phoenix Inverter 48V 1600VA 230V",
+		VeProductPhoenixInverter12V2000VA230V:           "Phoenix Inverter 12V 2000VA 230V",
+		VeProductPhoenixInverter24V2000VA230V:           "Phoenix Inverter 24V 2000VA 230V",
+		VeProductPhoenixInverter48V2000VA230V:           "Phoenix Inverter 48V 2000VA 230V",
+		VeProductPhoenixInverter12V3000VA230V:           "Phoenix Inverter 12V 3000VA 230V",
+		VeProductPhoenixInverter24V3000VA230V:           "Phoenix Inverter 24V 3000VA 230V",
+		VeProductPhoenixInverter48V3000VA230V:           "Phoenix Inverter 48V 3000VA 230V",
+		VeProductPhoenixInverterSmart12V5000VA230Vac64k: "Phoenix Inverter Smart 12V 5000VA 230Vac 64k",
+		VeProductPhoenixInverterSmart24V5000VA230Vac64k: "Phoenix Inverter Smart 24V 5000VA 230Vac 64k",
+		VeProductPhoenixInverterSmart48V5000VA230Vac64k: "Phoenix Inverter Smart 48V 5000VA 230Vac 64k",
+		VeProductPhoenixInverter12V800VA230Vac64kHS:     "Phoenix Inverter 12V 800VA 230Vac 64k HS",
+		VeProductPhoenixInverter24V800VA230Vac64kHS:     "Phoenix Inverter 24V 800VA 230Vac 64k HS",
+		VeProductPhoenixInverter48V800VA230Vac64kHS:     "Phoenix Inverter 48V 800VA 230Vac 64k HS",
+		VeProductPhoenixInverter12V800VA120Vac64kHS:     "Phoenix Inverter 12V 800VA 120Vac 64k HS",
+		VeProductPhoenixInverter24V800VA120Vac64kHS:     "Phoenix Inverter 24V 800VA 120Vac 64k HS",
+		VeProductPhoenixInverter48V800VA120Vac64kHS:     "Phoenix Inverter 48V 800VA 120Vac 64k HS",
+		VeProductPhoenixInverter12V1200VA230Vac64kHS:    "Phoenix Inverter 12V 1200VA 230Vac 64k HS",
+		VeProductPhoenixInverter24V1200VA230Vac64kHS:    "Phoenix Inverter 24V 1200VA 230Vac 64k HS",
+		VeProductPhoenixInverter48V1200VA230Vac64kHS:    "Phoenix Inverter 48V 1200VA 230Vac 64k HS",
+		VeProductPhoenixInverter12V1200VA120Vac64kHS:    "Phoenix Inverter 12V 1200VA 120Vac 64k HS",
+		VeProductPhoenixInverter24V1200VA120Vac64kHS:    "Phoenix Inverter 24V 1200VA 120Vac 64k HS",
+		VeProductPhoenixInverter48V1200VA120Vac64kHS:    "Phoenix Inverter 48V 1200VA 120Vac 64k HS",
+		VeProductPhoenixSmartIP43Charger12_50_1p1:       "Phoenix Smart IP43 Charger 12|50 (1+1)",
+		VeProductPhoenixSmartIP43Charger12_50_3:         "Phoenix Smart IP43 Charger 12|50 (3)",
+		VeProductPhoenixSmartIP43Charger24_25_1p1:       "Phoenix Smart IP43 Charger 24|25 (1+1)",
+		VeProductPhoenixSmartIP43Charger24_25_3:         "Phoenix Smart IP43 Charger 24|25 (3)",
+		VeProductPhoenixSmartIP43Charger12_30_1p1:       "Phoenix Smart IP43 Charger 12|30 (1+1)",
+		VeProductPhoenixSmartIP43Charger12_30_3:         "Phoenix Smart IP43 Charger 12|30 (3)",
+		VeProductPhoenixSmartIP43Charger24_16_1p1:       "Phoenix Smart IP43 Charger 24|16 (1+1)",
+		VeProductPhoenixSmartIP43Charger24_16_3:         "Phoenix Smart IP43 Charger 24|16 (3)",
+		VeProductBMV712Smart:                            "BMV-712 Smart",
+		VeProductBMV710HSmart:                           "BMV-710H Smart",
+		VeProductBMV712SmartRev2:                        "BMV-712 Smart Rev2",
+		VeProductSmartShunt500A_50mV:                    "SmartShunt 500A/50mV",
+		VeProductSmartShunt1000A_50mV:                   "SmartShunt 1000A/50mV",
+		VeProductSmartShunt2000A_50mV:                   "SmartShunt 2000A/50mV",
+	}
+}
+
 func (product VeProduct) String() string {
-	switch product {
-	case VeProductBMV700:
-		return "BMV-700"
-	case VeProductBMV702:
-		return "BMV-702"
-	case VeProductBMV700H:
-		return "BMV-700H"
-	case VeProductBlueSolarMPPT70_15:
-		return "BlueSolar MPPT 70|15"
-	case VeProductBlueSolarMPPT75_50:
-		return "BlueSolar MPPT 75|50"
-	case VeProductBlueSolarMPPT150_35:
-		return "BlueSolar MPPT 150|35"
-	case VeProductBlueSolarMPPT75_15:
-		return "BlueSolar MPPT 75|15"
-	case VeProductBlueSolarMPPT100_15:
-		return "BlueSolar MPPT 100|15"
-	case VeProductBlueSolarMPPT100_30:
-		return "BlueSolar MPPT 100|30"
-	case VeProductBlueSolarMPPT100_50:
-		return "BlueSolar MPPT 100|50"
-	case VeProductBlueSolarMPPT150_70:
-		return "BlueSolar MPPT 150|70"
-	case VeProductBlueSolarMPPT150_100:
-		return "BlueSolar MPPT 150|100"
-	case VeProductBlueSolarMPPT100_50rev2:
-		return "BlueSolar MPPT 100|50 rev2"
-	case VeProductBlueSolarMPPT100_30rev2:
-		return "BlueSolar MPPT 100|30 rev2"
-	case VeProductBlueSolarMPPT150_35rev2:
-		return "BlueSolar MPPT 150|35 rev2"
-	case VeProductBlueSolarMPPT75_10:
-		return "BlueSolar MPPT 75|10"
-	case VeProductBlueSolarMPPT150_45:
-		return "BlueSolar MPPT 150|45"
-	case VeProductBlueSolarMPPT150_60:
-		return "BlueSolar MPPT 150|60"
-	case VeProductBlueSolarMPPT150_85:
-		return "BlueSolar MPPT 150|85"
-	case VeProductSmartSolarMPPT250_100:
-		return "SmartSolar MPPT 250|100"
-	case VeProductSmartSolarMPPT150_100:
-		return "SmartSolar MPPT 150|100"
-	case VeProductSmartSolarMPPT150_85:
-		return "SmartSolar MPPT 150|85"
-	case VeProductSmartSolarMPPT75_15:
-		return "SmartSolar MPPT 75|15"
-	case VeProductSmartSolarMPPT75_10:
-		return "SmartSolar MPPT 75|10"
-	case VeProductSmartSolarMPPT100_15:
-		return "SmartSolar MPPT 100|15"
-	case VeProductSmartSolarMPPT100_30:
-		return "SmartSolar MPPT 100|30"
-	case VeProductSmartSolarMPPT100_50:
-		return "SmartSolar MPPT 100|50"
-	case VeProductSmartSolarMPPT150_35:
-		return "SmartSolar MPPT 150|35"
-	case VeProductSmartSolarMPPT150_100rev2:
-		return "SmartSolar MPPT 150|100 rev2"
-	case VeProductSmartSolarMPPT150_85rev2:
-		return "SmartSolar MPPT 150|85 rev2"
-	case VeProductSmartSolarMPPT250_70:
-		return "SmartSolar MPPT 250|70"
-	case VeProductSmartSolarMPPT250_85:
-		return "SmartSolar MPPT 250|85"
-	case VeProductSmartSolarMPPT250_60:
-		return "SmartSolar MPPT 250|60"
-	case VeProductSmartSolarMPPT250_45:
-		return "SmartSolar MPPT 250|45"
-	case VeProductSmartSolarMPPT100_20:
-		return "SmartSolar MPPT 100|20"
-	case VeProductSmartSolarMPPT100_2048V:
-		return "SmartSolar MPPT 100|20 48V"
-	case VeProductSmartSolarMPPT150_45:
-		return "SmartSolar MPPT 150|45"
-	case VeProductSmartSolarMPPT150_60:
-		return "SmartSolar MPPT 150|60"
-	case VeProductSmartSolarMPPT150_70:
-		return "SmartSolar MPPT 150|70"
-	case VeProductSmartSolarMPPT250_85rev2:
-		return "SmartSolar MPPT 250|85 rev2"
-	case VeProductSmartSolarMPPT250_100rev2:
-		return "SmartSolar MPPT 250|100 rev2"
-	case VeProductBlueSolarMPPT100_20:
-		return "BlueSolar MPPT 100|20"
-	case VeProductBlueSolarMPPT100_2048V:
-		return "BlueSolar MPPT 100|20 48V"
-	case VeProductSmartSolarMPPT250_60rev2:
-		return "SmartSolar MPPT 250|60 rev2"
-	case VeProductSmartSolarMPPT250_70rev2:
-		return "SmartSolar MPPT 250|70 rev2"
-	case VeProductSmartSolarMPPT150_45rev2:
-		return "SmartSolar MPPT 150|45 rev2"
-	case VeProductSmartSolarMPPT150_60rev2:
-		return "SmartSolar MPPT 150|60 rev2"
-	case VeProductSmartSolarMPPT150_70rev2:
-		return "SmartSolar MPPT 150|70 rev2"
-	case VeProductSmartSolarMPPT150_85rev3:
-		return "SmartSolar MPPT 150|85 rev3"
-	case VeProductSmartSolarMPPT150_100rev3:
-		return "SmartSolar MPPT 150|100 rev3"
-	case VeProductBlueSolarMPPT150_45rev2:
-		return "BlueSolar MPPT 150|45 rev2"
-	case VeProductBlueSolarMPPT150_60rev2:
-		return "BlueSolar MPPT 150|60 rev2"
-	case VeProductBlueSolarMPPT150_70rev2:
-		return "BlueSolar MPPT 150|70 rev2"
-	case VeProductSmartSolarMPPTVECan150_70:
-		return "SmartSolar MPPT VE.Can 150/70"
-	case VeProductSmartSolarMPPTVECan150_45:
-		return "SmartSolar MPPT VE.Can 150/45"
-	case VeProductSmartSolarMPPTVECan150_60:
-		return "SmartSolar MPPT VE.Can 150/60"
-	case VeProductSmartSolarMPPTVECan150_85:
-		return "SmartSolar MPPT VE.Can 150/85"
-	case VeProductSmartSolarMPPTVECan150_100:
-		return "SmartSolar MPPT VE.Can 150/100"
-	case VeProductSmartSolarMPPTVECan250_45:
-		return "SmartSolar MPPT VE.Can 250/45"
-	case VeProductSmartSolarMPPTVECan250_60:
-		return "SmartSolar MPPT VE.Can 250/60"
-	case VeProductSmartSolarMPPTVECan250_70:
-		return "SmartSolar MPPT VE.Can 250/70"
-	case VeProductSmartSolarMPPTVECan250_85:
-		return "SmartSolar MPPT VE.Can 250/85"
-	case VeProductSmartSolarMPPTVECan250_100:
-		return "SmartSolar MPPT VE.Can 250/100"
-	case VeProductSmartSolarMPPTVECan150_70rev2:
-		return "SmartSolar MPPT VE.Can 150/70 rev2"
-	case VeProductSmartSolarMPPTVECan150_85rev2:
-		return "SmartSolar MPPT VE.Can 150/85 rev2"
-	case VeProductSmartSolarMPPTVECan150_100rev2:
-		return "SmartSolar MPPT VE.Can 150/100 rev2"
-	case VeProductBlueSolarMPPTVECan150_100:
-		return "BlueSolar MPPT VE.Can 150/100"
-	case VeProductBlueSolarMPPTVECan250_70:
-		return "BlueSolar MPPT VE.Can 250/70"
-	case VeProductBlueSolarMPPTVECan250_100:
-		return "BlueSolar MPPT VE.Can 250/100"
-	case VeProductSmartSolarMPPTVECan250_70rev2:
-		return "SmartSolar MPPT VE.Can 250/70 rev2"
-	case VeProductSmartSolarMPPTVECan250_100rev2:
-		return "SmartSolar MPPT VE.Can 250/100 rev2"
-	case VeProductSmartSolarMPPTVECan250_85rev2:
-		return "SmartSolar MPPT VE.Can 250/85 rev2"
-	case VeProductPhoenixInverter12V250VA230V:
-		return "Phoenix Inverter 12V 250VA 230V"
-	case VeProductPhoenixInverter24V250VA230V:
-		return "Phoenix Inverter 24V 250VA 230V"
-	case VeProductPhoenixInverter48V250VA230V:
-		return "Phoenix Inverter 48V 250VA 230V"
-	case VeProductPhoenixInverter12V250VA120V:
-		return "Phoenix Inverter 12V 250VA 120V"
-	case VeProductPhoenixInverter24V250VA120V:
-		return "Phoenix Inverter 24V 250VA 120V"
-	case VeProductPhoenixInverter48V250VA120V:
-		return "Phoenix Inverter 48V 250VA 120V"
-	case VeProductPhoenixInverter12V375VA230V:
-		return "Phoenix Inverter 12V 375VA 230V"
-	case VeProductPhoenixInverter24V375VA230V:
-		return "Phoenix Inverter 24V 375VA 230V"
-	case VeProductPhoenixInverter48V375VA230V:
-		return "Phoenix Inverter 48V 375VA 230V"
-	case VeProductPhoenixInverter12V375VA120V:
-		return "Phoenix Inverter 12V 375VA 120V"
-	case VeProductPhoenixInverter24V375VA120V:
-		return "Phoenix Inverter 24V 375VA 120V"
-	case VeProductPhoenixInverter48V375VA120V:
-		return "Phoenix Inverter 48V 375VA 120V"
-	case VeProductPhoenixInverter12V500VA230V:
-		return "Phoenix Inverter 12V 500VA 230V"
-	case VeProductPhoenixInverter24V500VA230V:
-		return "Phoenix Inverter 24V 500VA 230V"
-	case VeProductPhoenixInverter48V500VA230V:
-		return "Phoenix Inverter 48V 500VA 230V"
-	case VeProductPhoenixInverter12V500VA120V:
-		return "Phoenix Inverter 12V 500VA 120V"
-	case VeProductPhoenixInverter24V500VA120V:
-		return "Phoenix Inverter 24V 500VA 120V"
-	case VeProductPhoenixInverter48V500VA120V:
-		return "Phoenix Inverter 48V 500VA 120V"
-	case VeProductPhoenixInverter12V800VA230V:
-		return "Phoenix Inverter 12V 800VA 230V"
-	case VeProductPhoenixInverter24V800VA230V:
-		return "Phoenix Inverter 24V 800VA 230V"
-	case VeProductPhoenixInverter48V800VA230V:
-		return "Phoenix Inverter 48V 800VA 230V"
-	case VeProductPhoenixInverter12V800VA120V:
-		return "Phoenix Inverter 12V 800VA 120V"
-	case VeProductPhoenixInverter24V800VA120V:
-		return "Phoenix Inverter 24V 800VA 120V"
-	case VeProductPhoenixInverter48V800VA120V:
-		return "Phoenix Inverter 48V 800VA 120V"
-	case VeProductPhoenixInverter12V1200VA230V:
-		return "Phoenix Inverter 12V 1200VA 230V"
-	case VeProductPhoenixInverter24V1200VA230V:
-		return "Phoenix Inverter 24V 1200VA 230V"
-	case VeProductPhoenixInverter48V1200VA230V:
-		return "Phoenix Inverter 48V 1200VA 230V"
-	case VeProductPhoenixInverter12V1200VA120V:
-		return "Phoenix Inverter 12V 1200VA 120V"
-	case VeProductPhoenixInverter24V1200VA120V:
-		return "Phoenix Inverter 24V 1200VA 120V"
-	case VeProductPhoenixInverter48V1200VA120V:
-		return "Phoenix Inverter 48V 1200VA 120V"
-	case VeProductPhoenixInverter12V1600VA230V:
-		return "Phoenix Inverter 12V 1600VA 230V"
-	case VeProductPhoenixInverter24V1600VA230V:
-		return "Phoenix Inverter 24V 1600VA 230V"
-	case VeProductPhoenixInverter48V1600VA230V:
-		return "Phoenix Inverter 48V 1600VA 230V"
-	case VeProductPhoenixInverter12V2000VA230V:
-		return "Phoenix Inverter 12V 2000VA 230V"
-	case VeProductPhoenixInverter24V2000VA230V:
-		return "Phoenix Inverter 24V 2000VA 230V"
-	case VeProductPhoenixInverter48V2000VA230V:
-		return "Phoenix Inverter 48V 2000VA 230V"
-	case VeProductPhoenixInverter12V3000VA230V:
-		return "Phoenix Inverter 12V 3000VA 230V"
-	case VeProductPhoenixInverter24V3000VA230V:
-		return "Phoenix Inverter 24V 3000VA 230V"
-	case VeProductPhoenixInverter48V3000VA230V:
-		return "Phoenix Inverter 48V 3000VA 230V"
-	case VeProductPhoenixInverterSmart12V5000VA230Vac64k:
-		return "Phoenix Inverter Smart 12V 5000VA 230Vac 64k"
-	case VeProductPhoenixInverterSmart24V5000VA230Vac64k:
-		return "Phoenix Inverter Smart 24V 5000VA 230Vac 64k"
-	case VeProductPhoenixInverterSmart48V5000VA230Vac64k:
-		return "Phoenix Inverter Smart 48V 5000VA 230Vac 64k"
-	case VeProductPhoenixInverter12V800VA230Vac64kHS:
-		return "Phoenix Inverter 12V 800VA 230Vac 64k HS"
-	case VeProductPhoenixInverter24V800VA230Vac64kHS:
-		return "Phoenix Inverter 24V 800VA 230Vac 64k HS"
-	case VeProductPhoenixInverter48V800VA230Vac64kHS:
-		return "Phoenix Inverter 48V 800VA 230Vac 64k HS"
-	case VeProductPhoenixInverter12V800VA120Vac64kHS:
-		return "Phoenix Inverter 12V 800VA 120Vac 64k HS"
-	case VeProductPhoenixInverter24V800VA120Vac64kHS:
-		return "Phoenix Inverter 24V 800VA 120Vac 64k HS"
-	case VeProductPhoenixInverter48V800VA120Vac64kHS:
-		return "Phoenix Inverter 48V 800VA 120Vac 64k HS"
-	case VeProductPhoenixInverter12V1200VA230Vac64kHS:
-		return "Phoenix Inverter 12V 1200VA 230Vac 64k HS"
-	case VeProductPhoenixInverter24V1200VA230Vac64kHS:
-		return "Phoenix Inverter 24V 1200VA 230Vac 64k HS"
-	case VeProductPhoenixInverter48V1200VA230Vac64kHS:
-		return "Phoenix Inverter 48V 1200VA 230Vac 64k HS"
-	case VeProductPhoenixInverter12V1200VA120Vac64kHS:
-		return "Phoenix Inverter 12V 1200VA 120Vac 64k HS"
-	case VeProductPhoenixInverter24V1200VA120Vac64kHS:
-		return "Phoenix Inverter 24V 1200VA 120Vac 64k HS"
-	case VeProductPhoenixInverter48V1200VA120Vac64kHS:
-		return "Phoenix Inverter 48V 1200VA 120Vac 64k HS"
-	case VeProductPhoenixSmartIP43Charger12_50_1p1:
-		return "Phoenix Smart IP43 Charger 12|50 (1+1)"
-	case VeProductPhoenixSmartIP43Charger12_50_3:
-		return "Phoenix Smart IP43 Charger 12|50 (3)"
-	case VeProductPhoenixSmartIP43Charger24_25_1p1:
-		return "Phoenix Smart IP43 Charger 24|25 (1+1)"
-	case VeProductPhoenixSmartIP43Charger24_25_3:
-		return "Phoenix Smart IP43 Charger 24|25 (3)"
-	case VeProductPhoenixSmartIP43Charger12_30_1p1:
-		return "Phoenix Smart IP43 Charger 12|30 (1+1)"
-	case VeProductPhoenixSmartIP43Charger12_30_3:
-		return "Phoenix Smart IP43 Charger 12|30 (3)"
-	case VeProductPhoenixSmartIP43Charger24_16_1p1:
-		return "Phoenix Smart IP43 Charger 24|16 (1+1)"
-	case VeProductPhoenixSmartIP43Charger24_16_3:
-		return "Phoenix Smart IP43 Charger 24|16 (3)"
-	case VeProductBMV712Smart:
-		return "BMV-712 Smart"
-	case VeProductBMV710HSmart:
-		return "BMV-710H Smart"
-	case VeProductBMV712SmartRev2:
-		return "BMV-712 Smart Rev2"
-	case VeProductSmartShunt500A_50mV:
-		return "SmartShunt 500A/50mV"
-	case VeProductSmartShunt1000A_50mV:
-		return "SmartShunt 1000A/50mV"
-	case VeProductSmartShunt2000A_50mV:
-		return "SmartShunt 2000A/50mV"
+	m := GetVeProductMap()
+	if v, ok := m[product]; ok {
+		return v
 	}
 	return ""
 }
