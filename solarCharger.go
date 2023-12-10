@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"github.com/koestler/go-iotdevice/victronDefinitions"
+	"math"
 )
 
 type SolarChargerRecord struct {
@@ -50,18 +51,28 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
 		ret.BatteryVoltage = float64(v) / 100
+	} else {
+		ret.BatteryVoltage = math.NaN()
 	}
 	if v := binary.LittleEndian.Uint16(inp[4:6]); v != 0x7FFF {
 		ret.BatteryCurrent = float64(v) / 10
+	} else {
+		ret.BatteryCurrent = math.NaN()
 	}
 	if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
 		ret.YieldToday = float64(v) * 10
+	} else {
+		ret.YieldToday = math.NaN()
 	}
 	if v := binary.LittleEndian.Uint16(inp[8:10]); v != 0xFFFF {
 		ret.PvPower = float64(v)
+	} else {
+		ret.PvPower = math.NaN()
 	}
 	if v := binary.LittleEndian.Uint16([]byte{inp[10], inp[11] & 0x01}); v != 0x1FF {
 		ret.LoadCurrent = float64(v) / 10
+	} else {
+		ret.LoadCurrent = math.NaN()
 	}
 
 	return
