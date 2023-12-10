@@ -3,14 +3,15 @@ package ble
 import (
 	"encoding/binary"
 	"fmt"
+	"github.com/koestler/go-iotdevice/victronDefinitions"
 )
 
 type SolarChargerRecord struct {
-	DeviceState    uint
-	ChargerError   uint
+	DeviceState    victronDefinitions.SolarChargerState
+	ChargerError   victronDefinitions.SolarChargerError
 	BatteryVoltage float64 // in V
 	BatteryCurrent float64 // in A
-	YieldToday     float64 // in kWh
+	YieldToday     float64 // in Wh
 	PvPower        float64 // in W
 	LoadCurrent    float64 // in A
 }
@@ -31,8 +32,22 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = uint(inp[0])
-	ret.ChargerError = uint(inp[1])
+	ret.DeviceState = victronDefinitions.SolarChargerState(uint(inp[0]))
+	{
+		sm := victronDefinitions.GetSolarChargerStateMap()
+		if _, ok := sm[ret.DeviceState]; !ok {
+			ret.DeviceState = victronDefinitions.SolarChargerStateUnavailable
+		}
+	}
+
+	ret.ChargerError = victronDefinitions.SolarChargerError(uint(inp[1]))
+	{
+		sm := victronDefinitions.GetSolarChargerErrorMap()
+		if _, ok := sm[ret.ChargerError]; !ok {
+			ret.ChargerError = victronDefinitions.SolarChargerErrorUnknown
+		}
+	}
+
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
 		ret.BatteryVoltage = float64(v) / 100
 	}
@@ -40,12 +55,12 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 		ret.BatteryCurrent = float64(v) / 10
 	}
 	if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
-		ret.YieldToday = float64(v) / 100
+		ret.YieldToday = float64(v) * 10
 	}
 	if v := binary.LittleEndian.Uint16(inp[8:10]); v != 0xFFFF {
 		ret.PvPower = float64(v)
 	}
-	if v := binary.LittleEndian.Uint16(inp[10:12]); v != 0x1FF {
+	if v := binary.LittleEndian.Uint16([]byte{inp[10], inp[11] & 0x01}); v != 0x1FF {
 		ret.LoadCurrent = float64(v) / 10
 	}
 
