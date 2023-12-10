@@ -2,6 +2,7 @@ package victronDevice
 
 import (
 	"github.com/koestler/go-iotdevice/dataflow"
+	"golang.org/x/exp/constraints"
 )
 
 type VictronRegister struct {
@@ -111,19 +112,24 @@ func NewNumberRegisterStruct(
 	}
 }
 
-func NewEnumRegisterStruct(
+func NewEnumRegisterStruct[K constraints.Integer, M map[K]string](
 	category, name, description string,
 	address uint16,
 	bit int,
 	static bool,
-	enum map[int]string,
+	enum M,
 	sort int,
 ) VictronRegister {
+	intEnum := make(map[int]string)
+	for k, v := range enum {
+		intEnum[int(k)] = v
+	}
+
 	return VictronRegister{
 		dataflow.NewRegisterStruct(
 			category, name, description,
 			dataflow.EnumRegister,
-			enum,
+			intEnum,
 			"",
 			sort,
 			false,

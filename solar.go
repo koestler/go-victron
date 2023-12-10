@@ -1,5 +1,7 @@
 package victronDevice
 
+import "github.com/koestler/go-iotdevice/victronDefinitions"
+
 var RegisterListSolarProduct = []VictronRegister{
 	NewNumberRegisterStruct(
 		"Product",
@@ -64,18 +66,7 @@ var RegisterListSolarGeneric = []VictronRegister{
 		"Device state",
 		0x0201, -1,
 		false,
-		map[int]string{
-			0:   "Not charging",
-			2:   "Fault",
-			3:   "Bulk Charging",
-			4:   "Absorption Charging",
-			5:   "Float Charging",
-			7:   "Manual Equalise",
-			245: "Wake-Up",
-			247: "Auto  Equalise",
-			252: "External Control",
-			255: "Unavailable",
-		},
+		victronDefinitions.GetSolarChargerStateMap(),
 		6,
 	),
 	// skipped Remote control used
