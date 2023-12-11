@@ -8,24 +8,24 @@ import (
 )
 
 type SolarChargerRecord struct {
-	DeviceState    victronDefinitions.SolarChargerState
-	ChargerError   victronDefinitions.SolarChargerError
-	BatteryVoltage float64 // in V
-	BatteryCurrent float64 // in A
-	YieldToday     float64 // in Wh
-	PvPower        float64 // in W
-	LoadCurrent    float64 // in A
+	DeviceState    victronDefinitions.SolarChargerState `Description:"Device state"`
+	ChargerError   victronDefinitions.SolarChargerError `Description:"Charger error"`
+	BatteryVoltage float64                              `Description:"Battery voltage" Unit:"V"`
+	BatteryCurrent float64                              `Description:"Battery current" Unit:"A"`
+	YieldToday     float64                              `Description:"Yield today" Unit:"Wh"`
+	PvPower        float64                              `Description:"PV power" Unit:"W"`
+	LoadCurrent    float64                              `Description:"Load current" Unit:"A"`
 }
 
 // Solar Charger
-// Start bits | Nr of bits | Meaning               | Units   | NA value
-// 0          | 8          | Device state          |         | 0xFF
-// 8          | 8          | Charger error         |         | 0xFF
-// 16		  | 16         | Battery voltage       | 0.01V   | 0x7FFF
-// 32         | 16         | Battery current       | 0.1A    | 0x7FFF
-// 48         | 16         | Yield today           | 0.01kWh | 0xFFFF
-// 64         | 16         | PV power              | 1W      | 0xFFFF
-// 80         | 9          | Load current          | 0.1A    | 0x1FF
+// Start bits | Nr of bits | Meaning               | Units   | Range               | NA value
+// 0          | 8          | Device state          |         | 0 .. 0xFE           | 0xFF
+// 8          | 8          | Charger error         |         | 0 .. 0xFE           | 0xFF
+// 16	      | 16         | Battery voltage       | 0.01V   | -327.68 .. 327.66 V | 0x7FFF
+// 32         | 16         | Battery current       | 0.1A    | -3276.8 .. 3276.6 A | 0x7FFF
+// 48         | 16         | Yield today           | 0.01kWh | 0 .. 65534 W        | 0xFFFF
+// 64         | 16         | PV power              | 1W      | 0 .. 65534 W        | 0xFFFF
+// 80         | 9          | Load current          | 0.1A    | 0 .. 51.0 A         | 0x1FF
 
 func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 	if len(inp) < 12 {
@@ -50,12 +50,12 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
-		ret.BatteryVoltage = float64(v) / 100
+		ret.BatteryVoltage = float64(int16(v)) / 100
 	} else {
 		ret.BatteryVoltage = math.NaN()
 	}
 	if v := binary.LittleEndian.Uint16(inp[4:6]); v != 0x7FFF {
-		ret.BatteryCurrent = float64(v) / 10
+		ret.BatteryCurrent = float64(int16(v)) / 10
 	} else {
 		ret.BatteryCurrent = math.NaN()
 	}
