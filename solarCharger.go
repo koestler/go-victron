@@ -69,7 +69,7 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 	} else {
 		ret.PvPower = math.NaN()
 	}
-	if v := binary.LittleEndian.Uint16([]byte{inp[10], inp[11] & 0x01}); v != 0x1FF {
+	if v := binary.LittleEndian.Uint16([]byte{inp[10], inp[11]}) & 0x1FF; v != 0x1FF {
 		ret.LoadCurrent = float64(v) / 10
 	} else {
 		ret.LoadCurrent = math.NaN()
