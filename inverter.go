@@ -1,5 +1,7 @@
 package victronDevice
 
+import "github.com/koestler/go-iotdevice/victronDefinitions"
+
 var RegisterListInverterProduct = []VictronRegister{
 	NewNumberRegisterStruct(
 		"Product",
@@ -99,12 +101,7 @@ var RegisterListInverterGeneric = []VictronRegister{
 		"Device state",
 		0x0201, -1,
 		false,
-		map[int]string{
-			0: "Off",
-			1: "Low Power",
-			2: "Fault",
-			9: "Inverting",
-		},
+		victronDefinitions.GetInverterStateMap(),
 		10,
 	),
 	// todo: add device off reason, device warning reason and alarm reason (all bit masks)
@@ -114,13 +111,7 @@ var RegisterListInverterGeneric = []VictronRegister{
 		"Device mode",
 		0x0200, -1,
 		false,
-		map[int]string{
-			2:    "Inverter On",
-			3:    "Device On",
-			4:    "Device Off",
-			5:    "Eco mode",
-			0xFD: "Hibernate",
-		},
+		victronDefinitions.GetInverterModeMap(),
 		300,
 	),
 }
