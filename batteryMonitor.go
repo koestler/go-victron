@@ -59,15 +59,15 @@ func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error
 	ret.Temperature = math.NaN()
 
 	switch ret.AuxMode {
-	case 0:
+	case victronDefinitions.BmvAuxModeStartervoltage:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0x7FFF {
 			ret.AuxVoltage = float64(int16(v)) / 100
 		}
-	case 1:
+	case victronDefinitions.BmvAuxModeMidpointVoltage:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
 			ret.MidVoltage = float64(v) / 100
 		}
-	case 2:
+	case victronDefinitions.BmvAuxModeTemperature:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
 			ret.Temperature = float64(v) / 100
 		}
