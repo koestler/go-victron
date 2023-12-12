@@ -33,7 +33,7 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = victronDefinitions.SolarChargerState(uint(inp[0]))
+	ret.DeviceState = victronDefinitions.SolarChargerState(inp[0])
 	{
 		sm := victronDefinitions.GetSolarChargerStateMap()
 		if _, ok := sm[ret.DeviceState]; !ok {
@@ -41,7 +41,7 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 		}
 	}
 
-	ret.ChargerError = victronDefinitions.SolarChargerError(uint(inp[1]))
+	ret.ChargerError = victronDefinitions.SolarChargerError(inp[1])
 	{
 		sm := victronDefinitions.GetSolarChargerErrorMap()
 		if _, ok := sm[ret.ChargerError]; !ok {
