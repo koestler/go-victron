@@ -7,15 +7,6 @@ import (
 	"math"
 )
 
-type InverterRecord struct {
-	DeviceState     victronDefinitions.InverterState `Description:"Device state"`
-	AlarmReason     uint16                           `Description:"Alarm reason"`
-	BatteryVoltage  float64                          `Description:"Battery voltage" Unit:"V"`
-	AcApparentPower float64                          `Description:"AC Apparent power" Unit:"VA"`
-	AcVoltage       float64                          `Description:"AC voltage" Unit:"V"`
-	AcCurrent       float64                          `Description:"AC current" Unit:"A"`
-}
-
 // Inverter
 // Start bits | Nr of bits | Meaning               | Units   | Range               | NA value
 // 0          | 8          | Device state          |         | 0 .. 0xFE           | 0xFF
@@ -24,6 +15,15 @@ type InverterRecord struct {
 // 40         | 16         | AC Apparent power     | 1VA     | 0 .. 65534 VA       | 0xFFFF
 // 56         | 15         | AC voltage            | 0.01V   | 0 .. 327.66 V       | 0x7FFF
 // 71         | 11         | AC current            | 0.1A    | 0 .. 204.6 A        | 0x7FF
+
+type InverterRecord struct {
+	DeviceState     victronDefinitions.InverterState `Description:"Device state"`
+	AlarmReason     uint16                           `Description:"Alarm reason"`
+	BatteryVoltage  float64                          `Description:"Battery voltage" Unit:"V"`
+	AcApparentPower float64                          `Description:"AC Apparent power" Unit:"VA"`
+	AcVoltage       float64                          `Description:"AC voltage" Unit:"V"`
+	AcCurrent       float64                          `Description:"AC current" Unit:"A"`
+}
 
 func DecodeInverterRecord(inp []byte) (ret InverterRecord, err error) {
 	if len(inp) < 11 {

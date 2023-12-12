@@ -7,19 +7,6 @@ import (
 	"math"
 )
 
-type BatteryMonitorRecord struct {
-	Ttg            float64                       `Description:"Time to go" Unit:"s"`
-	BatteryVoltage float64                       `Description:"Battery voltage" Unit:"V"`
-	AlarmReason    uint16                        `Description:"Alarm reason"`
-	AuxVoltage     float64                       `Description:"Aux voltage" Unit:"V"`
-	MidVoltage     float64                       `Description:"Mid voltage" Unit:"V"`
-	Temperature    float64                       `Description:"Temperature" Unit:"K"`
-	AuxMode        victronDefinitions.BmvAuxMode `Description:"Aux mode"`
-	BatteryCurrent float64                       `Description:"Battery current" Unit:"A"`
-	ConsumedAh     float64                       `Description:"Consumed Ah" Unit:"Ah"`
-	StateOfCharge  float64                       `Description:"State of charge" Unit:"%"`
-}
-
 // Battery Monitor
 // Start bits | Nr of bits | Meaning               | Units   | Range               | NA value
 // 0          | 16         | TTG                   | 1m      | 0 .. 45.5 d         | 0xFFFF
@@ -32,6 +19,19 @@ type BatteryMonitorRecord struct {
 // 66         | 22         | Battery current       | 0.001A  | -4194 .. 4194 A     | 0x3FFFFF
 // 88         | 20         | Consumed Ah           | 0.1Ah   | -104.857 .. 0 Ah    | 0x0FFFFF
 // 108        | 10         | State of charge       | 0.1%    | 0 .. 100%           | 0x3FF
+
+type BatteryMonitorRecord struct {
+	Ttg            float64                       `Description:"Time to go" Unit:"s"`
+	BatteryVoltage float64                       `Description:"Battery voltage" Unit:"V"`
+	AlarmReason    uint16                        `Description:"Alarm reason"`
+	AuxVoltage     float64                       `Description:"Aux voltage" Unit:"V"`
+	MidVoltage     float64                       `Description:"Mid voltage" Unit:"V"`
+	Temperature    float64                       `Description:"Temperature" Unit:"K"`
+	AuxMode        victronDefinitions.BmvAuxMode `Description:"Aux mode"`
+	BatteryCurrent float64                       `Description:"Battery current" Unit:"A"`
+	ConsumedAh     float64                       `Description:"Consumed Ah" Unit:"Ah"`
+	StateOfCharge  float64                       `Description:"State of charge" Unit:"%"`
+}
 
 func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error) {
 	if len(inp) < 15 {
