@@ -3,7 +3,7 @@ package victronDefinitions
 type BmvAuxMode uint8
 
 const (
-	BmvAuxModeStartervoltage  BmvAuxMode = 0
+	BmvAuxModeStarterVoltage  BmvAuxMode = 0
 	BmvAuxModeMidpointVoltage BmvAuxMode = 1
 	BmvAuxModeTemperature     BmvAuxMode = 2
 	BmvAuxModeDisabled        BmvAuxMode = 3
@@ -11,7 +11,7 @@ const (
 
 func GetBmvAuxModeMap() map[BmvAuxMode]string {
 	return map[BmvAuxMode]string{
-		BmvAuxModeStartervoltage:  "Starter voltage",
+		BmvAuxModeStarterVoltage:  "Starter voltage",
 		BmvAuxModeMidpointVoltage: "Mid-point voltage",
 		BmvAuxModeTemperature:     "Temperature",
 		BmvAuxModeDisabled:        "Disabled",
