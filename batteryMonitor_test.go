@@ -30,7 +30,7 @@ func TestDecodeBatteryMonitorRecord(t *testing.T) {
 			AuxVoltage:     -0.02,
 			MidVoltage:     math.NaN(),
 			Temperature:    math.NaN(),
-			AuxMode:        victronDefinitions.BmvAuxModeStartervoltage,
+			AuxMode:        victronDefinitions.BmvAuxModeStarterVoltage,
 			BatteryCurrent: 0.0,
 			ConsumedAh:     0.0,
 			StateOfCharge:  100.0,
