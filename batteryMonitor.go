@@ -8,17 +8,17 @@ import (
 )
 
 // Battery Monitor
-// Start bits | Nr of bits | Meaning               | Units   | Range               | NA value
-// 0          | 16         | TTG                   | 1m      | 0 .. 45.5 d         | 0xFFFF
-// 16         | 16         | Battery voltage       | 0.01V   | -327.68 .. 327.66 V | 0x7FFF
-// 32         | 16         | Alarm reason          |         | 0 .. 0xFFFF         | -
-// 48         | 16         | Aux voltage           | 0.01V   | -327.68 .. 327.66 V | -
-// 48         | 16         | Mid voltage           | 0.01V   | 0 .. 655.34 V       | -
-// 48         | 16         | Temperature           | 0.01K   | 0 .. 655.34 K       | -
-// 64         | 2          | Aux input             |         | 0 .. 3              | 0x3
-// 66         | 22         | Battery current       | 0.001A  | -4194 .. 4194 A     | 0x3FFFFF
-// 88         | 20         | Consumed Ah           | 0.1Ah   | -104.857 .. 0 Ah    | 0x0FFFFF
-// 108        | 10         | State of charge       | 0.1%    | 0 .. 100%           | 0x3FF
+// Start bits | Start byte | Bit offset | Nr of bits | Meaning               | Units   | Range               | NA value
+// 0          | 0          | 0          | 16         | TTG                   | 1m      | 0 .. 45.5 d         | 0xFFFF
+// 16         | 2          | 0          | 16         | Battery voltage       | 0.01V   | -327.68 .. 327.66 V | 0x7FFF
+// 32         | 4          | 0          | 16         | Alarm reason          |         | 0 .. 0xFFFF         | -
+// 48         | 6          | 0          | 16         | Aux voltage           | 0.01V   | -327.68 .. 327.66 V | -
+// 48         | 6          | 0          | 16         | Mid voltage           | 0.01V   | 0 .. 655.34 V       | -
+// 48         | 6          | 0          | 16         | Temperature           | 0.01K   | 0 .. 655.34 K       | -
+// 64         | 8          | 0          | 2          | Aux input             |         | 0 .. 3              | 0x3
+// 66         | 8          | 2          | 22         | Battery current       | 0.001A  | -4194 .. 4194 A     | 0x3FFFFF
+// 88         | 11         | 0          | 20         | Consumed Ah           | 0.1Ah   | -104.857 .. 0 Ah    | 0x0FFFFF
+// 108        | 13         | 4          | 10         | State of charge       | 0.1%    | 0 .. 100%           | 0x3FF
 
 type BatteryMonitorRecord struct {
 	Ttg            float64                       `Description:"Time to go" Unit:"s"`
@@ -73,22 +73,19 @@ func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error
 		}
 	}
 
-	// drop first two bits
-	if v := binary.LittleEndian.Uint32([]byte{inp[8], inp[9], inp[10], 0x00}) >> 2; v != 0x3FFFFF {
+	if v := (binary.LittleEndian.Uint32(inp[8:12]) >> 2) & 0x3FFFFF; v != 0x3FFFFF {
 		ret.BatteryCurrent = float64(int32(v)) / 1000
 	} else {
 		ret.BatteryCurrent = math.NaN()
 	}
 
-	// drop last 4 bits
 	if v := binary.LittleEndian.Uint32(inp[11:15]) & 0x0FFFFF; v != 0x0FFFFF {
 		ret.ConsumedAh = float64(-int32(v)) / 10
 	} else {
 		ret.ConsumedAh = math.NaN()
 	}
 
-	// drop first 4 bits and drop last 2 bits
-	if v := (binary.LittleEndian.Uint16([]byte{inp[13], inp[14]}) >> 4) & 0x3FF; v != 0x3FF {
+	if v := (binary.LittleEndian.Uint16(inp[13:15]) >> 4) & 0x3FF; v != 0x3FF {
 		ret.StateOfCharge = float64(v) / 10
 	} else {
 		ret.StateOfCharge = math.NaN()
