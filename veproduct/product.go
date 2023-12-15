@@ -2,6 +2,9 @@ package veproduct
 
 type Product uint16
 
+// List of Victron Energy products and their ProductID as defined in:
+// https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.33.pdf
+
 const (
 	BMV700                                 Product = 0x203
 	BMV702                                 Product = 0x204
@@ -211,6 +214,16 @@ func GetProductMap() map[Product]string {
 		BlueSolarMPPT150_45rev2:                "BlueSolar MPPT 150|45 rev2",
 		BlueSolarMPPT150_60rev2:                "BlueSolar MPPT 150|60 rev2",
 		BlueSolarMPPT150_70rev2:                "BlueSolar MPPT 150|70 rev2",
+		BlueSolarMPPT150_45rev3:                "BlueSolar MPPT 150|45 rev3",
+		SmatrtSolarMPPT150_45rev3:              "SmartSolar MPPT 150|45 rev3",
+		SmartSolarMPPT70_10rev2:                "SmartSolar MPPT 70|10 rev2",
+		SmartSolarMPPT75_15rev2:                "SmartSolar MPPT 75|15 rev2",
+		BlueSolarMPPT100_30rev3:                "BlueSolar MPPT 100|30 rev3",
+		BlueSolarMPPT100_50rev3:                "BlueSolar MPPT 100|50 rev3",
+		BlueSolarMPPT150_35rev3:                "BlueSolar MPPT 150|35 rev3",
+		BlueSolarMPPT75_10rev2:                 "BlueSolar MPPT 75|10 rev2",
+		BlueSolarMPPT75_15rev2:                 "BlueSolar MPPT 75|15 rev2",
+		BlueSolarMPPT100_15rev2:                "BlueSolar MPPT 100|15 rev2",
 		SmartSolarMPPTVECan150_70:              "SmartSolar MPPT VE.Can 150/70",
 		SmartSolarMPPTVECan150_45:              "SmartSolar MPPT VE.Can 150/45",
 		SmartSolarMPPTVECan150_60:              "SmartSolar MPPT VE.Can 150/60",
@@ -230,6 +243,7 @@ func GetProductMap() map[Product]string {
 		SmartSolarMPPTVECan250_70rev2:          "SmartSolar MPPT VE.Can 250/70 rev2",
 		SmartSolarMPPTVECan250_100rev2:         "SmartSolar MPPT VE.Can 250/100 rev2",
 		SmartSolarMPPTVECan250_85rev2:          "SmartSolar MPPT VE.Can 250/85 rev2",
+		BlueSolarMPPTVECan150_100rev2:          "BlueSolar MPPT VE.Can 150/100 rev2",
 		PhoenixInverter12V250VA230V:            "Phoenix Inverter 12V 250VA 230V",
 		PhoenixInverter24V250VA230V:            "Phoenix Inverter 24V 250VA 230V",
 		PhoenixInverter48V250VA230V:            "Phoenix Inverter 48V 250VA 230V",
