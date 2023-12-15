@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"math"
 )
 
@@ -34,7 +33,7 @@ type AcChargerRecord struct {
 
 func DecodeAcChargerRecord(inp []byte) (ret AcChargerRecord, err error) {
 	if len(inp) < 12 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

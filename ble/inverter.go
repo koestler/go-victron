@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"github.com/koestler/go-victron/victronDefinitions"
 	"math"
 )
@@ -27,7 +26,7 @@ type InverterRecord struct {
 
 func DecodeInverterRecord(inp []byte) (ret InverterRecord, err error) {
 	if len(inp) < 11 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

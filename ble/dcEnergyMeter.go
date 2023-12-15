@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"github.com/koestler/go-victron/victronDefinitions"
 	"math"
 )
@@ -29,7 +28,7 @@ type DcEnergyMeterRecord struct {
 
 func DecodeDcEnergyMeterRecord(inp []byte) (ret DcEnergyMeterRecord, err error) {
 	if len(inp) < 12 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

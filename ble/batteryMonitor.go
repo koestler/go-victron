@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"github.com/koestler/go-victron/victronDefinitions"
 	"math"
 )
@@ -35,7 +34,7 @@ type BatteryMonitorRecord struct {
 
 func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error) {
 	if len(inp) < 15 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

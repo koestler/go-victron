@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"math"
 )
 
@@ -32,7 +31,7 @@ type LynxSmartBms struct {
 
 func DecodeLynxSmartBms(inp []byte) (ret LynxSmartBms, err error) {
 	if len(inp) < 16 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

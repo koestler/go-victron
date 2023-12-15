@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"math"
 )
 
@@ -24,7 +23,7 @@ type GxDeviceRecord struct {
 
 func DecodeGxDeviceRecord(inp []byte) (ret GxDeviceRecord, err error) {
 	if len(inp) < 11 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

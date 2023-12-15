@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"github.com/koestler/go-victron/victronDefinitions"
 	"math"
 )
@@ -35,7 +34,7 @@ type VeBusRecord struct {
 
 func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
 	if len(inp) < 12 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

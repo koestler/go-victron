@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"github.com/koestler/go-victron/victronDefinitions"
 	"math"
 )
@@ -25,7 +24,7 @@ type DcDcConverterRecord struct {
 
 func DecodeDcDcConverterRecord(inp []byte) (ret DcDcConverterRecord, err error) {
 	if len(inp) < 10 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

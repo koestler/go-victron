@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"math"
 )
 
@@ -40,7 +39,7 @@ type SmartLithiumRecord struct {
 
 func DecodeSmartLithiumRecord(inp []byte) (ret SmartLithiumRecord, err error) {
 	if len(inp) < 16 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"github.com/koestler/go-victron/victronDefinitions"
 	"math"
 )
@@ -33,7 +32,7 @@ type MultiRsRecord struct {
 
 func DecodeMultiRsRecord(inp []byte) (ret MultiRsRecord, err error) {
 	if len(inp) < 13 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 

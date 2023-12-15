@@ -2,7 +2,6 @@ package ble
 
 import (
 	"encoding/binary"
-	"fmt"
 	"math"
 )
 
@@ -30,7 +29,7 @@ type SmartBatteryProtectRecord struct {
 
 func DecodeSmartBatteryProtectRecord(inp []byte) (ret SmartBatteryProtectRecord, err error) {
 	if len(inp) < 15 {
-		err = fmt.Errorf("inp too short")
+		err = ErrInputTooShort
 		return
 	}
 
