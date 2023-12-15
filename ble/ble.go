@@ -8,6 +8,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"github.com/koestler/go-victron/bleparser"
 	"github.com/koestler/go-victron/veproduct"
 	"github.com/muka/go-bluetooth/api"
 	"github.com/muka/go-bluetooth/bluez/profile/adapter"
@@ -253,7 +254,7 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	switch recordType {
 	case 0x01:
 		// solar charger
-		record, err := DecodeSolarChargeRecord(decryptedBytes)
+		record, err := bleparser.DecodeSolarChargeRecord(decryptedBytes)
 		if err != nil {
 			log.Printf("ble[%s]->%s: cannot decode solar charger record: %s",
 				ble.cfg.Name(), deviceConfig.Name(), err,

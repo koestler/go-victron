@@ -1,4 +1,4 @@
-package ble
+package bleparser
 
 import "math"
 
