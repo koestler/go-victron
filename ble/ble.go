@@ -8,7 +8,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veproduct"
 	"github.com/muka/go-bluetooth/api"
 	"github.com/muka/go-bluetooth/bluez/profile/adapter"
 	"github.com/muka/go-bluetooth/bluez/profile/device"
@@ -199,7 +199,7 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 
 	prefix := rawBytes[0:2]
 	productId := binary.LittleEndian.Uint16(rawBytes[2:4])
-	product := victronDefinitions.VeProduct(productId)
+	product := veproduct.Product(productId)
 	recordType := rawBytes[4]
 	nonce := rawBytes[5:7] // used ad iv for encryption; is only 16 bits
 	iv := binary.LittleEndian.Uint16(nonce)

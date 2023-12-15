@@ -80,7 +80,7 @@ func GetDcDcConverterErrorMap() map[DcDcConverterError]string {
 		DcDcConverterErrorInputShutdownCurrentFlowing:       "Input shutdown (current flowing while the converter is switched off)",
 		DcDcConverterErrorIncompatibleDeviceInTheNetwork:    "Incompatible device in the network (for synchronized charging)",
 		DcDcConverterErrorBmsConnectionLost:                 "BMS connection lost",
-		DcDcConverterErrorNetworkMisconfigured:              "Network misconfigured (e.g. combining ESS with ve.smart networking)",
+		DcDcConverterErrorNetworkMisconfigured:              "Network misconfigured (e.g. combining ESS with veproduct.smart networking)",
 		DcDcConverterErrorCalibrationDataLost:               "Calibration data lost",
 		DcDcConverterErrorIncompatibleFirmware:              "Incompatible firmware (i.e. not for this model)",
 		DcDcConverterErrorSettingsDataInvalid:               "Settings data invalid / corrupted (use restore to defaults and set to recover)",

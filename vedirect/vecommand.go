@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veproduct"
 	"log"
 	"strconv"
 )
@@ -50,7 +50,7 @@ func (vd *Vedirect) VeCommandPing() (err error) {
 	return nil
 }
 
-func (vd *Vedirect) VeCommandDeviceId() (deviceId victronDefinitions.VeProduct, err error) {
+func (vd *Vedirect) VeCommandDeviceId() (deviceId veproduct.Product, err error) {
 	vd.debugPrintf("vedirect: VeCommandDeviceId begin")
 
 	rawValue, err := vd.VeCommand(VeCommandDeviceId, 0)
@@ -59,7 +59,7 @@ func (vd *Vedirect) VeCommandDeviceId() (deviceId victronDefinitions.VeProduct, 
 		return 0, err
 	}
 
-	deviceId = victronDefinitions.VeProduct(littleEndianBytesToUint(rawValue))
+	deviceId = veproduct.Product(littleEndianBytesToUint(rawValue))
 	if len(deviceId.String()) < 1 {
 		vd.debugPrintf("vedirect: VeCommandDeviceId end unknown deviceId=%x", rawValue)
 		return 0, fmt.Errorf("unknownw deviceId=%x", rawValue)
@@ -197,7 +197,7 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	vd.debugPrintf("vedirect: VeCommandGet begin address=%x", address)
 
 	// fetch response using multiple tries to
-	// deal with old data in the tx buffer of the ve device and our rx buffer
+	// deal with old data in the tx buffer of the veproduct device and our rx buffer
 	const numbTries = 8
 	for try := 0; try < numbTries; try++ {
 		var rawValues []byte

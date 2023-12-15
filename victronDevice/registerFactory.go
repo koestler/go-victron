@@ -1,10 +1,10 @@
 package victronDevice
 
 import (
-	vd "github.com/koestler/go-victron/victronDefinitions"
+	vd "github.com/koestler/go-victron/veproduct"
 )
 
-func RegisterFactoryByProduct(product vd.VeProduct) []VictronRegister {
+func RegisterFactoryByProduct(product vd.Product) []VictronRegister {
 	switch product {
 	case vd.VeProductBMV700:
 		return RegisterListBmv700

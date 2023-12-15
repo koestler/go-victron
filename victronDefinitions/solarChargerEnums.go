@@ -80,7 +80,7 @@ func GetSolarChargerErrorMap() map[SolarChargerError]string {
 		SolarChargerErrorInputShutdownCurrentFlowing:       "Input shutdown (current flowing while the converter is switched off)",
 		SolarChargerErrorIncompatibleDeviceInTheNetwork:    "Incompatible device in the network (for synchronized charging)",
 		SolarChargerErrorBmsConnectionLost:                 "BMS connection lost",
-		SolarChargerErrorNetworkMisconfigured:              "Network misconfigured (e.g. combining ESS with ve.smart networking)",
+		SolarChargerErrorNetworkMisconfigured:              "Network misconfigured (e.g. combining ESS with veproduct.smart networking)",
 		SolarChargerErrorCalibrationDataLost:               "Calibration data lost",
 		SolarChargerErrorIncompatibleFirmware:              "Incompatible firmware (i.e. not for this model)",
 		SolarChargerErrorSettingsDataInvalid:               "Settings data invalid / corrupted (use restore to defaults and set to recover)",
