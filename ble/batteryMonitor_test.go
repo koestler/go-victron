@@ -2,7 +2,7 @@ package ble
 
 import (
 	"encoding/hex"
-	"github.com/koestler/go-iotdevice/victronDefinitions"
+	"github.com/koestler/go-victron/victronDefinitions"
 	"math"
 	"testing"
 )

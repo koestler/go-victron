@@ -3,7 +3,7 @@ package ble
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/koestler/go-iotdevice/victronDefinitions"
+	"github.com/koestler/go-victron/victronDefinitions"
 	"math"
 )
 
