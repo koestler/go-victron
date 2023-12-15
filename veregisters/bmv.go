@@ -1,4 +1,4 @@
-package victronDevice
+package veregisters
 
 var RegisterListBmvProduct = []VictronRegister{
 	NewNumberRegisterStruct(

@@ -1,4 +1,4 @@
-package victronDevice
+package veregisters
 
 import (
 	"github.com/koestler/go-victron/veproduct"
