@@ -1,7 +1,7 @@
 package victronDevice
 
 import (
-	vd "github.com/koestler/go-iotdevice/victronDefinitions"
+	vd "github.com/koestler/go-victron/victronDefinitions"
 )
 
 func RegisterFactoryByProduct(product vd.VeProduct) []VictronRegister {

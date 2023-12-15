@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"github.com/koestler/go-iotdevice/victronDefinitions"
+	"github.com/koestler/go-victron/victronDefinitions"
 	"log"
 	"strconv"
 )

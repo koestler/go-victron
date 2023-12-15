@@ -1,6 +1,6 @@
 package victronDevice
 
-import "github.com/koestler/go-iotdevice/victronDefinitions"
+import "github.com/koestler/go-victron/victronDefinitions"
 
 var RegisterListSolarProduct = []VictronRegister{
 	NewNumberRegisterStruct(
