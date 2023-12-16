@@ -1,26 +1,39 @@
 package veregisters
 
 import (
+	"fmt"
 	"github.com/koestler/go-victron/veproduct"
 )
 
-func RegisterFactoryByProduct(product veproduct.Product) []VictronRegister {
-	switch product.Type() {
+var ErrUnsupportedType = fmt.Errorf("unsuported product type")
+
+func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error) {
+	rl = NewRegisterList()
+
+	switch t {
 	case veproduct.TypeBMV:
-		return RegisterListBmv700
-	case veproduct.TypeBMVSmart:
-		return RegisterListBmv712
-	case veproduct.TypeBlueSolarMPPT:
-		return RegisterListSolar
-	case veproduct.TypeSmartSolarMPPT:
-		return RegisterListSolar
-	case veproduct.TypePhoenixInverter:
-		return RegisterListInverter
-	case veproduct.TypePhoenixInverterSmart:
-		return RegisterListInverter
-	case veproduct.TypeSmartShunt:
-		return RegisterListBmv712
+		appendBmv(&rl)
+		rl.FilterByName(
+			"AuxVoltage",
+			"BatteryTemperature",
+			"MidPointVoltage",
+			"MidPointVoltageDeviation",
+			"AuxVoltageMinimum",
+			"AuxVoltageMaximum",
+		)
+	case veproduct.TypeBMVSmart, veproduct.TypeSmartShunt:
+		appendBmv(&rl)
+		rl.FilterByName(
+			"ProductRevision",
+			"Description",
+		)
+	case veproduct.TypeBlueSolarMPPT, veproduct.TypeSmartSolarMPPT:
+		appendSolar(&rl)
+	case veproduct.TypePhoenixInverter, veproduct.TypePhoenixInverterSmart:
+		appendInverter(&rl)
 	default:
-		return nil
+		err = ErrUnsupportedType
 	}
+
+	return
 }
