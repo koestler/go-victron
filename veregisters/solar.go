@@ -5,16 +5,17 @@ import "github.com/koestler/go-victron/victronDefinitions"
 // appendSolar appends all registers of solar chargers to the given RegisterList.
 // The list is based on:
 // https://www.victronenergy.com/upload/documents/BlueSolar-HEX-protocol.pdf
-func appendSolar(rl *RegisterList) {
-	appendSolarProduct(rl)
-	appendSolarGeneric(rl)
-	appendSolarSettings(rl)
-	appendSolarChargerData(rl)
-	appendSolarPanelData(rl)
+func AppendSolar(rl *RegisterList) {
+	AppendSolarProduct(rl)
+	AppendSolarGeneric(rl)
+	AppendSolarSettings(rl)
+	AppendSolarChargerData(rl)
+	AppendSolarPanelData(rl)
 }
 
-func appendSolarProduct(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendSolarProduct appends all registers of the Product category to the given RegisterList.
+func AppendSolarProduct(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Product",
 			"ProductId",
@@ -40,7 +41,7 @@ func appendSolarProduct(rl *RegisterList) {
 			301,
 		),
 	)
-	rl.appendTextRegisterStruct(
+	rl.AppendTextRegisterStruct(
 		NewTextRegisterStruct(
 			"Product",
 			"SerialNumber",
@@ -61,8 +62,9 @@ func appendSolarProduct(rl *RegisterList) {
 	// skipped capabilities
 }
 
-func appendSolarGeneric(rl *RegisterList) {
-	rl.appendEnumRegisterStruct(
+// AppendSolarGeneric appends all registers of the Generic category to the given RegisterList.
+func AppendSolarGeneric(rl *RegisterList) {
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Generic",
 			"DeviceMode",
@@ -90,8 +92,9 @@ func appendSolarGeneric(rl *RegisterList) {
 	)
 }
 
-func appendSolarSettings(rl *RegisterList) {
-	rl.appendEnumRegisterStruct(
+// AppendSolarSettings appends all registers of the Settings category to the given RegisterList.
+func AppendSolarSettings(rl *RegisterList) {
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Settings",
 			"AdaptiveMode",
@@ -105,7 +108,7 @@ func appendSolarSettings(rl *RegisterList) {
 			500,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Settings",
 			"AutomaticEqualisationMode",
@@ -179,7 +182,7 @@ func appendSolarSettings(rl *RegisterList) {
 			506,
 		),
 	)
-	rl.appendEnumRegisterStruct(
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Settings",
 			"BatteryType",
@@ -200,7 +203,7 @@ func appendSolarSettings(rl *RegisterList) {
 			507,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Settings",
 			"BatteryMaximumCurrent",
@@ -226,7 +229,7 @@ func appendSolarSettings(rl *RegisterList) {
 			509,
 		),
 	)
-	rl.appendEnumRegisterStruct(
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Settings",
 			"BatteryVoltageSetting",
@@ -255,7 +258,7 @@ func appendSolarSettings(rl *RegisterList) {
 			512,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Settings",
 			"TailCurrent",
@@ -281,7 +284,7 @@ func appendSolarSettings(rl *RegisterList) {
 			514,
 		),
 	)
-	rl.appendEnumRegisterStruct(
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Settings",
 			"AutoEqualiseStop",
@@ -295,7 +298,7 @@ func appendSolarSettings(rl *RegisterList) {
 			515,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Settings",
 			"EqualisationCurrentLevel",
@@ -347,8 +350,9 @@ func appendSolarSettings(rl *RegisterList) {
 	)
 }
 
-func appendSolarChargerData(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendSolarChargerData appends all registers of the Charger category to the given RegisterList.
+func AppendSolarChargerData(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Essential",
 			"BatteryTemperature",
@@ -410,7 +414,7 @@ func appendSolarChargerData(rl *RegisterList) {
 			204,
 		),
 	)
-	rl.appendEnumRegisterStruct(
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Generic",
 			"ChargerErrorCode",
@@ -421,7 +425,7 @@ func appendSolarChargerData(rl *RegisterList) {
 			401,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Essential",
 			"ChargerCurrent",
@@ -503,8 +507,9 @@ func appendSolarChargerData(rl *RegisterList) {
 	// skipped adjustable voltage maximum
 }
 
-func appendSolarPanelData(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendSolarPanelData appends all registers of the Panel category to the given RegisterList.
+func AppendSolarPanelData(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Essential",
 			"PanelPower",
@@ -554,7 +559,7 @@ func appendSolarPanelData(rl *RegisterList) {
 			102,
 		),
 	)
-	rl.appendEnumRegisterStruct(
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Panel",
 			"TrackerMode",

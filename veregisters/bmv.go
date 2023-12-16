@@ -1,16 +1,17 @@
 package veregisters
 
-// appendBmv appends all registers of BMV units to the given RegisterList.
+// AppendBmv appends all registers of BMV units to the given RegisterList.
 // The list is based on:
 // https://www.victronenergy.com/upload/documents/BMV-7xx-HEX-Protocol.pdf
-func appendBmv(rl *RegisterList) {
-	appendBmvProduct(rl)
-	appendBmvMonitor(rl)
-	appendBmvHistoric(rl)
+func AppendBmv(rl *RegisterList) {
+	AppendBmvProduct(rl)
+	AppendBmvMonitor(rl)
+	AppendBmvHistoric(rl)
 }
 
-func appendBmvProduct(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendBmvProduct appends all registers of the Product category to the given RegisterList.
+func AppendBmvProduct(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Product",
 			"ProductId",
@@ -36,7 +37,7 @@ func appendBmvProduct(rl *RegisterList) {
 			201,
 		),
 	)
-	rl.appendTextRegisterStruct(
+	rl.AppendTextRegisterStruct(
 		NewTextRegisterStruct(
 			"Product",
 			"SerialNumber",
@@ -62,7 +63,7 @@ func appendBmvProduct(rl *RegisterList) {
 			204,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Product",
 			"Uptime",
@@ -79,8 +80,9 @@ func appendBmvProduct(rl *RegisterList) {
 	// skipped Bluetooth capabilities
 }
 
-func appendBmvMonitor(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendBmvMonitor appends all registers of the Monitor category to the given RegisterList.
+func AppendBmvMonitor(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Essential",
 			"Power",
@@ -202,7 +204,7 @@ func appendBmvMonitor(rl *RegisterList) {
 			105,
 		),
 	)
-	rl.appendEnumRegisterStruct(
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Monitor",
 			"SynchronizationState",
@@ -218,8 +220,9 @@ func appendBmvMonitor(rl *RegisterList) {
 	)
 }
 
-func appendBmvHistoric(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendBmvHistoric appends all registers of the Historic category to the given RegisterList.
+func AppendBmvHistoric(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Historic",
 			"DepthOfTheDeepestDischarge",

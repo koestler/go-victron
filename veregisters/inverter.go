@@ -2,24 +2,25 @@ package veregisters
 
 import "github.com/koestler/go-victron/victronDefinitions"
 
-// appendInverter appends all registers of phoenix inverters to the given RegisterList.
+// AppendInverter appends all registers of phoenix inverters to the given RegisterList.
 // The list is based on:
 // https://www.victronenergy.com/upload/documents/VE.Direct-HEX-Protocol-Phoenix-Inverter.pdf
-func appendInverter(rl *RegisterList) {
-	appendInverterProduct(rl)
-	appendInverterGeneric(rl)
-	appendInverterOffReasons(rl)
-	appendInverterWarningReasons(rl)
-	appendInverterHistory(rl)
-	appendInverterOperation(rl)
-	appendInverterAcOutControl(rl)
-	appendInverterBatteryControl(rl)
-	appendInverterDynamicCutoff(rl)
+func AppendInverter(rl *RegisterList) {
+	AppendInverterProduct(rl)
+	AppendInverterGeneric(rl)
+	AppendInverterOffReasons(rl)
+	AppendInverterWarningReasons(rl)
+	AppendInverterHistory(rl)
+	AppendInverterOperation(rl)
+	AppendInverterAcOutControl(rl)
+	AppendInverterBatteryControl(rl)
+	AppendInverterDynamicCutoff(rl)
 	// appendInverterRelayControl(rl)
 }
 
-func appendInverterProduct(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendInverterProduct appends all registers of the Product category to the given RegisterList.
+func AppendInverterProduct(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Product",
 			"ProductId",
@@ -57,7 +58,7 @@ func appendInverterProduct(rl *RegisterList) {
 			102,
 		),
 	)
-	rl.appendTextRegisterStruct(
+	rl.AppendTextRegisterStruct(
 		NewTextRegisterStruct(
 			"Product",
 			"SerialNumber",
@@ -75,7 +76,7 @@ func appendInverterProduct(rl *RegisterList) {
 			104,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Product",
 			"ACOutRatedPower",
@@ -116,8 +117,9 @@ func appendInverterProduct(rl *RegisterList) {
 	)
 }
 
-func appendInverterGeneric(rl *RegisterList) {
-	rl.appendEnumRegisterStruct(
+// AppendInverterGeneric appends all registers of the Generic category to the given RegisterList.
+func AppendInverterGeneric(rl *RegisterList) {
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Essential",
 			"DeviceState",
@@ -145,8 +147,9 @@ var inactiveActiveEnum = map[int]string{
 	1: "active",
 }
 
-func appendInverterOffReasons(rl *RegisterList) {
-	rl.appendEnumRegisterStruct(
+// AppendInverterOffReasons appends all registers of the Off Reasons category to the given RegisterList.
+func AppendInverterOffReasons(rl *RegisterList) {
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Off Reasons",
 			"DeviceOffReasonNoInputPower",
@@ -195,8 +198,9 @@ func appendInverterOffReasons(rl *RegisterList) {
 	)
 }
 
-func appendInverterWarningReasons(rl *RegisterList) {
-	rl.appendEnumRegisterStruct(
+// AppendInverterWarningReasons appends all registers of the Warning Reasons category to the given RegisterList.
+func AppendInverterWarningReasons(rl *RegisterList) {
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonLowBatVoltage",
@@ -272,8 +276,9 @@ func appendInverterWarningReasons(rl *RegisterList) {
 	)
 }
 
-func appendInverterHistory(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendInverterHistory appends all registers of the History category to the given RegisterList.
+func AppendInverterHistory(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"History",
 			"HistoryTime",
@@ -301,8 +306,9 @@ func appendInverterHistory(rl *RegisterList) {
 	)
 }
 
-func appendInverterOperation(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendInverterOperation appends all registers of the Operation category to the given RegisterList.
+func AppendInverterOperation(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Essential",
 			"AcOutCurrent",
@@ -369,8 +375,9 @@ func appendInverterOperation(rl *RegisterList) {
 	)
 }
 
-func appendInverterAcOutControl(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendInverterAcOutControl appends all registers of the AC-out settings category to the given RegisterList.
+func AppendInverterAcOutControl(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"AC-out settings",
 			"AcOutVoltageSetpoint",
@@ -435,7 +442,7 @@ func appendInverterAcOutControl(rl *RegisterList) {
 			),
 		*/
 	)
-	rl.appendEnumRegisterStruct(
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"AC-out settings",
 			"InvWaveSet50HzNot60Hz",
@@ -449,7 +456,7 @@ func appendInverterAcOutControl(rl *RegisterList) {
 			405,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"AC-out settings",
 			"InvOperEcoModeInvMin",
@@ -489,8 +496,9 @@ func appendInverterAcOutControl(rl *RegisterList) {
 	)
 }
 
-func appendInverterBatteryControl(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendInverterBatteryControl appends all registers of the Battery settings category to the given RegisterList.
+func AppendInverterBatteryControl(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Battery settings",
 			"ShutdownLowVoltageSet",
@@ -554,8 +562,9 @@ func appendInverterBatteryControl(rl *RegisterList) {
 	)
 }
 
-func appendInverterDynamicCutoff(rl *RegisterList) {
-	rl.appendEnumRegisterStruct(
+// AppendInverterDynamicCutoff appends all registers of the Dynamic Cutoff category to the given RegisterList.
+func AppendInverterDynamicCutoff(rl *RegisterList) {
+	rl.AppendEnumRegisterStruct(
 		NewEnumRegisterStruct(
 			"Dynamic Cutoff",
 			"InvProtUbatDynCutoffEnable",
@@ -569,7 +578,7 @@ func appendInverterDynamicCutoff(rl *RegisterList) {
 			600,
 		),
 	)
-	rl.appendNumberRegisterStruct(
+	rl.AppendNumberRegisterStruct(
 		NewNumberRegisterStruct(
 			"Battery settings",
 			"InvProtUbatDynCutoffFactor",
@@ -634,8 +643,9 @@ func appendInverterDynamicCutoff(rl *RegisterList) {
 }
 
 /*
-func appendSolarPanelData(rl *RegisterList) {
-	rl.appendNumberRegisterStruct(
+// AppendInverterRelayControl appends all registers of the Relay Control category to the given RegisterList.
+func AppendSolarPanelData(rl *RegisterList) {
+	rl.AppendNumberRegisterStruct(
 		// todo: activate via capabilities?
 		NewEnumRegisterStruct(
 			"Relay Control",

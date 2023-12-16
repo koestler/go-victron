@@ -1,5 +1,6 @@
 package veregisters
 
+// RegisterList is a container holding {Number,Text,Enum}RegisterStructs.
 type RegisterList struct {
 	NumberRegisters []NumberRegisterStruct
 	TextRegisters   []TextRegisterStruct
@@ -14,19 +15,20 @@ func NewRegisterList() RegisterList {
 	}
 }
 
-func (rl *RegisterList) appendNumberRegisterStruct(r ...NumberRegisterStruct) {
+func (rl *RegisterList) AppendNumberRegisterStruct(r ...NumberRegisterStruct) {
 	rl.NumberRegisters = append(rl.NumberRegisters, r...)
 }
 
-func (rl *RegisterList) appendTextRegisterStruct(r ...TextRegisterStruct) {
+func (rl *RegisterList) AppendTextRegisterStruct(r ...TextRegisterStruct) {
 	rl.TextRegisters = append(rl.TextRegisters, r...)
 }
 
-func (rl *RegisterList) appendEnumRegisterStruct(r ...EnumRegisterStruct) {
+func (rl *RegisterList) AppendEnumRegisterStruct(r ...EnumRegisterStruct) {
 	rl.EnumRegisters = append(rl.EnumRegisters, r...)
 }
 
-func (rl *RegisterList) filterByName(exclude ...string) {
+// FilterByName removes all registers with the specified name from the list.
+func (rl *RegisterList) FilterByName(exclude ...string) {
 	rl.NumberRegisters = filterRegistersByName(rl.NumberRegisters, exclude...)
 	rl.TextRegisters = filterRegistersByName(rl.TextRegisters, exclude...)
 	rl.EnumRegisters = filterRegistersByName(rl.EnumRegisters, exclude...)

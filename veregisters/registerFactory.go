@@ -12,8 +12,8 @@ func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error)
 
 	switch t {
 	case veproduct.TypeBMV:
-		appendBmv(&rl)
-		rl.filterByName(
+		AppendBmv(&rl)
+		rl.FilterByName(
 			"AuxVoltage",
 			"BatteryTemperature",
 			"MidPointVoltage",
@@ -22,15 +22,15 @@ func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error)
 			"AuxVoltageMaximum",
 		)
 	case veproduct.TypeBMVSmart, veproduct.TypeSmartShunt:
-		appendBmv(&rl)
-		rl.filterByName(
+		AppendBmv(&rl)
+		rl.FilterByName(
 			"ProductRevision",
 			"Description",
 		)
 	case veproduct.TypeBlueSolarMPPT, veproduct.TypeSmartSolarMPPT:
-		appendSolar(&rl)
+		AppendSolar(&rl)
 	case veproduct.TypePhoenixInverter, veproduct.TypePhoenixInverterSmart:
-		appendInverter(&rl)
+		AppendInverter(&rl)
 	default:
 		err = ErrUnsupportedType
 	}
