@@ -26,7 +26,7 @@ func (rl *RegisterList) appendEnumRegisterStruct(r ...EnumRegisterStruct) {
 	rl.EnumRegisters = append(rl.EnumRegisters, r...)
 }
 
-func (rl *RegisterList) FilterByName(exclude ...string) {
+func (rl *RegisterList) filterByName(exclude ...string) {
 	rl.NumberRegisters = filterRegistersByName(rl.NumberRegisters, exclude...)
 	rl.TextRegisters = filterRegistersByName(rl.TextRegisters, exclude...)
 	rl.EnumRegisters = filterRegistersByName(rl.EnumRegisters, exclude...)

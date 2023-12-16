@@ -2,6 +2,22 @@ package veregisters
 
 import "github.com/koestler/go-victron/victronDefinitions"
 
+// appendInverter appends all registers of phoenix inverters to the given RegisterList.
+// The list is based on:
+// https://www.victronenergy.com/upload/documents/VE.Direct-HEX-Protocol-Phoenix-Inverter.pdf
+func appendInverter(rl *RegisterList) {
+	appendInverterProduct(rl)
+	appendInverterGeneric(rl)
+	appendInverterOffReasons(rl)
+	appendInverterWarningReasons(rl)
+	appendInverterHistory(rl)
+	appendInverterOperation(rl)
+	appendInverterAcOutControl(rl)
+	appendInverterBatteryControl(rl)
+	appendInverterDynamicCutoff(rl)
+	// appendInverterRelayControl(rl)
+}
+
 func appendInverterProduct(rl *RegisterList) {
 	rl.appendNumberRegisterStruct(
 		NewNumberRegisterStruct(
@@ -652,16 +668,3 @@ func appendSolarPanelData(rl *RegisterList) {
 	)
 }
 */
-
-func appendInverter(rl *RegisterList) {
-	appendInverterProduct(rl)
-	appendInverterGeneric(rl)
-	appendInverterOffReasons(rl)
-	appendInverterWarningReasons(rl)
-	appendInverterHistory(rl)
-	appendInverterOperation(rl)
-	appendInverterAcOutControl(rl)
-	appendInverterBatteryControl(rl)
-	appendInverterDynamicCutoff(rl)
-	// appendInverterRelayControl(rl)
-}

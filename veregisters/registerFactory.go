@@ -13,7 +13,7 @@ func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error)
 	switch t {
 	case veproduct.TypeBMV:
 		appendBmv(&rl)
-		rl.FilterByName(
+		rl.filterByName(
 			"AuxVoltage",
 			"BatteryTemperature",
 			"MidPointVoltage",
@@ -23,7 +23,7 @@ func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error)
 		)
 	case veproduct.TypeBMVSmart, veproduct.TypeSmartShunt:
 		appendBmv(&rl)
-		rl.FilterByName(
+		rl.filterByName(
 			"ProductRevision",
 			"Description",
 		)

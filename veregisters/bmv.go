@@ -1,5 +1,14 @@
 package veregisters
 
+// appendBmv appends all registers of BMV units to the given RegisterList.
+// The list is based on:
+// https://www.victronenergy.com/upload/documents/BMV-7xx-HEX-Protocol.pdf
+func appendBmv(rl *RegisterList) {
+	appendBmvProduct(rl)
+	appendBmvMonitor(rl)
+	appendBmvHistoric(rl)
+}
+
 func appendBmvProduct(rl *RegisterList) {
 	rl.appendNumberRegisterStruct(
 		NewNumberRegisterStruct(
@@ -404,10 +413,4 @@ func appendBmvHistoric(rl *RegisterList) {
 			315,
 		),
 	)
-}
-
-func appendBmv(rl *RegisterList) {
-	appendBmvProduct(rl)
-	appendBmvMonitor(rl)
-	appendBmvHistoric(rl)
 }

@@ -1,7 +1,11 @@
 package veregisters
 
 type nameable interface {
-	Name() string
+	getName() string
+}
+
+func (r RegisterStruct) getName() string {
+	return r.Name
 }
 
 func filterRegistersByName[N nameable](inp []N, exclude ...string) (oup []N) {
@@ -17,7 +21,7 @@ func filterRegistersByName[N nameable](inp []N, exclude ...string) (oup []N) {
 
 func nameExcluded[N nameable](n N, exclude ...string) bool {
 	for _, e := range exclude {
-		if e == n.Name() {
+		if e == n.getName() {
 			return true
 		}
 	}

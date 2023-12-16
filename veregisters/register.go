@@ -5,22 +5,22 @@ import (
 )
 
 type RegisterStruct struct {
-	category    string
-	name        string
-	description string
-	sort        int
+	Category    string
+	Name        string
+	Description string
+	Sort        int
 
-	address uint16
-	static  bool
+	Address uint16
+	Static  bool
 }
 
 type NumberRegisterStruct struct {
 	RegisterStruct
-	unit string
+	Unit string
 
-	signed bool
-	factor int
-	offset float64
+	Signed bool
+	Factor int
+	Offset float64
 }
 
 type TextRegisterStruct struct {
@@ -29,8 +29,8 @@ type TextRegisterStruct struct {
 
 type EnumRegisterStruct struct {
 	RegisterStruct
-	bit  int // when positive, only the given bit is used as 0/1
-	enum map[int]string
+	Bit  int // when positive, only the given bit is used as 0/1
+	Enum map[int]string
 }
 
 func NewNumberRegisterStruct(
