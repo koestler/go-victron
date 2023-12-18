@@ -15,7 +15,7 @@ import (
 // 48         | 6          | 0          | 16         | Mid voltage           | 0.01V   | 0 .. 655.34 V       | -
 // 48         | 6          | 0          | 16         | Temperature           | 0.01K   | 0 .. 655.34 K       | -
 // 64         | 8          | 0          | 2          | Aux input             |         | 0 .. 3              | 0x3
-// 66         | 8          | 2          | 22         | Battery current       | 0.001A  | -4194 .. 4194 A     | 0x3FFFFF
+// 66         | 8          | 2          | 22         | Battery current       | 0.001A  | -4194 .. 4194 A     | 0x3FFFFF | 0x1FFFFF
 // 88         | 11         | 0          | 20         | Consumed Ah           | 0.1Ah   | -104.857 .. 0 Ah    | 0x0FFFFF
 // 108        | 13         | 4          | 10         | State of charge       | 0.1%    | 0 .. 100%           | 0x3FF
 
@@ -25,7 +25,7 @@ type BatteryMonitorRecord struct {
 	AlarmReason    uint16                        `Description:"Alarm reason"`
 	AuxVoltage     float64                       `Description:"Aux voltage" Unit:"V"`
 	MidVoltage     float64                       `Description:"Mid voltage" Unit:"V"`
-	Temperature    float64                       `Description:"Temperature" Unit:"K"`
+	Temperature    float64                       `Description:"Temperature" Unit:"°C"`
 	AuxMode        victronDefinitions.BmvAuxMode `Description:"Aux mode"`
 	BatteryCurrent float64                       `Description:"Battery current" Unit:"A"`
 	ConsumedAh     float64                       `Description:"Consumed Ah" Unit:"Ah"`
@@ -68,11 +68,11 @@ func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error
 		}
 	case victronDefinitions.BmvAuxModeTemperature:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
-			ret.Temperature = float64(v) / 100
+			ret.Temperature = float64(v)/100 - 273.15
 		}
 	}
 
-	if v := (binary.LittleEndian.Uint32(inp[8:12]) >> 2) & 0x3FFFFF; v != 0x3FFFFF {
+	if v := (binary.LittleEndian.Uint32(inp[8:12]) >> 2) & 0x3FFFFF; v != 0x3FFFFF && v != 0x1FFFFF {
 		ret.BatteryCurrent = float64(int32(v)) / 1000
 	} else {
 		ret.BatteryCurrent = math.NaN()
