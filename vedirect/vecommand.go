@@ -1,73 +1,11 @@
 package vedirect
 
 import (
-	"bytes"
-	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"github.com/koestler/go-victron/veproduct"
 	"log"
 	"strconv"
 )
-
-func computeChecksum(cmd byte, data []byte) (checksum byte) {
-	checksum = byte(0x55)
-	checksum -= cmd
-	for _, v := range data {
-		checksum -= v
-	}
-	return
-}
-
-func (vd *Vedirect) SendVeCommand(cmd VeCommand, data []byte) (err error) {
-	vd.debugPrintf("vedirect: SendVeCommand begin")
-
-	checksum := computeChecksum(byte(cmd), data)
-	str := fmt.Sprintf(":%X%X%X\n", cmd, data, checksum)
-
-	_, err = vd.Write([]byte(str))
-
-	vd.debugPrintf("vedirect: SendVeCommand end")
-	return
-}
-
-func (vd *Vedirect) VeCommandPing() (err error) {
-	vd.debugPrintf("vedirect: VeCommandPing begin")
-
-	err = vd.SendVeCommand(VeCommandPing, []byte{})
-	if err != nil {
-		vd.debugPrintf("vedirect: VeCommandPing end err=%v", err)
-		return err
-	}
-
-	_, err = vd.RecvVeResponse()
-	if err != nil {
-		vd.debugPrintf("vedirect: VeCommandPing end err=%v", err)
-		return err
-	}
-
-	vd.debugPrintf("vedirect: VeCommandPing end")
-	return nil
-}
-
-func (vd *Vedirect) VeCommandDeviceId() (deviceId veproduct.Product, err error) {
-	vd.debugPrintf("vedirect: VeCommandDeviceId begin")
-
-	rawValue, err := vd.VeCommand(VeCommandDeviceId, 0)
-	if err != nil {
-		vd.debugPrintf("vedirect: VeCommandDeviceId end err=%v", err)
-		return 0, err
-	}
-
-	deviceId = veproduct.Product(littleEndianBytesToUint(rawValue))
-	if len(deviceId.String()) < 1 {
-		vd.debugPrintf("vedirect: VeCommandDeviceId end unknown deviceId=%x", rawValue)
-		return 0, fmt.Errorf("unknownw deviceId=%x", rawValue)
-	}
-
-	vd.debugPrintf("vedirect: VeCommandDeviceId end deviceId=%x", deviceId)
-	return deviceId, nil
-}
 
 func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte, err error) {
 	vd.debugPrintf("vedirect: VeCommand begin command=%v, address=%x", command, address)
@@ -78,14 +16,14 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 		param = append(id, 0x00)
 	}
 
-	err = vd.SendVeCommand(command, param)
+	err = vd.sendVeCommand(command, param)
 	if err != nil {
 		vd.debugPrintf("vedirect: VeCommand end err=%v", err)
 		return
 	}
 
 	var responseData []byte
-	responseData, err = vd.RecvVeResponse()
+	responseData, err = vd.recvVeResponse()
 	if err != nil {
 		vd.debugPrintf("vedirect: VeCommand end err=%v", err)
 		return
@@ -148,51 +86,7 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 	return
 }
 
-func littleEndianBytesToUint(bytes []byte) (res uint64) {
-	for i, b := range bytes {
-		res |= uint64(b) << uint(i*8)
-		if i >= 7 {
-			break
-		}
-	}
-	return
-}
-
-func littleEndianBytesToInt(input []byte) (res int64) {
-	length := len(input)
-	buf := bytes.NewReader(input)
-	var err error
-
-	switch length {
-	case 1:
-		var v int8
-		err = binary.Read(buf, binary.LittleEndian, &v)
-		res = int64(v)
-	case 2:
-		var v int16
-		err = binary.Read(buf, binary.LittleEndian, &v)
-		res = int64(v)
-	case 4:
-		var v int32
-		err = binary.Read(buf, binary.LittleEndian, &v)
-		res = int64(v)
-	case 8:
-		var v int64
-		err = binary.Read(buf, binary.LittleEndian, &v)
-		res = v
-	default:
-		log.Printf("vecommand: littleEndianBytesToInt: unhandled length=%v, input=%x", length, input)
-		return 0
-	}
-
-	if err != nil {
-		log.Printf("vecommand: littleEndianBytesToInt: binary.Read failed: %v", err)
-		return 0
-	}
-
-	return
-}
-
+// VeCommandGet fetches the addressed register and returns it's raw value or an error.
 func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	vd.debugPrintf("vedirect: VeCommandGet begin address=%x", address)
 
@@ -239,74 +133,43 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	return nil, err
 }
 
-func (vd *Vedirect) VeCommandGetUint(address uint16) (value uint64, err error) {
-	vd.debugPrintf("vedirect: VeCommandGetUint begin")
+func (vd *Vedirect) sendVeCommand(cmd VeCommand, data []byte) (err error) {
+	vd.debugPrintf("vedirect: sendVeCommand begin")
 
-	rawValue, err := vd.VeCommandGet(address)
-	if err != nil {
-		vd.debugPrintf("vedirect: VeCommandGetUint end err=%v", err)
-		return
-	}
+	checksum := computeChecksum(byte(cmd), data)
+	str := fmt.Sprintf(":%X%X%X\n", cmd, data, checksum)
 
-	value = littleEndianBytesToUint(rawValue)
-	vd.debugPrintf("vedirect: VeCommandGetUint end value=%v", value)
+	_, err = vd.write([]byte(str))
+
+	vd.debugPrintf("vedirect: sendVeCommand end")
 	return
 }
 
-func (vd *Vedirect) VeCommandGetInt(address uint16) (value int64, err error) {
-	vd.debugPrintf("vedirect: VeCommandGetInt begin")
-
-	rawValue, err := vd.VeCommandGet(address)
-	if err != nil {
-		vd.debugPrintf("vedirect: VeCommandGetInt end err=%v", err)
-		return
-	}
-	value = littleEndianBytesToInt(rawValue)
-
-	vd.debugPrintf("vedirect: VeCommandGetInt end value=%v", value)
-	return
-}
-
-func (vd *Vedirect) VeCommandGetString(address uint16) (value string, err error) {
-	vd.debugPrintf("vedirect: VeCommandGetString begin")
-
-	rawValue, err := vd.VeCommandGet(address)
-	if err != nil {
-		vd.debugPrintf("vedirect: VeCommandGetString end err=%v", err)
-		return
-	}
-
-	value = string(bytes.TrimRightFunc(rawValue, func(r rune) bool { return r == 0 }))
-
-	vd.debugPrintf("vedirect: VeCommandGetString end value=%v", value)
-	return
-}
-
-func (vd *Vedirect) RecvVeResponse() (data []byte, err error) {
-	vd.debugPrintf("vedirect: RecvVeResponse begin")
+func (vd *Vedirect) recvVeResponse() (data []byte, err error) {
+	vd.debugPrintf("vedirect: recvVeResponse begin")
 
 	for {
 		// search start marker
-		_, err = vd.RecvUntil(':')
+		_, err = vd.recvUntil(':')
 		if err != nil {
-			vd.debugPrintf("vedirect: RecvVeResponse end err=%v", err)
+			vd.debugPrintf("vedirect: recvVeResponse end err=%v", err)
 			return nil, err
 		}
 
 		// search end marker
-		data, err = vd.RecvUntil('\n')
+		data, err = vd.recvUntil('\n')
 		if err != nil {
-			vd.debugPrintf("vedirect: RecvVeResponse end err=%v", err)
+			vd.debugPrintf("vedirect: recvVeResponse end err=%v", err)
 			return nil, err
 		}
 
 		if len(data) > 0 && data[0] == 'A' {
-			vd.debugPrintf("vedirect: RecvVeResponse async message received; ignore and read next response")
+			vd.debugPrintf("vedirect: recvVeResponse async message received; ignore and read next response")
 		} else {
 			break
 		}
 	}
 
-	vd.debugPrintf("vedirect: RecvVeResponse end")
+	vd.debugPrintf("vedirect: recvVeResponse end")
 	return
 }

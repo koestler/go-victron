@@ -1,76 +1,133 @@
+// Package vedirect implements the VE.Direct serial protocol.
 package vedirect
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
-	"github.com/tarm/serial"
-	"log"
-	"time"
+	"github.com/koestler/go-victron/veproduct"
+	"io"
 )
 
+type IoPort interface {
+	io.ReadWriteCloser
+	Flush() error
+}
+
+type Config struct {
+	ioPort      IoPort
+	debugLogger io.Writer
+	ioLogger    io.Writer
+}
+
 type Vedirect struct {
-	ioPort         *serial.Port
+	cfg            *Config
 	reader         *bufio.Reader
-	logDebug       bool
 	logDebugIndent int
+	lastWritten    []byte
 }
 
-func Open(portName string, logDebug bool) (*Vedirect, error) {
-	if logDebug {
-		log.Printf("vedirect: Open portName=%v", portName)
+// NewVedirect creates a new Vedirect instance.
+func NewVedirect(cfg *Config) *Vedirect {
+	return &Vedirect{
+		cfg,
+		bufio.NewReader(cfg.ioPort),
+		0,
+		nil,
 	}
+}
 
-	options := serial.Config{
-		Name:        portName,
-		Baud:        19200,
-		ReadTimeout: time.Millisecond * 200,
-	}
+// FlushReceiver flushes the underlying receiver buffer.
+// Todo: remove this function; do it automatically after some inactivity.
+func (vd *Vedirect) FlushReceiver() {
+	vd.debugPrintf("vedirect: FlushReceiver begin")
+	vd.flushReceiver()
+	vd.debugPrintf("vedirect: FlushReceiver end")
+}
 
-	ioHandle, err := serial.OpenPort(&options)
+// Ping sends a ping command to the device and waits for a response.
+func (vd *Vedirect) Ping() (err error) {
+	vd.debugPrintf("vedirect: VeCommandPing begin")
+
+	err = vd.sendVeCommand(VeCommandPing, []byte{})
 	if err != nil {
-		return nil, fmt.Errorf("cannot open port: %v", portName)
+		vd.debugPrintf("vedirect: VeCommandPing end err=%v", err)
+		return err
 	}
 
-	if logDebug {
-		log.Printf("vedirect: Open succeeded portName=%v", portName)
-	}
-
-	return &Vedirect{ioHandle, bufio.NewReader(ioHandle), logDebug, 0}, nil
-}
-
-func (vd *Vedirect) Close() (err error) {
-	vd.debugPrintf("vedirect: Close begin")
-	err = vd.ioPort.Close()
-	vd.debugPrintf("vedirect: Close end err=%v", err)
-	return
-}
-
-func (vd *Vedirect) Write(b []byte) (n int, err error) {
-	vd.debugPrintf("vedirect: Write b=%s len=%v", b, len(b))
-	n, err = vd.ioPort.Write(b)
+	_, err = vd.recvVeResponse()
 	if err != nil {
-		log.Printf("vedirect: Write error: %v\n", err)
+		vd.debugPrintf("vedirect: VeCommandPing end err=%v", err)
+		return err
+	}
+
+	vd.debugPrintf("vedirect: VeCommandPing end")
+	return nil
+}
+
+// GetDeviceId fetches what Victron Energy calls the device id.
+// It is not a serial number, but it is a product id which can be decoded using veproduct.
+func (vd *Vedirect) GetDeviceId() (deviceId veproduct.Product, err error) {
+	vd.debugPrintf("vedirect: VeCommandDeviceId begin")
+
+	rawValue, err := vd.VeCommand(VeCommandDeviceId, 0)
+	if err != nil {
+		vd.debugPrintf("vedirect: VeCommandDeviceId end err=%v", err)
 		return 0, err
 	}
+
+	deviceId = veproduct.Product(littleEndianBytesToUint(rawValue))
+	if len(deviceId.String()) < 1 {
+		vd.debugPrintf("vedirect: VeCommandDeviceId end unknown deviceId=%x", rawValue)
+		return 0, fmt.Errorf("unknownw deviceId=%x", rawValue)
+	}
+
+	vd.debugPrintf("vedirect: VeCommandDeviceId end deviceId=%x", deviceId)
+	return deviceId, nil
+}
+
+// GetUint fetches the addressed register assuming it contains an unsigned integer of 1, 2, 4 or 8 bytes.
+func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
+	vd.debugPrintf("vedirect: VeCommandGetUint begin")
+
+	rawValue, err := vd.VeCommandGet(address)
+	if err != nil {
+		vd.debugPrintf("vedirect: VeCommandGetUint end err=%v", err)
+		return
+	}
+
+	value = littleEndianBytesToUint(rawValue)
+	vd.debugPrintf("vedirect: VeCommandGetUint end value=%v", value)
 	return
 }
 
-func (vd *Vedirect) RecvFlush() {
-	vd.debugPrintf("vedirect: RecvFlush begin")
+// GetInt fetches the addressed register assuming it contains a signed integer of 1, 2, 4 or 8 bytes.
+func (vd *Vedirect) GetInt(address uint16) (value int64, err error) {
+	vd.debugPrintf("vedirect: VeCommandGetInt begin")
 
-	if err := vd.ioPort.Flush(); err != nil {
-		vd.debugPrintf("vedirect: RecvFlush err=%v", err)
+	rawValue, err := vd.VeCommandGet(address)
+	if err != nil {
+		vd.debugPrintf("vedirect: VeCommandGetInt end err=%v", err)
+		return
 	}
-	vd.reader.Reset(vd.ioPort)
+	value = littleEndianBytesToInt(rawValue)
 
-	vd.debugPrintf("vedirect: RecvFlush end")
+	vd.debugPrintf("vedirect: VeCommandGetInt end value=%v", value)
+	return
 }
 
-func (vd *Vedirect) RecvUntil(needle byte) (data []byte, err error) {
-	vd.debugPrintf("vedirect: RecvUntil needle=%c", needle)
-	data, err = vd.reader.ReadBytes(needle)
-	if err == nil {
-		data = data[:len(data)-1] // exclude delimiter
+// GetString fetches the addressed register assuming it contains a string of arbitrary length.
+func (vd *Vedirect) GetString(address uint16) (value string, err error) {
+	vd.debugPrintf("vedirect: VeCommandGetString begin")
+
+	rawValue, err := vd.VeCommandGet(address)
+	if err != nil {
+		vd.debugPrintf("vedirect: VeCommandGetString end err=%v", err)
+		return
 	}
+
+	value = string(bytes.TrimRightFunc(rawValue, func(r rune) bool { return r == 0 }))
+
+	vd.debugPrintf("vedirect: VeCommandGetString end value=%v", value)
 	return
 }
