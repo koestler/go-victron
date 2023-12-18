@@ -47,7 +47,30 @@ func TestDecodeBatteryMonitorRecord(t *testing.T) {
 			ConsumedAh:     0.0,
 			StateOfCharge:  100.0,
 		},
-		// todo: add test case for temperature
+		"ffffc60400007d73feff7fffffffff12": {
+			Ttg:            math.NaN(),
+			BatteryVoltage: 12.22,
+			AlarmReason:    0,
+			AuxVoltage:     math.NaN(),
+			MidVoltage:     math.NaN(),
+			Temperature:    22.5,
+			AuxMode:        victronDefinitions.BmvAuxModeTemperature,
+			BatteryCurrent: math.NaN(),
+			ConsumedAh:     math.NaN(),
+			StateOfCharge:  math.NaN(),
+		},
+		"fffff80400008971feff7fffffffff5c": {
+			Ttg:            math.NaN(),
+			BatteryVoltage: 12.72,
+			AlarmReason:    0,
+			AuxVoltage:     math.NaN(),
+			MidVoltage:     math.NaN(),
+			Temperature:    17.5,
+			AuxMode:        victronDefinitions.BmvAuxModeTemperature,
+			BatteryCurrent: math.NaN(),
+			ConsumedAh:     math.NaN(),
+			StateOfCharge:  math.NaN(),
+		},
 	}
 
 	for stimuli, expResp := range cases {
