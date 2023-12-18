@@ -9,7 +9,8 @@ import (
 
 func TestVedirect(t *testing.T) {
 	io := NewLookupIOPort(t, map[string]string{
-		":154\n": ":51641F9\n",
+		":154\n":       ":51641F9\n",
+		":7F0ED0071\n": ":7F0ED009600DB\n",
 	})
 	defer io.CheckEverythingHeard()
 	defer io.CheckClosed()
@@ -26,6 +27,13 @@ func TestVedirect(t *testing.T) {
 
 	if err := vd.Ping(); err != nil {
 		t.Fatalf("cannot ping: %v", err)
+	}
+
+	// fetch Battery Maximum Current
+	if got, err := vd.GetUint(0xEDF0); err != nil {
+		t.Fatalf("cannot get 0xEDF0: %v", err)
+	} else if expect := uint64(0x96); expect != got {
+		t.Fatalf("fetching Battery Maximum Current: expected 0x%x but 0x%x", expect, got)
 	}
 
 	if err := io.Close(); err != nil {
@@ -61,7 +69,6 @@ func (l *LookupIOPort) Write(b []byte) (n int, err error) {
 	if rx, ok := l.lookup(b); !ok {
 		l.t.Errorf("LookupIOPort: Write: lookup failed: len(b)=%d, b=%s", len(b), b)
 	} else {
-		l.t.Logf("write to buffer: %s", rx)
 		l.buff.Write(rx)
 	}
 
@@ -70,7 +77,6 @@ func (l *LookupIOPort) Write(b []byte) (n int, err error) {
 
 func (l *LookupIOPort) Read(b []byte) (n int, err error) {
 	n, err = l.buff.Read(b)
-	l.t.Logf("read from buffer: b=%s, n=%d, err=%s", b[:n], n, err)
 	return
 }
 
