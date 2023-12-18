@@ -52,6 +52,15 @@ func TestProduct_String(t *testing.T) {
 	if expect, got := "Phoenix Smart IP43 Charger 24|16 (3)", PhoenixSmartIP43Charger24_16_3.String(); expect != got {
 		t.Errorf("expect %#v but got %#v", expect, got)
 	}
+
+	if expect, got := "", Product(0x1234).String(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := "", TypeUnknown.String(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
 }
 
 func Benchmark_String(b *testing.B) {

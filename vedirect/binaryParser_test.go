@@ -30,6 +30,7 @@ func TestLittleEndianBytesToInt(t *testing.T) {
 		expect int64
 	}{
 		{[]byte{0x00, 0x00}, 0},
+		{[]byte{0x01}, 1},
 		{[]byte{0x01, 0x00}, 1},
 		{[]byte{0x01, 0x00, 0x00, 0x00}, 1},
 		{[]byte{0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, 1},
@@ -48,5 +49,9 @@ func TestLittleEndianBytesToInt(t *testing.T) {
 		if tc.expect != got {
 			t.Errorf("expect %d but got %d for input %x", tc.expect, got, tc.inp)
 		}
+	}
+
+	if _, err := littleEndianBytesToInt([]byte{0x01, 0x00, 0x00}); err == nil {
+		t.Errorf("expect error for length=3")
 	}
 }
