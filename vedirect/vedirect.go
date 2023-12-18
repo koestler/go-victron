@@ -4,20 +4,21 @@ package vedirect
 import (
 	"bufio"
 	"bytes"
+	"encoding/binary"
 	"fmt"
-	"github.com/koestler/go-victron/veproduct"
 	"io"
 )
 
-type IoPort interface {
+// IOPort is the interface for the underlying serial port. It is implemented by e.g. tarm/serial.
+type IOPort interface {
 	io.ReadWriteCloser
 	Flush() error
 }
 
 type Config struct {
-	ioPort      IoPort
-	debugLogger io.Writer
-	ioLogger    io.Writer
+	IOPort      IOPort    // mandatory: an implementation of a serial port
+	DebugLogger io.Writer // optional: a logger for debug output; if nil, no debug output is written
+	IoLogger    io.Writer // optional: a logger for all io operations; if nil, no io output is written
 }
 
 type Vedirect struct {
@@ -27,14 +28,20 @@ type Vedirect struct {
 	lastWritten    []byte
 }
 
+var ErrNoIOPort = fmt.Errorf("no io port")
+
 // NewVedirect creates a new Vedirect instance.
-func NewVedirect(cfg *Config) *Vedirect {
+func NewVedirect(cfg *Config) (*Vedirect, error) {
+	if cfg.IoLogger == nil {
+		return nil, ErrNoIOPort
+	}
+
 	return &Vedirect{
 		cfg,
-		bufio.NewReader(cfg.ioPort),
+		bufio.NewReader(cfg.IOPort),
 		0,
 		nil,
-	}
+	}, nil
 }
 
 // FlushReceiver flushes the underlying receiver buffer.
@@ -67,7 +74,7 @@ func (vd *Vedirect) Ping() (err error) {
 
 // GetDeviceId fetches what Victron Energy calls the device id.
 // It is not a serial number, but it is a product id which can be decoded using veproduct.
-func (vd *Vedirect) GetDeviceId() (deviceId veproduct.Product, err error) {
+func (vd *Vedirect) GetDeviceId() (deviceId uint16, err error) {
 	vd.debugPrintf("vedirect: VeCommandDeviceId begin")
 
 	rawValue, err := vd.VeCommand(VeCommandDeviceId, 0)
@@ -76,11 +83,7 @@ func (vd *Vedirect) GetDeviceId() (deviceId veproduct.Product, err error) {
 		return 0, err
 	}
 
-	deviceId = veproduct.Product(littleEndianBytesToUint(rawValue))
-	if len(deviceId.String()) < 1 {
-		vd.debugPrintf("vedirect: VeCommandDeviceId end unknown deviceId=%x", rawValue)
-		return 0, fmt.Errorf("unknownw deviceId=%x", rawValue)
-	}
+	deviceId = binary.LittleEndian.Uint16(rawValue)
 
 	vd.debugPrintf("vedirect: VeCommandDeviceId end deviceId=%x", deviceId)
 	return deviceId, nil
@@ -110,7 +113,7 @@ func (vd *Vedirect) GetInt(address uint16) (value int64, err error) {
 		vd.debugPrintf("vedirect: VeCommandGetInt end err=%v", err)
 		return
 	}
-	value = littleEndianBytesToInt(rawValue)
+	value, err = littleEndianBytesToInt(rawValue)
 
 	vd.debugPrintf("vedirect: VeCommandGetInt end value=%v", value)
 	return

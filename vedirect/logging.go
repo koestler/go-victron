@@ -7,7 +7,7 @@ import (
 
 func (vd *Vedirect) debugPrintf(format string, v ...interface{}) {
 	// check if debug output is enabled
-	if vd.cfg.debugLogger == nil {
+	if vd.cfg.DebugLogger == nil {
 		return
 	}
 
@@ -20,7 +20,7 @@ func (vd *Vedirect) debugPrintf(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
 	s = strings.Replace(s, "\n", "\\n", -1)
 
-	_, _ = fmt.Fprint(vd.cfg.debugLogger, strings.Repeat("  ", vd.logDebugIndent)+s+"\n")
+	_, _ = fmt.Fprint(vd.cfg.DebugLogger, strings.Repeat("  ", vd.logDebugIndent)+s+"\n")
 
 	if vd.logDebugIndent < 64 && strings.Contains(intro, " begin") {
 		vd.logDebugIndent += 1
@@ -28,9 +28,9 @@ func (vd *Vedirect) debugPrintf(format string, v ...interface{}) {
 }
 
 func (vd *Vedirect) printIO(oup []byte) {
-	if vd.cfg.ioLogger == nil {
+	if vd.cfg.IoLogger == nil {
 		return
 	}
 
-	_, _ = fmt.Fprintf(vd.cfg.ioLogger, "\"%x\": \"%x\"\n", vd.lastWritten, oup)
+	_, _ = fmt.Fprintf(vd.cfg.IoLogger, "\"%x\": \"%x\"\n", vd.lastWritten, oup)
 }

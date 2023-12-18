@@ -32,7 +32,8 @@ type TextRegisterStruct struct {
 // EnumRegisterStruct is for registers that store enum values.
 type EnumRegisterStruct struct {
 	RegisterStruct
-	Bit  int            // when positive, the specified bit is used as a boolean 0/1
+	Bit int // when positive, the specified bit is used as a boolean 0/1
+	// todo: remove this bit stuff; add a new multi enum register type instead
 	Enum map[int]string // a map uf enum index to enum string value
 }
 

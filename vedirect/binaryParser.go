@@ -3,7 +3,7 @@ package vedirect
 import (
 	"bytes"
 	"encoding/binary"
-	"log"
+	"fmt"
 )
 
 func littleEndianBytesToUint(bytes []byte) (res uint64) {
@@ -16,10 +16,9 @@ func littleEndianBytesToUint(bytes []byte) (res uint64) {
 	return
 }
 
-func littleEndianBytesToInt(input []byte) (res int64) {
+func littleEndianBytesToInt(input []byte) (res int64, err error) {
 	length := len(input)
 	buf := bytes.NewReader(input)
-	var err error
 
 	switch length {
 	case 1:
@@ -39,13 +38,11 @@ func littleEndianBytesToInt(input []byte) (res int64) {
 		err = binary.Read(buf, binary.LittleEndian, &v)
 		res = v
 	default:
-		log.Printf("vecommand: littleEndianBytesToInt: unhandled length=%v, input=%x", length, input)
-		return 0
+		return 0, fmt.Errorf("vecommand: littleEndianBytesToInt: unhandled length=%v, input=%x", length, input)
 	}
 
 	if err != nil {
-		log.Printf("vecommand: littleEndianBytesToInt: binary.Read failed: %v", err)
-		return 0
+		return 0, fmt.Errorf("vecommand: littleEndianBytesToInt: binary.Read failed: %w", err)
 	}
 
 	return
