@@ -15,24 +15,31 @@ type IOPort interface {
 	Flush() error
 }
 
-type Config struct {
-	IOPort      IOPort    // mandatory: an implementation of a serial port
-	DebugLogger io.Writer // optional: a logger for debug output; if nil, no debug output is written
-	IoLogger    io.Writer // optional: a logger for all io operations; if nil, no io output is written
+// Logger is the interface for a logger. It is implemented by e.g. log.Logger.
+type Logger interface {
+	Printf(format string, v ...any)
 }
 
+// Config is the configuration for a Vedirect instance.
+type Config struct {
+	IOPort      IOPort // mandatory: an implementation of a serial port
+	DebugLogger Logger // optional: a logger for debug output; if nil, no debug output is written
+	IoLogger    Logger // optional: a logger for all io operations; if nil, no io output is written
+}
+
+// Vedirect is the main struct for the VE.Direct serial protocol driver.
+// There should be one instance per physical device.
 type Vedirect struct {
 	cfg            *Config
 	reader         *bufio.Reader
 	logDebugIndent int
-	lastWritten    []byte
 }
 
 var ErrNoIOPort = fmt.Errorf("no io port")
 
 // NewVedirect creates a new Vedirect instance.
 func NewVedirect(cfg *Config) (*Vedirect, error) {
-	if cfg.IoLogger == nil {
+	if cfg.IOPort == nil {
 		return nil, ErrNoIOPort
 	}
 
@@ -40,7 +47,6 @@ func NewVedirect(cfg *Config) (*Vedirect, error) {
 		cfg,
 		bufio.NewReader(cfg.IOPort),
 		0,
-		nil,
 	}, nil
 }
 

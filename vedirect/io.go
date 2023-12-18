@@ -9,10 +9,7 @@ func (vd *Vedirect) write(b []byte) (n int, err error) {
 		log.Printf("vedirect: write error: %v\n", err)
 		return 0, err
 	}
-	if vd.cfg.IoLogger != nil {
-		vd.lastWritten = b
-	}
-
+	vd.ioLogger("tx", b)
 	return
 }
 
@@ -20,8 +17,8 @@ func (vd *Vedirect) recvUntil(needle byte) (data []byte, err error) {
 	vd.debugPrintf("vedirect: recvUntil needle=%c", needle)
 	data, err = vd.reader.ReadBytes(needle)
 	if err == nil {
+		vd.ioLogger("rx", data)
 		data = data[:len(data)-1] // exclude delimiter
-		vd.printIO(data)
 	}
 	return
 }

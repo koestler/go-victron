@@ -8,16 +8,15 @@ import (
 	"github.com/koestler/go-victron/veproduct"
 	"github.com/koestler/go-victron/veregisters"
 	"github.com/tarm/serial"
-	"io"
 	"time"
 )
 
 // Config is the configuration for the Api.
 // PortName is the only mandatory field.
 type Config struct {
-	PortName    string    // mandatory: the serial device: e.g. /dev/ttyUSB0
-	DebugLogger io.Writer // optional: a logger for debug output; if nil, no debug output is written
-	IoLogger    io.Writer // optional: a logger for all io operations; if nil, no io output is written
+	PortName    string          // mandatory: the serial device: e.g. /dev/ttyUSB0
+	DebugLogger vedirect.Logger // optional: a logger for debug output; if nil, no debug output is written
+	IoLogger    vedirect.Logger // optional: a logger for all io operations; if nil, no io output is written
 }
 
 type Api struct {

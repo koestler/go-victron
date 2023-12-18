@@ -20,17 +20,16 @@ func (vd *Vedirect) debugPrintf(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
 	s = strings.Replace(s, "\n", "\\n", -1)
 
-	_, _ = fmt.Fprint(vd.cfg.DebugLogger, strings.Repeat("  ", vd.logDebugIndent)+s+"\n")
+	vd.cfg.DebugLogger.Printf("%s%s", strings.Repeat("  ", vd.logDebugIndent), s)
 
 	if vd.logDebugIndent < 64 && strings.Contains(intro, " begin") {
 		vd.logDebugIndent += 1
 	}
 }
 
-func (vd *Vedirect) printIO(oup []byte) {
+func (vd *Vedirect) ioLogger(prefix string, d []byte) {
 	if vd.cfg.IoLogger == nil {
 		return
 	}
-
-	_, _ = fmt.Fprintf(vd.cfg.IoLogger, "\"%x\": \"%x\"\n", vd.lastWritten, oup)
+	vd.cfg.IoLogger.Printf("%s: %s\n", prefix, strings.ReplaceAll(string(d), "\n", "\\n"))
 }
