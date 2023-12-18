@@ -1,3 +1,4 @@
+// Package veregisters contains the register definitions for the VE.Direct protocol.
 package veregisters
 
 import (
@@ -82,7 +83,7 @@ func NewTextRegisterStruct(
 }
 
 // NewEnumRegisterStruct is a shortcut to create a RegisterStruct and embed it into a EnumRegisterStruct.
-// Also different key types for the enum map are supported as long as they are integers.
+// Also, different key types for the enum map are supported as long as they are integers.
 func NewEnumRegisterStruct[K constraints.Integer, M map[K]string](
 	category, name, description string,
 	address uint16,

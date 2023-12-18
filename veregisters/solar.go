@@ -2,7 +2,7 @@ package veregisters
 
 import "github.com/koestler/go-victron/victronDefinitions"
 
-// appendSolar appends all registers of solar chargers to the given RegisterList.
+// AppendSolar appends all registers of solar chargers to the given RegisterList.
 // The list is based on:
 // https://www.victronenergy.com/upload/documents/BlueSolar-HEX-protocol.pdf
 func AppendSolar(rl *RegisterList) {
