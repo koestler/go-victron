@@ -12,11 +12,11 @@ import (
 )
 
 // Config is the configuration for the Api.
-// PortName is the only mandatory field.
+// SerialDevice is the only mandatory field.
 type Config struct {
-	PortName    string          // mandatory: the serial device: e.g. /dev/ttyUSB0
-	DebugLogger vedirect.Logger // optional: a logger for debug output; if nil, no debug output is written
-	IoLogger    vedirect.Logger // optional: a logger for all io operations; if nil, no io output is written
+	SerialDevice string          // mandatory: the file path of the serial device: E.g. /dev/ttyUSB0
+	DebugLogger  vedirect.Logger // optional: a logger for debug output; if nil, no debug output is written
+	IoLogger     vedirect.Logger // optional: a logger for all io operations; if nil, no io output is written
 }
 
 type Api struct {
@@ -32,17 +32,17 @@ type Api struct {
 // - gets the device id and uses it to get the product type
 // - gets the register list for the product type
 // Make sure to defer Api.Close() after creating a new Api instance.
-func NewApi(config Config) (*Api, error) {
+func NewApi(config *Config) (*Api, error) {
 	sa := Api{}
 
 	serialConfig := serial.Config{
-		Name:        config.PortName,
+		Name:        config.SerialDevice,
 		Baud:        19200,
 		ReadTimeout: time.Millisecond * 200,
 	}
 
 	if ioHandle, err := serial.OpenPort(&serialConfig); err != nil {
-		return nil, fmt.Errorf("cannot open port %s: %w", config.PortName, err)
+		return nil, fmt.Errorf("cannot open port %s: %w", config.SerialDevice, err)
 	} else {
 		sa.IoHandle = ioHandle
 	}
