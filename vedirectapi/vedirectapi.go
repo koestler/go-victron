@@ -145,29 +145,14 @@ func (sa *Api) FetchEnumRegister(r veregisters.EnumRegisterStruct) (enumIdx int,
 	return
 }
 
-type NumberRegisterValue struct {
-	Register veregisters.NumberRegisterStruct
-	Value    float64
-}
-
-type TextRegisterValue struct {
-	Register veregisters.TextRegisterStruct
-	Value    string
-}
-
-type EnumRegisterValue struct {
-	Register  veregisters.EnumRegisterStruct
-	EnumIdx   int
-	EnumValue string
-}
-
+// RegisterValues is a container for Number, Text and Enum Registers and their values.
 type RegisterValues struct {
 	NumberValues map[string]NumberRegisterValue
 	TextValues   map[string]TextRegisterValue
 	EnumValues   map[string]EnumRegisterValue
 }
 
-// FetchRegisterList fetches all registers from the register list and returns them as a RegisterValues struct.
+// FetchRegisterList fetches all registers from the given list and returns them as a RegisterValues struct.
 // When an error occurs, fetching is aborted and the error is returned.
 func (sa *Api) FetchRegisterList(rl veregisters.RegisterList) (RegisterValues, error) {
 	rv := RegisterValues{
@@ -213,7 +198,12 @@ func (sa *Api) FetchRegisterList(rl veregisters.RegisterList) (RegisterValues, e
 	return rv, nil
 }
 
-// StreamRegisterList fetches all registers from the register list and calls the given handlers for each register.
+// FetchAllRegisters fetches all available registers and returns them as a RegisterValues struct.
+func (sa *Api) FetchAllRegisters() (RegisterValues, error) {
+	return sa.FetchRegisterList(sa.Registers)
+}
+
+// StreamRegisterList fetches all registers from the given list and calls the given handlers for each register.
 // When an error occurs, fetching is aborted and the error is returned.
 // This is useful since fetching all registers of a device can take up to a second. This way, you can start processing
 // the values as soon as they are available.
@@ -248,4 +238,13 @@ func (sa *Api) StreamRegisterList(
 	}
 
 	return nil
+}
+
+// StreamAllRegisters fetches all available registers and calls the given handlers for each register.
+func (sa *Api) StreamAllRegisters(
+	handleNumber func(register veregisters.NumberRegisterStruct, value float64),
+	handleText func(register veregisters.TextRegisterStruct, value string),
+	handleEnum func(register veregisters.EnumRegisterStruct, enumIdx int, enumValue string),
+) error {
+	return sa.StreamRegisterList(sa.Registers, handleNumber, handleText, handleEnum)
 }
