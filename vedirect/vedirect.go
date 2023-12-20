@@ -107,7 +107,6 @@ func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
 
 	rawValue, err := vd.VeCommandGet(address)
 	if err != nil {
-		vd.debugPrintf("GetUint end err=%v", err)
 		return
 	}
 

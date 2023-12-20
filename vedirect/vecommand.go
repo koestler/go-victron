@@ -3,7 +3,6 @@ package vedirect
 import (
 	"encoding/hex"
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 )
@@ -94,7 +93,7 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 		rawValues, err = vd.VeCommand(VeCommandGet, address)
 		if err != nil {
 			if try > 0 {
-				log.Printf("retry try=%d err=%v", try, err)
+				vd.debugPrintf("retry try=%d err=%v", try, err)
 			}
 			continue
 		}
@@ -104,7 +103,7 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 		if address != responseAddress {
 			err = fmt.Errorf("address != responseAddress, 0x%X != 0x%X", address, responseAddress)
 			if try > 0 {
-				log.Printf("retry try=%d err=%v", try, err)
+				vd.debugPrintf("retry try=%d err=%v", try, err)
 			}
 			continue
 		}
@@ -114,7 +113,7 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 		if e := responseError(responseFlag); e != nil {
 			err = e
 			if try > 0 {
-				log.Printf("retry try=%d err=%v", try, err)
+				vd.debugPrintf("retry try=%d err=%v", try, err)
 			}
 			continue
 		}
