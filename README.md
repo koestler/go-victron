@@ -1,5 +1,6 @@
 # go-victron
 [![Audit & Test](https://github.com/koestler/go-victron/actions/workflows/audit.yml/badge.svg)](https://github.com/koestler/go-victron/actions/workflows/audit.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/koestler/go-victron.svg)](https://pkg.go.dev/github.com/koestler/go-victron)
 
 A go implementatino of Victron Energy's VE.Direct and BLE protocols.
 
