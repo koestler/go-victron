@@ -5,7 +5,6 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/binary"
-	"fmt"
 	"io"
 	"time"
 )
@@ -40,12 +39,10 @@ type Vedirect struct {
 	logIoRxBuff    []byte
 }
 
-var ErrNoIOPort = fmt.Errorf("no io port")
-
 // NewVedirect creates a new Vedirect instance.
 func NewVedirect(cfg *Config) (*Vedirect, error) {
 	if cfg.IOPort == nil {
-		return nil, ErrNoIOPort
+		return nil, ErrInvalidConfig
 	}
 
 	vd := &Vedirect{
@@ -67,39 +64,40 @@ func (vd *Vedirect) clearIoLogBuffers() {
 // Ping sends a ping command to the device and waits for a response.
 func (vd *Vedirect) Ping() (err error) {
 	vd.debugPrintf("Ping begin")
+	defer func() {
+		vd.ioLoggerLineEnd("Ping()")
+		vd.debugPrintf("Ping end err=%s", err)
+	}()
 
 	_, err = vd.sendReceive(VeCommandPing, []byte{})
-	if err != nil {
-		vd.debugPrintf("Ping end err=%v", err)
-		return err
-	}
-
-	vd.ioLoggerLineEnd("Ping()")
-	vd.debugPrintf("Ping end")
-	return nil
+	return
 }
 
 // GetDeviceId fetches what Victron Energy calls the device id.
 // It is not a serial number, but it is a product id which can be decoded using veproduct.
 func (vd *Vedirect) GetDeviceId() (deviceId uint16, err error) {
 	vd.debugPrintf("GetDeviceId begin")
+	defer func() {
+		vd.ioLoggerLineEnd("GetDeviceId() = 0x%X", deviceId)
+		vd.debugPrintf("GetDeviceId end deviceId=%x err=%s", deviceId, err)
+	}()
 
 	rawValue, err := vd.VeCommand(VeCommandDeviceId, 0)
 	if err != nil {
-		vd.debugPrintf("GetDeviceId end err=%v", err)
-		return 0, err
+		return
 	}
 
 	deviceId = binary.LittleEndian.Uint16(rawValue)
-
-	vd.ioLoggerLineEnd("GetDeviceId() = 0x%X", deviceId)
-	vd.debugPrintf("GetDeviceId end deviceId=%x", deviceId)
-	return deviceId, nil
+	return
 }
 
 // GetUint fetches the addressed register assuming it contains an unsigned integer of 1, 2, 4 or 8 bytes.
 func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
 	vd.debugPrintf("GetUint begin")
+	defer func() {
+		vd.ioLoggerLineEnd("GetUint(0x%X) = %d", address, value)
+		vd.debugPrintf("GetUint end value=%v end=%s", value, err)
+	}()
 
 	rawValue, err := vd.VeCommandGet(address)
 	if err != nil {
@@ -108,41 +106,39 @@ func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
 	}
 
 	value = littleEndianBytesToUint(rawValue)
-
-	vd.ioLoggerLineEnd("GetUint(0x%X) = %d", address, value)
-	vd.debugPrintf("GetUint end value=%v", value)
 	return
 }
 
 // GetInt fetches the addressed register assuming it contains a signed integer of 1, 2, 4 or 8 bytes.
 func (vd *Vedirect) GetInt(address uint16) (value int64, err error) {
 	vd.debugPrintf("GetInt begin")
+	defer func() {
+		vd.ioLoggerLineEnd("GetInt(0x%X) = %d", address, value)
+		vd.debugPrintf("GetInt end value=%v err=%s", value, err)
+	}()
 
 	rawValue, err := vd.VeCommandGet(address)
 	if err != nil {
-		vd.debugPrintf("GetInt end err=%v", err)
 		return
 	}
-	value, err = littleEndianBytesToInt(rawValue)
 
-	vd.ioLoggerLineEnd("GetInt(0x%X) = %d", address, value)
-	vd.debugPrintf("GetInt end value=%v", value)
+	value, err = littleEndianBytesToInt(rawValue)
 	return
 }
 
 // GetString fetches the addressed register assuming it contains a string of arbitrary length.
 func (vd *Vedirect) GetString(address uint16) (value string, err error) {
 	vd.debugPrintf("GetString begin")
+	defer func() {
+		vd.ioLoggerLineEnd("GetString(0x%X) = %s", address, value)
+		vd.debugPrintf("GetString end value=%v err=%s", value, err)
+	}()
 
 	rawValue, err := vd.VeCommandGet(address)
 	if err != nil {
-		vd.debugPrintf("GetString end err=%v", err)
 		return
 	}
 
 	value = string(bytes.TrimRightFunc(rawValue, func(r rune) bool { return r == 0 }))
-
-	vd.ioLoggerLineEnd("GetString(0x%X) = %s", address, value)
-	vd.debugPrintf("GetString end value=%v", value)
 	return
 }

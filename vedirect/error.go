@@ -1,7 +1,15 @@
 package vedirect
 
-import "errors"
+import (
+	"errors"
+)
 
+// ErrInvalidConfig is returned by NewVedirect if IOPort is missing in the configuration
+var (
+	ErrInvalidConfig = errors.New("invalid configuration")
+)
+
+// Errors for VeCommand, GetUInt, GetInt, GetString
 var (
 	ErrUnknownId        = errors.New("device responded with Unknown Id")
 	ErrorNotSupported   = errors.New("device responded with Not Supported")
