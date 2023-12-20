@@ -17,7 +17,7 @@ type IOPort interface {
 
 // Logger is the interface for a logger. It is implemented by e.g. log.Logger.
 type Logger interface {
-	Printf(format string, v ...any)
+	Println(v ...any)
 }
 
 // Config is the configuration for a Vedirect instance.
