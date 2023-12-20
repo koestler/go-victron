@@ -63,11 +63,13 @@ func (vd *Vedirect) clearIoLogBuffers() {
 
 // Ping sends a ping command to the device and waits for a response.
 func (vd *Vedirect) Ping() (err error) {
-	vd.debugPrintf("Ping begin")
-	defer func() {
-		vd.ioLoggerLineEnd("Ping()")
-		vd.debugPrintf("Ping end err=%s", err)
-	}()
+	if vd.cfg.DebugLogger != nil || vd.cfg.IoLogger != nil {
+		vd.debugPrintf("Ping() begin")
+		defer func() {
+			vd.ioLoggerLineEnd("Ping()")
+			vd.debugPrintf("Ping end err=%s", err)
+		}()
+	}
 
 	_, err = vd.sendReceive(VeCommandPing, []byte{})
 	return
@@ -76,11 +78,13 @@ func (vd *Vedirect) Ping() (err error) {
 // GetDeviceId fetches what Victron Energy calls the device id.
 // It is not a serial number, but it is a product id which can be decoded using veproduct.
 func (vd *Vedirect) GetDeviceId() (deviceId uint16, err error) {
-	vd.debugPrintf("GetDeviceId begin")
-	defer func() {
-		vd.ioLoggerLineEnd("GetDeviceId() = 0x%X", deviceId)
-		vd.debugPrintf("GetDeviceId end deviceId=%x err=%s", deviceId, err)
-	}()
+	if vd.cfg.DebugLogger != nil || vd.cfg.IoLogger != nil {
+		vd.debugPrintf("GetDeviceId() begin")
+		defer func() {
+			vd.ioLoggerLineEnd("GetDeviceId() = 0x%X", deviceId)
+			vd.debugPrintf("GetDeviceId end deviceId=%x err=%s", deviceId, err)
+		}()
+	}
 
 	rawValue, err := vd.VeCommand(VeCommandDeviceId, 0)
 	if err != nil {
@@ -93,11 +97,13 @@ func (vd *Vedirect) GetDeviceId() (deviceId uint16, err error) {
 
 // GetUint fetches the addressed register assuming it contains an unsigned integer of 1, 2, 4 or 8 bytes.
 func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
-	vd.debugPrintf("GetUint begin")
-	defer func() {
-		vd.ioLoggerLineEnd("GetUint(0x%X) = %d", address, value)
-		vd.debugPrintf("GetUint end value=%v end=%s", value, err)
-	}()
+	if vd.cfg.DebugLogger != nil || vd.cfg.IoLogger != nil {
+		vd.debugPrintf("GetUint(address=0x%X) begin", address)
+		defer func() {
+			vd.ioLoggerLineEnd("GetUint(0x%X) = %d", address, value)
+			vd.debugPrintf("GetUint end value=%d end=%s", value, err)
+		}()
+	}
 
 	rawValue, err := vd.VeCommandGet(address)
 	if err != nil {
@@ -111,11 +117,13 @@ func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
 
 // GetInt fetches the addressed register assuming it contains a signed integer of 1, 2, 4 or 8 bytes.
 func (vd *Vedirect) GetInt(address uint16) (value int64, err error) {
-	vd.debugPrintf("GetInt begin")
-	defer func() {
-		vd.ioLoggerLineEnd("GetInt(0x%X) = %d", address, value)
-		vd.debugPrintf("GetInt end value=%v err=%s", value, err)
-	}()
+	if vd.cfg.DebugLogger != nil || vd.cfg.IoLogger != nil {
+		vd.debugPrintf("GetInt(address=0x%X) begin", address)
+		defer func() {
+			vd.ioLoggerLineEnd("GetInt(0x%X) = %d", address, value)
+			vd.debugPrintf("GetInt end value=%d err=%s", value, err)
+		}()
+	}
 
 	rawValue, err := vd.VeCommandGet(address)
 	if err != nil {
@@ -128,11 +136,13 @@ func (vd *Vedirect) GetInt(address uint16) (value int64, err error) {
 
 // GetString fetches the addressed register assuming it contains a string of arbitrary length.
 func (vd *Vedirect) GetString(address uint16) (value string, err error) {
-	vd.debugPrintf("GetString begin")
-	defer func() {
-		vd.ioLoggerLineEnd("GetString(0x%X) = %s", address, value)
-		vd.debugPrintf("GetString end value=%v err=%s", value, err)
-	}()
+	if vd.cfg.DebugLogger != nil || vd.cfg.IoLogger != nil {
+		vd.debugPrintf("GetString(address=0x%X) begin", address)
+		defer func() {
+			vd.ioLoggerLineEnd("GetString(0x%X) = %s", address, value)
+			vd.debugPrintf("GetString end value=%v err=%s", value, err)
+		}()
+	}
 
 	rawValue, err := vd.VeCommandGet(address)
 	if err != nil {

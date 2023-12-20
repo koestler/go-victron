@@ -1,14 +1,18 @@
 package vedirect
 
-import "log"
-
 func (vd *Vedirect) write(b []byte) (n int, err error) {
-	vd.debugPrintf("write b=%s len=%v", b, len(b))
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("write(b=%s) begin len(b)=%d", b, len(b))
+		defer func() {
+			vd.debugPrintf("write end n=%d err=%s", n, err)
+		}()
+	}
+
 	n, err = vd.cfg.IOPort.Write(b)
 	if err != nil {
-		log.Printf("write error: %v\n", err)
-		return 0, err
+		return
 	}
+
 	if vd.cfg.IoLogger != nil {
 		vd.logIoTxBuff = append(vd.logIoTxBuff, b...)
 	}
@@ -16,7 +20,13 @@ func (vd *Vedirect) write(b []byte) (n int, err error) {
 }
 
 func (vd *Vedirect) recvUntil(needle byte) (data []byte, err error) {
-	vd.debugPrintf("recvUntil needle=%c", needle)
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("recvUntil(needle=%c) begin", needle)
+		defer func() {
+			vd.debugPrintf("recvUntil end data=%s err=%s", data, err)
+		}()
+	}
+
 	data, err = vd.reader.ReadBytes(needle)
 	if err == nil {
 		if vd.cfg.IoLogger != nil {
@@ -30,12 +40,13 @@ func (vd *Vedirect) recvUntil(needle byte) (data []byte, err error) {
 // FlushReceiver flushes the underlying receiver buffer. This after some inactivity since some devices
 // like the BMV will start sending asynchronous messages after a while.
 func (vd *Vedirect) flushReceiver() {
-	vd.debugPrintf("flushReceiver begin")
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("flushReceiver() begin")
+		defer vd.debugPrintf("flushReceiver end")
+	}
 
 	if err := vd.cfg.IOPort.Flush(); err != nil {
-		vd.debugPrintf("flushReceiver err=%v", err)
+		vd.debugPrintf("err=%v", err)
 	}
 	vd.reader.Reset(vd.cfg.IOPort)
-
-	vd.debugPrintf("flushReceiver end")
 }

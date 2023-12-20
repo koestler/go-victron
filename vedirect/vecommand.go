@@ -9,7 +9,12 @@ import (
 )
 
 func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte, err error) {
-	vd.debugPrintf("VeCommand begin command=%v, address=%x", command, address)
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("VeCommand(command=0x%X, address=0x%X) begin", command, address)
+		defer func() {
+			vd.debugPrintf("VeCommand end values=%s err=%s", values, err)
+		}()
+	}
 
 	var param []byte
 	if command == VeCommandGet || command == VeCommandSet {
@@ -20,50 +25,43 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 	var responseData []byte
 	responseData, err = vd.sendReceive(command, param)
 	if err != nil {
-		vd.debugPrintf("VeCommand end err=%v", err)
 		return
 	}
 
 	if len(responseData) < 7 {
-		err = fmt.Errorf("responseData too short, len(responseData)=%v", len(responseData))
-		vd.debugPrintf("VeCommand end err=%v", err)
-		return nil, err
+		err = fmt.Errorf("responseData too short, len(responseData)=%d", len(responseData))
+		return
 	}
 
 	// extract and check command
 	var response VeResponse
 	s := string(responseData[0])
-	if i, err := strconv.ParseUint(s, 16, 8); err != nil {
-		err = fmt.Errorf("cannot parse response, address=%x, s=%v, err=%v", address, s, err)
-		vd.debugPrintf("VeCommand end err=%v", err)
-		return nil, err
+	if i, e := strconv.ParseUint(s, 16, 8); err != nil {
+		err = fmt.Errorf("cannot parse response, address=0x%X, s=%s: %s", address, s, e)
+		return
 	} else {
 		response = VeResponse(i)
 	}
 
 	expectedResponse := ResponseForCommand(command)
 	if expectedResponse != response {
-		err = fmt.Errorf("expectedResponse != response, expectedResponse=%v, response=%v",
-			expectedResponse, response)
-		vd.debugPrintf("VeCommand end err=%v", err)
-		return nil, err
+		err = fmt.Errorf("expectedResponse != response, expectedResponse=0x%X, response=0x%X", expectedResponse, response)
+		return
 	}
 
 	// extract data
 	hexData := responseData[1:]
 	if len(hexData)%2 != 0 {
-		err = fmt.Errorf("received an odd number of hex bytes, len(hexData)=%v", len(hexData))
-		vd.debugPrintf("VeCommand end err=%v", err)
-		return nil, err
+		err = fmt.Errorf("received an odd number of hex bytes, len(hexData)=%d", len(hexData))
+		return
 	}
 
 	numbBytes := len(hexData) / 2
 	binData := make([]byte, numbBytes)
 
-	if n, err := hex.Decode(binData, hexData); err != nil || n != numbBytes {
-		err = fmt.Errorf("hex to bin conversion failed: n=%v, err=%v", n, err)
-		vd.debugPrintf("VeCommand end err=%v", err)
-		return nil, err
+	if n, e := hex.Decode(binData, hexData); e != nil || n != numbBytes {
+		err = fmt.Errorf("hex to bin conversion failed: n=%d, e=%s", n, e)
+		return
 	}
 
 	// extract and check checksum
@@ -72,18 +70,21 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 
 	checksum := computeChecksum(byte(response), values)
 	if checksum != responseChecksum {
-		err = fmt.Errorf("checksum != responseChecksum, checksum=%X, responseChecksum=%X", checksum, responseChecksum)
-		vd.debugPrintf("VeCommand end err=%v", err)
-		return nil, err
+		err = fmt.Errorf("checksum != responseChecksum, checksum=0x%X, responseChecksum=0x%X", checksum, responseChecksum)
+		return
 	}
 
-	vd.debugPrintf("VeCommand end")
 	return
 }
 
 // VeCommandGet fetches the addressed register and returns its raw value or an error.
 func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
-	vd.debugPrintf("VeCommandGet begin address=%x", address)
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("VeCommandGet(address=0x%X) begin", address)
+		defer func() {
+			vd.debugPrintf("VeCommandGet(address=0x%X) end value=%s, err=%s", address, value, err)
+		}()
+	}
 
 	// fetch response using multiple tries to
 	// deal with old data in the tx buffer of the veproduct device and our rx buffer
@@ -93,7 +94,7 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 		rawValues, err = vd.VeCommand(VeCommandGet, address)
 		if err != nil {
 			if try > 0 {
-				log.Printf("VeCommandGet(address=%x) retry try=%v err=%v", address, try, err)
+				log.Printf("retry try=%d err=%s", try, err)
 			}
 			continue
 		}
@@ -103,34 +104,37 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 		if address != responseAddress {
 			err = fmt.Errorf("address != responseAddress, address=%x, responseAddress=%x", address, responseAddress)
 			if try > 0 {
-				log.Printf("VeCommandGet(address=%x) retry try=%v err=%v", address, try, err)
+				log.Printf("retry try=%d err=%s", try, err)
 			}
 			continue
 		}
 
 		// check flag
 		responseFlag := VeResponseFlag(littleEndianBytesToUint(rawValues[2:3]))
-		if responseErr := responseError(responseFlag); responseErr != nil {
-			err = responseErr
+		if e := responseError(responseFlag); e != nil {
+			err = e
 			if try > 0 {
-				log.Printf("VeCommandGet(address=%x) retry try=%v err=%v", address, try, err)
+				log.Printf("retry try=%d err=%s", try, err)
 			}
 			continue
 		}
 
 		// extract value
-		vd.debugPrintf("VeCommandGet end")
-		return rawValues[3:], nil
+		value = rawValues[3:]
+		return
 	}
 
-	vd.debugPrintf("VeCommandGet(address=%x) end tries=%v last err=%v", address, numbTries, err)
 	err = fmt.Errorf("gave up after %v tries, last err=%v", numbTries, err)
-	return nil, err
+	return
 }
 
 func (vd *Vedirect) sendReceive(cmd VeCommand, data []byte) (response []byte, err error) {
-	vd.debugPrintf("sendReceive begin")
-	defer vd.debugPrintf("sendReceive end err=%v", err)
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("sendReceive(cmd=0x%X, data=%s) begin", cmd, data)
+		defer func() {
+			vd.debugPrintf("sendReceive end response=%s err=%s", response, err)
+		}()
+	}
 
 	now := time.Now()
 	if now.Sub(vd.lastSent) > 200*time.Millisecond {
@@ -140,7 +144,8 @@ func (vd *Vedirect) sendReceive(cmd VeCommand, data []byte) (response []byte, er
 	}
 	vd.lastSent = now
 
-	if err = vd.sendCommand(cmd, data); err != nil {
+	err = vd.sendCommand(cmd, data)
+	if err != nil {
 		return
 	}
 
@@ -149,42 +154,46 @@ func (vd *Vedirect) sendReceive(cmd VeCommand, data []byte) (response []byte, er
 }
 
 func (vd *Vedirect) sendCommand(cmd VeCommand, data []byte) (err error) {
-	vd.debugPrintf("sendCommand begin")
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("sendCommand(cmd=0x%X, data=%s) begin", cmd, data)
+		defer func() {
+			vd.debugPrintf("sendCommand end err=%s", err)
+		}()
+	}
 
 	checksum := computeChecksum(byte(cmd), data)
 	str := fmt.Sprintf(":%X%X%X\n", cmd, data, checksum)
-
 	_, err = vd.write([]byte(str))
-
-	vd.debugPrintf("sendCommand end")
 	return
 }
 
 func (vd *Vedirect) receiveResponse() (data []byte, err error) {
-	vd.debugPrintf("receiveResponse begin")
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("receiveResponse() begin")
+		defer func() {
+			vd.debugPrintf("receiveResponse end data=%s, err=%s", data, err)
+		}()
+	}
 
+	var received []byte
 	for {
 		// search start marker
 		_, err = vd.recvUntil(':')
 		if err != nil {
-			vd.debugPrintf("receiveResponse end err=%v", err)
-			return nil, err
+			return
 		}
 
 		// search end marker
-		data, err = vd.recvUntil('\n')
+		received, err = vd.recvUntil('\n')
 		if err != nil {
-			vd.debugPrintf("receiveResponse end err=%v", err)
-			return nil, err
+			return
 		}
 
-		if len(data) > 0 && data[0] == 'A' {
-			vd.debugPrintf("receiveResponse async message received; ignore and read next response")
+		if len(received) > 0 && received[0] == 'A' {
+			vd.debugPrintf("async message received; ignore and read next response")
 		} else {
-			break
+			data = received
+			return
 		}
 	}
-
-	vd.debugPrintf("receiveResponse end data=%s", data)
-	return
 }
