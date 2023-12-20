@@ -59,8 +59,8 @@ func NewVedirect(cfg *Config) (*Vedirect, error) {
 
 func (vd *Vedirect) clearIoLogBuffers() {
 	if vd.cfg.IoLogger != nil {
-		vd.logIoTxBuff = make([]byte, 0, 255)
-		vd.logIoRxBuff = make([]byte, 0, 255)
+		vd.logIoTxBuff = make([]byte, 0, 32)
+		vd.logIoRxBuff = make([]byte, 0, 32)
 	}
 }
 
