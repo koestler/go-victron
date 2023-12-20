@@ -10,7 +10,7 @@ func (vd *Vedirect) write(b []byte) (n int, err error) {
 		return 0, err
 	}
 	if vd.cfg.IoLogger != nil {
-		vd.ioLogTxBuff = append(vd.ioLogTxBuff, b...)
+		vd.logIoTxBuff = append(vd.logIoTxBuff, b...)
 	}
 	return
 }
@@ -20,7 +20,7 @@ func (vd *Vedirect) recvUntil(needle byte) (data []byte, err error) {
 	data, err = vd.reader.ReadBytes(needle)
 	if err == nil {
 		if vd.cfg.IoLogger != nil {
-			vd.ioLogRxBuff = append(vd.ioLogRxBuff, data...)
+			vd.logIoRxBuff = append(vd.logIoRxBuff, data...)
 		}
 		data = data[:len(data)-1] // exclude delimiter
 	}

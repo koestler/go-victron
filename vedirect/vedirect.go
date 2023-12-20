@@ -7,6 +7,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"time"
 )
 
 // IOPort is the interface for the underlying serial port. It is implemented by e.g. tarm/serial.
@@ -30,12 +31,13 @@ type Config struct {
 // Vedirect is the main struct for the VE.Direct serial protocol driver.
 // There should be one instance per physical device.
 type Vedirect struct {
-	cfg            *Config
-	reader         *bufio.Reader
-	logDebugIndent int
+	cfg      *Config
+	reader   *bufio.Reader
+	lastSent time.Time
 
-	ioLogTxBuff []byte
-	ioLogRxBuff []byte
+	logDebugIndent int
+	logIoTxBuff    []byte
+	logIoRxBuff    []byte
 }
 
 var ErrNoIOPort = fmt.Errorf("no io port")
@@ -57,30 +59,16 @@ func NewVedirect(cfg *Config) (*Vedirect, error) {
 
 func (vd *Vedirect) clearIoLogBuffers() {
 	if vd.cfg.IoLogger != nil {
-		vd.ioLogTxBuff = make([]byte, 0, 255)
-		vd.ioLogRxBuff = make([]byte, 0, 255)
+		vd.logIoTxBuff = make([]byte, 0, 255)
+		vd.logIoRxBuff = make([]byte, 0, 255)
 	}
-}
-
-// FlushReceiver flushes the underlying receiver buffer.
-// Todo: remove this function; do it automatically after some inactivity.
-func (vd *Vedirect) FlushReceiver() {
-	vd.debugPrintf("FlushReceiver begin")
-	vd.flushReceiver()
-	vd.debugPrintf("FlushReceiver end")
 }
 
 // Ping sends a ping command to the device and waits for a response.
 func (vd *Vedirect) Ping() (err error) {
 	vd.debugPrintf("Ping begin")
 
-	err = vd.sendVeCommand(VeCommandPing, []byte{})
-	if err != nil {
-		vd.debugPrintf("Ping end err=%v", err)
-		return err
-	}
-
-	_, err = vd.recvVeResponse()
+	_, err = vd.sendReceive(VeCommandPing, []byte{})
 	if err != nil {
 		vd.debugPrintf("Ping end err=%v", err)
 		return err

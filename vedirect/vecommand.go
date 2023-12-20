@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 )
 
 func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte, err error) {
@@ -16,14 +17,8 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 		param = append(id, 0x00)
 	}
 
-	err = vd.sendVeCommand(command, param)
-	if err != nil {
-		vd.debugPrintf("VeCommand end err=%v", err)
-		return
-	}
-
 	var responseData []byte
-	responseData, err = vd.recvVeResponse()
+	responseData, err = vd.sendReceive(command, param)
 	if err != nil {
 		vd.debugPrintf("VeCommand end err=%v", err)
 		return
@@ -86,7 +81,7 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 	return
 }
 
-// VeCommandGet fetches the addressed register and returns it's raw value or an error.
+// VeCommandGet fetches the addressed register and returns its raw value or an error.
 func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	vd.debugPrintf("VeCommandGet begin address=%x", address)
 
@@ -133,43 +128,63 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	return nil, err
 }
 
-func (vd *Vedirect) sendVeCommand(cmd VeCommand, data []byte) (err error) {
-	vd.debugPrintf("sendVeCommand begin")
+func (vd *Vedirect) sendReceive(cmd VeCommand, data []byte) (response []byte, err error) {
+	vd.debugPrintf("sendReceive begin")
+	defer vd.debugPrintf("sendReceive end err=%v", err)
+
+	now := time.Now()
+	if now.Sub(vd.lastSent) > 200*time.Millisecond {
+		// after a while, the BMV starts sending asynchronous messages
+		// flush the receiver to get rid of them
+		vd.flushReceiver()
+	}
+	vd.lastSent = now
+
+	if err = vd.sendCommand(cmd, data); err != nil {
+		return
+	}
+
+	response, err = vd.receiveResponse()
+	return
+}
+
+func (vd *Vedirect) sendCommand(cmd VeCommand, data []byte) (err error) {
+	vd.debugPrintf("sendCommand begin")
 
 	checksum := ComputeChecksum(byte(cmd), data)
 	str := fmt.Sprintf(":%X%X%X\n", cmd, data, checksum)
 
 	_, err = vd.write([]byte(str))
 
-	vd.debugPrintf("sendVeCommand end")
+	vd.debugPrintf("sendCommand end")
 	return
 }
 
-func (vd *Vedirect) recvVeResponse() (data []byte, err error) {
-	vd.debugPrintf("recvVeResponse begin")
+func (vd *Vedirect) receiveResponse() (data []byte, err error) {
+	vd.debugPrintf("receiveResponse begin")
 
 	for {
 		// search start marker
 		_, err = vd.recvUntil(':')
 		if err != nil {
-			vd.debugPrintf("recvVeResponse end err=%v", err)
+			vd.debugPrintf("receiveResponse end err=%v", err)
 			return nil, err
 		}
 
 		// search end marker
 		data, err = vd.recvUntil('\n')
 		if err != nil {
-			vd.debugPrintf("recvVeResponse end err=%v", err)
+			vd.debugPrintf("receiveResponse end err=%v", err)
 			return nil, err
 		}
 
 		if len(data) > 0 && data[0] == 'A' {
-			vd.debugPrintf("recvVeResponse async message received; ignore and read next response")
+			vd.debugPrintf("receiveResponse async message received; ignore and read next response")
 		} else {
 			break
 		}
 	}
 
-	vd.debugPrintf("recvVeResponse end")
+	vd.debugPrintf("receiveResponse end data=%s", data)
 	return
 }

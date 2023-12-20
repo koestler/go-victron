@@ -32,8 +32,8 @@ func (vd *Vedirect) ioLoggerLineEnd(commentFormat string, commentParams ...any) 
 		return
 	}
 	vd.cfg.IoLogger.Println(fmt.Sprintf("%q: %q, // %s",
-		vd.ioLogTxBuff,
-		vd.ioLogRxBuff,
+		vd.logIoTxBuff,
+		vd.logIoRxBuff,
 		fmt.Sprintf(commentFormat, commentParams...),
 	))
 	vd.clearIoLogBuffers()
