@@ -70,7 +70,7 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 	values = binData[:len(binData)-1]
 	responseChecksum := binData[len(binData)-1]
 
-	checksum := ComputeChecksum(byte(response), values)
+	checksum := computeChecksum(byte(response), values)
 	if checksum != responseChecksum {
 		err = fmt.Errorf("checksum != responseChecksum, checksum=%X, responseChecksum=%X", checksum, responseChecksum)
 		vd.debugPrintf("VeCommand end err=%v", err)
@@ -151,7 +151,7 @@ func (vd *Vedirect) sendReceive(cmd VeCommand, data []byte) (response []byte, er
 func (vd *Vedirect) sendCommand(cmd VeCommand, data []byte) (err error) {
 	vd.debugPrintf("sendCommand begin")
 
-	checksum := ComputeChecksum(byte(cmd), data)
+	checksum := computeChecksum(byte(cmd), data)
 	str := fmt.Sprintf(":%X%X%X\n", cmd, data, checksum)
 
 	_, err = vd.write([]byte(str))

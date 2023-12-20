@@ -13,7 +13,7 @@ func TestChecksum(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got := ComputeChecksum(tc.cmd, tc.data)
+		got := computeChecksum(tc.cmd, tc.data)
 		if tc.expect != got {
 			t.Errorf("expect %d but got %d for cmd=%x and data=%x", tc.expect, got, tc.cmd, tc.data)
 		}
