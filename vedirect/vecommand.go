@@ -7,6 +7,55 @@ import (
 	"time"
 )
 
+// VeCommandGet fetches the addressed register and returns its raw value or an error.
+func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
+	if vd.cfg.DebugLogger != nil {
+		vd.debugPrintf("VeCommandGet(address=0x%X) begin", address)
+		defer func() {
+			vd.debugPrintf("VeCommandGet(address=0x%X) end value=%q, err=%v", address, value, err)
+		}()
+	}
+
+	// fetch response using multiple tries to
+	// deal with old data in the tx buffer of the veproduct device and our rx buffer
+	const numbTries = 8
+	for try := 0; try < numbTries; try++ {
+		var rawValues []byte
+		rawValues, err = vd.VeCommand(VeCommandGet, address)
+		if err != nil {
+			if try > 0 {
+				vd.debugPrintf("retry try=%d err=%v", try, err)
+			}
+			continue
+		}
+
+		// check address
+		responseAddress := uint16(littleEndianBytesToUint(rawValues[0:2]))
+		if address != responseAddress {
+			err = fmt.Errorf("address != responseAddress, 0x%X != 0x%X", address, responseAddress)
+			if try > 0 {
+				vd.debugPrintf("retry try=%d err=%v", try, err)
+			}
+			continue
+		}
+
+		// check flag
+		responseFlag := VeResponseFlag(littleEndianBytesToUint(rawValues[2:3]))
+		if e := responseError(responseFlag); e != nil {
+			// do not retry an error returned by the device for the correct address as it will not change
+			err = e
+			return
+		}
+
+		// extract value
+		value = rawValues[3:]
+		return
+	}
+
+	err = fmt.Errorf("gave up after %d tries, last err=%v", numbTries, err)
+	return
+}
+
 func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte, err error) {
 	if vd.cfg.DebugLogger != nil {
 		vd.debugPrintf("VeCommand(command=0x%X, address=0x%X) begin", command, address)
@@ -73,57 +122,6 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 		return
 	}
 
-	return
-}
-
-// VeCommandGet fetches the addressed register and returns its raw value or an error.
-func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
-	if vd.cfg.DebugLogger != nil {
-		vd.debugPrintf("VeCommandGet(address=0x%X) begin", address)
-		defer func() {
-			vd.debugPrintf("VeCommandGet(address=0x%X) end value=%q, err=%v", address, value, err)
-		}()
-	}
-
-	// fetch response using multiple tries to
-	// deal with old data in the tx buffer of the veproduct device and our rx buffer
-	const numbTries = 8
-	for try := 0; try < numbTries; try++ {
-		var rawValues []byte
-		rawValues, err = vd.VeCommand(VeCommandGet, address)
-		if err != nil {
-			if try > 0 {
-				vd.debugPrintf("retry try=%d err=%v", try, err)
-			}
-			continue
-		}
-
-		// check address
-		responseAddress := uint16(littleEndianBytesToUint(rawValues[0:2]))
-		if address != responseAddress {
-			err = fmt.Errorf("address != responseAddress, 0x%X != 0x%X", address, responseAddress)
-			if try > 0 {
-				vd.debugPrintf("retry try=%d err=%v", try, err)
-			}
-			continue
-		}
-
-		// check flag
-		responseFlag := VeResponseFlag(littleEndianBytesToUint(rawValues[2:3]))
-		if e := responseError(responseFlag); e != nil {
-			err = e
-			if try > 0 {
-				vd.debugPrintf("retry try=%d err=%v", try, err)
-			}
-			continue
-		}
-
-		// extract value
-		value = rawValues[3:]
-		return
-	}
-
-	err = fmt.Errorf("gave up after %d tries, last err=%v", numbTries, err)
 	return
 }
 
