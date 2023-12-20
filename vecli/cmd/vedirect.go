@@ -38,6 +38,16 @@ func vedirect(cmd *cobra.Command, args []string) {
 		cfg.DebugLogger = log.Default()
 	}
 
+	if ioLog, err := cmd.Flags().GetString("io-log"); err == nil && ioLog != "" {
+		fl, err := newFileLogger(ioLog)
+		if err != nil {
+			fmt.Printf("error creating io log file: %s\n", err)
+			return
+		}
+		defer fl.Close()
+		cfg.IoLogger = fl
+	}
+
 	time0 := time.Now()
 	api, err := vedirectapi.NewApi(&cfg)
 	if err != nil {
