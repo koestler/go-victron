@@ -92,7 +92,7 @@ func (vd *Vedirect) GetDeviceId() (deviceId uint16, err error) {
 
 	deviceId = binary.LittleEndian.Uint16(rawValue)
 
-	vd.ioLoggerLineEnd("GetDeviceId()")
+	vd.ioLoggerLineEnd("GetDeviceId() = 0x%X", deviceId)
 	vd.debugPrintf("GetDeviceId end deviceId=%x", deviceId)
 	return deviceId, nil
 }
@@ -109,7 +109,7 @@ func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
 
 	value = littleEndianBytesToUint(rawValue)
 
-	vd.ioLoggerLineEnd("GetUint(0x%X)", address)
+	vd.ioLoggerLineEnd("GetUint(0x%X) = %d", address, value)
 	vd.debugPrintf("GetUint end value=%v", value)
 	return
 }
@@ -125,7 +125,7 @@ func (vd *Vedirect) GetInt(address uint16) (value int64, err error) {
 	}
 	value, err = littleEndianBytesToInt(rawValue)
 
-	vd.ioLoggerLineEnd("GetInt(0x%X)", address)
+	vd.ioLoggerLineEnd("GetInt(0x%X) = %d", address, value)
 	vd.debugPrintf("GetInt end value=%v", value)
 	return
 }
@@ -142,7 +142,7 @@ func (vd *Vedirect) GetString(address uint16) (value string, err error) {
 
 	value = string(bytes.TrimRightFunc(rawValue, func(r rune) bool { return r == 0 }))
 
-	vd.ioLoggerLineEnd("GetString(0x%X)", address)
+	vd.ioLoggerLineEnd("GetString(0x%X) = %s", address, value)
 	vd.debugPrintf("GetString end value=%v", value)
 	return
 }
