@@ -50,15 +50,15 @@ func NewVedirect(cfg *Config) (*Vedirect, error) {
 		reader:         bufio.NewReader(cfg.IOPort),
 		logDebugIndent: 0,
 	}
-	vd.clearIoLogBuffers()
+	if vd.cfg.IoLogger != nil {
+		vd.resetIoLogBuffers()
+	}
 	return vd, nil
 }
 
-func (vd *Vedirect) clearIoLogBuffers() {
-	if vd.cfg.IoLogger != nil {
-		vd.logIoTxBuff = make([]byte, 0, 32)
-		vd.logIoRxBuff = make([]byte, 0, 32)
-	}
+func (vd *Vedirect) resetIoLogBuffers() {
+	vd.logIoTxBuff = make([]byte, 0, 32)
+	vd.logIoRxBuff = make([]byte, 0, 32)
 }
 
 // Ping sends a ping command to the device and waits for a response.
@@ -67,7 +67,7 @@ func (vd *Vedirect) Ping() (err error) {
 		vd.debugPrintf("Ping() begin")
 		defer func() {
 			vd.ioLoggerLineEnd("Ping()")
-			vd.debugPrintf("Ping end err=%s", err)
+			vd.debugPrintf("Ping end err=%v", err)
 		}()
 	}
 
@@ -82,7 +82,7 @@ func (vd *Vedirect) GetDeviceId() (deviceId uint16, err error) {
 		vd.debugPrintf("GetDeviceId() begin")
 		defer func() {
 			vd.ioLoggerLineEnd("GetDeviceId() = 0x%X", deviceId)
-			vd.debugPrintf("GetDeviceId end deviceId=%x err=%s", deviceId, err)
+			vd.debugPrintf("GetDeviceId end deviceId=%x err=%v", deviceId, err)
 		}()
 	}
 
@@ -101,7 +101,7 @@ func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
 		vd.debugPrintf("GetUint(address=0x%X) begin", address)
 		defer func() {
 			vd.ioLoggerLineEnd("GetUint(0x%X) = %d", address, value)
-			vd.debugPrintf("GetUint end value=%d end=%s", value, err)
+			vd.debugPrintf("GetUint end value=%d end=%v", value, err)
 		}()
 	}
 
@@ -121,7 +121,7 @@ func (vd *Vedirect) GetInt(address uint16) (value int64, err error) {
 		vd.debugPrintf("GetInt(address=0x%X) begin", address)
 		defer func() {
 			vd.ioLoggerLineEnd("GetInt(0x%X) = %d", address, value)
-			vd.debugPrintf("GetInt end value=%d err=%s", value, err)
+			vd.debugPrintf("GetInt end value=%d err=%v", value, err)
 		}()
 	}
 
@@ -140,7 +140,7 @@ func (vd *Vedirect) GetString(address uint16) (value string, err error) {
 		vd.debugPrintf("GetString(address=0x%X) begin", address)
 		defer func() {
 			vd.ioLoggerLineEnd("GetString(0x%X) = %s", address, value)
-			vd.debugPrintf("GetString end value=%v err=%s", value, err)
+			vd.debugPrintf("GetString end value=%v err=%v", value, err)
 		}()
 	}
 

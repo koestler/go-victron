@@ -11,9 +11,7 @@ func (vd *Vedirect) debugPrintf(format string, v ...interface{}) {
 		return
 	}
 
-	intro := strings.Split(format, "=")[0]
-
-	if vd.logDebugIndent > 0 && strings.Contains(intro, " end") {
+	if vd.logDebugIndent > 0 && strings.Contains(format, " end") {
 		vd.logDebugIndent -= 1
 	}
 
@@ -22,7 +20,7 @@ func (vd *Vedirect) debugPrintf(format string, v ...interface{}) {
 
 	vd.cfg.DebugLogger.Println(strings.Repeat("  ", vd.logDebugIndent), s)
 
-	if vd.logDebugIndent < 64 && strings.Contains(intro, " begin") {
+	if vd.logDebugIndent < 64 && strings.Contains(format, " begin") {
 		vd.logDebugIndent += 1
 	}
 }
@@ -36,5 +34,5 @@ func (vd *Vedirect) ioLoggerLineEnd(commentFormat string, commentParams ...any) 
 		vd.logIoRxBuff,
 		fmt.Sprintf(commentFormat, commentParams...),
 	))
-	vd.clearIoLogBuffers()
+	vd.resetIoLogBuffers()
 }

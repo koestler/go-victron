@@ -2,9 +2,9 @@ package vedirect
 
 func (vd *Vedirect) write(b []byte) (n int, err error) {
 	if vd.cfg.DebugLogger != nil {
-		vd.debugPrintf("write(b=%s) begin len(b)=%d", b, len(b))
+		vd.debugPrintf("write(b=%q) begin len(b)=%d", b, len(b))
 		defer func() {
-			vd.debugPrintf("write end n=%d err=%s", n, err)
+			vd.debugPrintf("write end n=%d err=%v", n, err)
 		}()
 	}
 
@@ -21,9 +21,9 @@ func (vd *Vedirect) write(b []byte) (n int, err error) {
 
 func (vd *Vedirect) recvUntil(needle byte) (data []byte, err error) {
 	if vd.cfg.DebugLogger != nil {
-		vd.debugPrintf("recvUntil(needle=%c) begin", needle)
+		vd.debugPrintf("recvUntil(needle=%q) begin", needle)
 		defer func() {
-			vd.debugPrintf("recvUntil end data=%s err=%s", data, err)
+			vd.debugPrintf("recvUntil end data=%q err=%v", data, err)
 		}()
 	}
 
