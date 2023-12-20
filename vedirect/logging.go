@@ -27,9 +27,14 @@ func (vd *Vedirect) debugPrintf(format string, v ...interface{}) {
 	}
 }
 
-func (vd *Vedirect) ioLogger(prefix string, d []byte) {
+func (vd *Vedirect) ioLoggerLineEnd(commentFormat string, commentParams ...any) {
 	if vd.cfg.IoLogger == nil {
 		return
 	}
-	vd.cfg.IoLogger.Println(prefix, ": ", strings.ReplaceAll(string(d), "\n", "\\n"))
+	vd.cfg.IoLogger.Println(fmt.Sprintf("%q: %q, // %s",
+		vd.ioLogTxBuff,
+		vd.ioLogRxBuff,
+		fmt.Sprintf(commentFormat, commentParams...),
+	))
+	vd.clearIoLogBuffers()
 }

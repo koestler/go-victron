@@ -33,6 +33,9 @@ type Vedirect struct {
 	cfg            *Config
 	reader         *bufio.Reader
 	logDebugIndent int
+
+	ioLogTxBuff []byte
+	ioLogRxBuff []byte
 }
 
 var ErrNoIOPort = fmt.Errorf("no io port")
@@ -43,11 +46,20 @@ func NewVedirect(cfg *Config) (*Vedirect, error) {
 		return nil, ErrNoIOPort
 	}
 
-	return &Vedirect{
-		cfg,
-		bufio.NewReader(cfg.IOPort),
-		0,
-	}, nil
+	vd := &Vedirect{
+		cfg:            cfg,
+		reader:         bufio.NewReader(cfg.IOPort),
+		logDebugIndent: 0,
+	}
+	vd.clearIoLogBuffers()
+	return vd, nil
+}
+
+func (vd *Vedirect) clearIoLogBuffers() {
+	if vd.cfg.IoLogger != nil {
+		vd.ioLogTxBuff = make([]byte, 0, 255)
+		vd.ioLogRxBuff = make([]byte, 0, 255)
+	}
 }
 
 // FlushReceiver flushes the underlying receiver buffer.
@@ -74,6 +86,7 @@ func (vd *Vedirect) Ping() (err error) {
 		return err
 	}
 
+	vd.ioLoggerLineEnd("Ping()")
 	vd.debugPrintf("Ping end")
 	return nil
 }
@@ -91,6 +104,7 @@ func (vd *Vedirect) GetDeviceId() (deviceId uint16, err error) {
 
 	deviceId = binary.LittleEndian.Uint16(rawValue)
 
+	vd.ioLoggerLineEnd("GetDeviceId()")
 	vd.debugPrintf("GetDeviceId end deviceId=%x", deviceId)
 	return deviceId, nil
 }
@@ -106,6 +120,8 @@ func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
 	}
 
 	value = littleEndianBytesToUint(rawValue)
+
+	vd.ioLoggerLineEnd("GetUint(0x%X)", address)
 	vd.debugPrintf("GetUint end value=%v", value)
 	return
 }
@@ -121,6 +137,7 @@ func (vd *Vedirect) GetInt(address uint16) (value int64, err error) {
 	}
 	value, err = littleEndianBytesToInt(rawValue)
 
+	vd.ioLoggerLineEnd("GetInt(0x%X)", address)
 	vd.debugPrintf("GetInt end value=%v", value)
 	return
 }
@@ -137,6 +154,7 @@ func (vd *Vedirect) GetString(address uint16) (value string, err error) {
 
 	value = string(bytes.TrimRightFunc(rawValue, func(r rune) bool { return r == 0 }))
 
+	vd.ioLoggerLineEnd("GetString(0x%X)", address)
 	vd.debugPrintf("GetString end value=%v", value)
 	return
 }
