@@ -25,9 +25,9 @@ func TestVedirect(t *testing.T) {
 	defer io.CheckClosed()
 
 	vd, err := vedirect.NewVedirect(&vedirect.Config{
-		io,
-		log.Default(),
-		log.Default(),
+		IOPort:      io,
+		DebugLogger: log.Default(),
+		IoLogger:    log.Default(),
 	})
 	if err != nil {
 		t.Fatalf("cannot create vedirect: %v", err)
