@@ -110,8 +110,8 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 
 		// check flag
 		responseFlag := VeResponseFlag(littleEndianBytesToUint(rawValues[2:3]))
-		if VeResponseFlagOk != responseFlag {
-			err = fmt.Errorf("VeResponseFlagOk != responseFlag, responseFlag=%v", responseFlag)
+		if responseErr := responseError(responseFlag); responseErr != nil {
+			err = responseErr
 			if try > 0 {
 				log.Printf("VeCommandGet(address=%x) retry try=%v err=%v", address, try, err)
 			}
