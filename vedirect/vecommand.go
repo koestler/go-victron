@@ -56,6 +56,8 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	return
 }
 
+// VeCommand executes, sends the given command returns the raw response or an error.
+// address is only used for VeCommandGet and VeCommandSet commands.
 func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte, err error) {
 	if vd.cfg.DebugLogger != nil {
 		vd.debugPrintf("VeCommand(command=0x%X, address=0x%X) begin", command, address)

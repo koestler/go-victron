@@ -1,8 +1,10 @@
-// Package veproduct provides a list of Victron Energy products, their ProductID, and their names as string.
+// Package veproduct provides a list of Victron Energy products, their device id, and their names as string.
 //
 // The source of the list is: https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.33.pdf
 package veproduct
 
+// Product defines the exact model of a Victron Energy product.
+// It is different for different product lines,, different power / voltage options and hardware revisions.
 type Product uint16
 
 const (

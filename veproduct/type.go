@@ -1,5 +1,6 @@
 package veproduct
 
+// Type defines the product line. It is the sort / purpose of the product.
 type Type uint8
 
 const (
@@ -16,6 +17,7 @@ const (
 	TypeSmartShunt
 )
 
+// String returns a human-readable string for the product type (e.g. "SmartSolar MPPT").
 func (t Type) String() string {
 	switch t {
 	case TypeBMV:

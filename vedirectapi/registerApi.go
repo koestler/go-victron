@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+// RegisterApi is the main struct for the VE.Direct serial protocol api. It allows to communicate with the device
+// by reading the device id, using it to get the list of available registers and than allow to read those registers.
 type RegisterApi struct {
 	IoHandle  *serial.Port
 	Vd        *vedirect.Vedirect
