@@ -18,6 +18,7 @@ type Register interface {
 	Sort() int
 	Address() uint16
 	Static() bool
+	Writable() bool
 	RegisterType() RegisterType
 	Enum() map[int]string
 	Unit() string
@@ -51,6 +52,11 @@ func (r RegisterStruct) Address() uint16 {
 // Static return true when the register is static and not updated by the device.
 func (r RegisterStruct) Static() bool {
 	return r.static
+}
+
+// Writable return true when the register can be written to.
+func (r RegisterStruct) Writable() bool {
+	return r.writable
 }
 
 // RegisterType return the data type of the register.

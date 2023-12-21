@@ -13,6 +13,7 @@ type RegisterStruct struct {
 	sort        int    // the sort order of the registers
 	address     uint16 // the memory address used to fetch register from the device
 	static      bool   // when true, the register is static and not updated by the device
+	writable    bool   // when true, the register can be written to
 }
 
 // NumberRegisterStruct is for registers that store numeric (integer or float) values.
@@ -42,6 +43,7 @@ func NewNumberRegisterStruct(
 	category, name, description string,
 	address uint16,
 	static bool,
+	writable bool,
 	signed bool,
 	factor int,
 	offset float64,
@@ -56,6 +58,7 @@ func NewNumberRegisterStruct(
 			sort,
 			address,
 			static,
+			writable,
 		},
 		unit,
 		signed,
@@ -69,6 +72,7 @@ func NewTextRegisterStruct(
 	category, name, description string,
 	address uint16,
 	static bool,
+	writable bool,
 	sort int,
 ) TextRegisterStruct {
 	return TextRegisterStruct{
@@ -79,6 +83,7 @@ func NewTextRegisterStruct(
 			sort,
 			address,
 			static,
+			writable,
 		},
 	}
 }
@@ -90,6 +95,7 @@ func NewEnumRegisterStruct[K constraints.Integer, M map[K]string](
 	address uint16,
 	bit int,
 	static bool,
+	writable bool,
 	enum M,
 	sort int,
 ) EnumRegisterStruct {
@@ -101,6 +107,7 @@ func NewEnumRegisterStruct[K constraints.Integer, M map[K]string](
 			sort,
 			address,
 			static,
+			writable,
 		},
 		bit,
 		func() map[int]string {
