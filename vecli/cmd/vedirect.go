@@ -6,7 +6,6 @@ import (
 	"github.com/koestler/go-victron/vedirectapi"
 	"github.com/spf13/cobra"
 	"log"
-	"sort"
 	"time"
 )
 
@@ -57,30 +56,16 @@ func runVedirect(cmd *cobra.Command, args []string) {
 
 	time1 := time.Now()
 
-	var list []ls
-
+	var values vedirectapi.RegisterValues
 	if rv, err := api.ReadAllRegisters(); err != nil {
 		fmt.Printf("error fetching registers: %s\n", err)
 	} else {
-		// create a list with one line per register value
-		list = make([]ls, 0, len(rv.NumberValues)+len(rv.TextValues)+len(rv.EnumValues))
-
-		for _, v := range rv.NumberValues {
-			list = append(list, ls{s: v.String(), sort: v.Register.Sort})
-		}
-		for _, v := range rv.TextValues {
-			list = append(list, ls{s: v.String(), sort: v.Register.Sort})
-		}
-		for _, v := range rv.EnumValues {
-			list = append(list, ls{s: v.String(), sort: v.Register.Sort})
-		}
-
-		// sort list by register sort order
-		sort.SliceStable(list, func(i, j int) bool { return list[i].sort < list[j].sort })
-
+		values = rv
 	}
 
 	time2 := time.Now()
+
+	list := values.GetList()
 
 	fmt.Printf("fetched %d registers, initialization took: %s, fetching took: %s\n",
 		len(list),
@@ -89,13 +74,7 @@ func runVedirect(cmd *cobra.Command, args []string) {
 	)
 
 	// output list
-	for _, v := range list {
-		fmt.Printf("%s\n", v.s)
+	for _, l := range list {
+		fmt.Println(l)
 	}
-
-}
-
-type ls struct {
-	s    string
-	sort int
 }

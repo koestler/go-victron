@@ -7,21 +7,21 @@ import (
 
 // RegisterStruct is the base struct for all register types.
 type RegisterStruct struct {
-	Category    string // the category of the register (e.g. "Essential")
-	Name        string // the technical name of the register (e.g. "PanelVoltage")
-	Description string // the description of the register (e.g. "Panel Voltage")
-	Sort        int    // the sort order of the registers
-	Address     uint16 // the memory address used to fetch register from the device
-	Static      bool   // when true, the register is static and not updated by the device
+	category    string // the category of the register (e.g. "Essential")
+	name        string // the technical name of the register (e.g. "PanelVoltage")
+	description string // the description of the register (e.g. "Panel Voltage")
+	sort        int    // the sort order of the registers
+	address     uint16 // the memory address used to fetch register from the device
+	static      bool   // when true, the register is static and not updated by the device
 }
 
 // NumberRegisterStruct is for registers that store numeric (integer or float) values.
 type NumberRegisterStruct struct {
 	RegisterStruct
-	Unit   string  // the unit of the number (e.g. "V" for volt)
-	Signed bool    // when true, the number is signed
-	Factor int     // the factor to multiply the number with (e.g. 10 when the number is in 0.1V resolution)
-	Offset float64 // the offset to add to the number
+	unit   string  // the unit of the number (e.g. "V" for volt)
+	signed bool    // when true, the number is signed
+	factor int     // the factor to multiply the number with (e.g. 10 when the number is in 0.1V resolution)
+	offset float64 // the offset to add to the number
 }
 
 // TextRegisterStruct is for registers that store text values.
@@ -32,9 +32,9 @@ type TextRegisterStruct struct {
 // EnumRegisterStruct is for registers that store enum values.
 type EnumRegisterStruct struct {
 	RegisterStruct
-	Bit int // when positive, the specified bit is used as a boolean 0/1
+	bit int // when positive, the specified bit is used as a boolean 0/1
 	// todo: remove this bit stuff; add a new multi enum register type instead
-	Enum map[int]string // a map uf enum index to enum string value
+	enum map[int]string // a map uf enum index to enum string value
 }
 
 // NewNumberRegisterStruct is a shortcut to create a RegisterStruct and embed it into a NumberRegisterStruct.

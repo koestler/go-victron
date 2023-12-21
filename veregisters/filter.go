@@ -29,7 +29,7 @@ func (rl *RegisterList) FilterByName(exclude ...string) {
 func byNameFilter(exclude ...string) FilterFunc {
 	return func(r Register) bool {
 		for _, e := range exclude {
-			if e == r.GetName() {
+			if e == r.Name() {
 				return false
 			}
 		}
