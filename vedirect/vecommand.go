@@ -136,7 +136,7 @@ func (vd *Vedirect) sendReceive(cmd VeCommand, data []byte) (response []byte, er
 	}
 
 	now := time.Now()
-	if now.Sub(vd.lastSent) > 200*time.Millisecond {
+	if now.Sub(vd.lastSent) > 100*time.Millisecond {
 		// after a while, the BMV starts sending asynchronous messages
 		// flush the receiver to get rid of them before sending a command
 		// otherwise we might use up all tries in VeCommandGet
