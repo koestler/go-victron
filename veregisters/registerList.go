@@ -26,10 +26,3 @@ func (rl *RegisterList) AppendTextRegisterStruct(r ...TextRegisterStruct) {
 func (rl *RegisterList) AppendEnumRegisterStruct(r ...EnumRegisterStruct) {
 	rl.EnumRegisters = append(rl.EnumRegisters, r...)
 }
-
-// FilterByName removes all registers with the specified name from the list.
-func (rl *RegisterList) FilterByName(exclude ...string) {
-	rl.NumberRegisters = filterRegistersByName(rl.NumberRegisters, exclude...)
-	rl.TextRegisters = filterRegistersByName(rl.TextRegisters, exclude...)
-	rl.EnumRegisters = filterRegistersByName(rl.EnumRegisters, exclude...)
-}
