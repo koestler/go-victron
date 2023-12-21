@@ -209,42 +209,41 @@ func (sa *Api) FetchAllRegisters() (RegisterValues, error) {
 // the values as soon as they are available.
 func (sa *Api) StreamRegisterList(
 	rl veregisters.RegisterList,
-	handleNumber func(register veregisters.NumberRegisterStruct, value float64),
-	handleText func(register veregisters.TextRegisterStruct, value string),
-	handleEnum func(register veregisters.EnumRegisterStruct, enumIdx int, enumValue string),
+	handlers struct {
+	number func(register veregisters.NumberRegisterStruct, value float64)
+	text   func(register veregisters.TextRegisterStruct, value string)
+	enum   func(register veregisters.EnumRegisterStruct, enumIdx int, enumValue string)
+},
 ) error {
-	for _, r := range rl.NumberRegisters {
-		v, err := sa.FetchNumberRegister(r)
-		if err != nil {
-			return err
+	if handlers.number != nil {
+		for _, r := range rl.NumberRegisters {
+			v, err := sa.FetchNumberRegister(r)
+			if err != nil {
+				return err
+			}
+			handlers.number(r, v)
 		}
-		handleNumber(r, v)
 	}
 
-	for _, r := range rl.TextRegisters {
-		v, err := sa.FetchTextRegister(r)
-		if err != nil {
-			return err
+	if handlers.text != nil {
+		for _, r := range rl.TextRegisters {
+			v, err := sa.FetchTextRegister(r)
+			if err != nil {
+				return err
+			}
+			handlers.text(r, v)
 		}
-		handleText(r, v)
 	}
 
-	for _, r := range rl.EnumRegisters {
-		v, ev, err := sa.FetchEnumRegister(r)
-		if err != nil {
-			return err
+	if handlers.enum != nil {
+		for _, r := range rl.EnumRegisters {
+			v, ev, err := sa.FetchEnumRegister(r)
+			if err != nil {
+				return err
+			}
+			handlers.enum(r, v, ev)
 		}
-		handleEnum(r, v, ev)
 	}
 
 	return nil
-}
-
-// StreamAllRegisters fetches all available registers and calls the given handlers for each register.
-func (sa *Api) StreamAllRegisters(
-	handleNumber func(register veregisters.NumberRegisterStruct, value float64),
-	handleText func(register veregisters.TextRegisterStruct, value string),
-	handleEnum func(register veregisters.EnumRegisterStruct, enumIdx int, enumValue string),
-) error {
-	return sa.StreamRegisterList(sa.Registers, handleNumber, handleText, handleEnum)
 }
