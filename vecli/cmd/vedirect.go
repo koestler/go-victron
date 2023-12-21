@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/koestler/go-victron/vedirect"
 	"github.com/koestler/go-victron/vedirectapi"
 	"github.com/spf13/cobra"
 	"log"
@@ -15,7 +16,7 @@ var vedirectCmd = &cobra.Command{
 	Short: "Connect to VE.Direct device.",
 	Long: `Connect to VE.Direct device, sends a ping, gets the device id and uses it to get the product type.
 Then it uses the register list to fetch all known registers and outputs it's values.`,
-	Run: vedirect,
+	Run: runVedirect,
 }
 
 func init() {
@@ -29,13 +30,11 @@ func init() {
 	)
 }
 
-func vedirect(cmd *cobra.Command, args []string) {
-	cfg := vedirectapi.Config{
-		SerialDevice: cmd.Flag("device").Value.String(),
-	}
+func runVedirect(cmd *cobra.Command, args []string) {
+	var vdConfig vedirect.Config
 
 	if verbose, err := cmd.Flags().GetBool("verbose"); err == nil && verbose {
-		cfg.DebugLogger = log.Default()
+		vdConfig.DebugLogger = log.Default()
 	}
 
 	if ioLog, err := cmd.Flags().GetString("io-log"); err == nil && ioLog != "" {
@@ -45,11 +44,11 @@ func vedirect(cmd *cobra.Command, args []string) {
 			return
 		}
 		defer fl.Close()
-		cfg.IoLogger = fl
+		vdConfig.IoLogger = fl
 	}
 
 	time0 := time.Now()
-	api, err := vedirectapi.NewApi(&cfg)
+	api, err := vedirectapi.NewRegistertApi(cmd.Flag("device").Value.String(), vdConfig)
 	if err != nil {
 		fmt.Printf("error creating api: %s\n", err)
 		return
@@ -60,7 +59,7 @@ func vedirect(cmd *cobra.Command, args []string) {
 
 	var list []ls
 
-	if rv, err := api.FetchAllRegisters(); err != nil {
+	if rv, err := api.ReadAllRegisters(); err != nil {
 		fmt.Printf("error fetching registers: %s\n", err)
 	} else {
 		// create a list with one line per register value

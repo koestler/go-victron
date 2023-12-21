@@ -24,8 +24,7 @@ func TestVedirect(t *testing.T) {
 	defer io.CheckEverythingHeard()
 	defer io.CheckClosed()
 
-	vd, err := vedirect.NewVedirect(&vedirect.Config{
-		IOPort:      io,
+	vd, err := vedirect.NewVedirect(io, vedirect.Config{
 		DebugLogger: log.Default(),
 		IoLogger:    log.Default(),
 	})

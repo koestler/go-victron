@@ -20,9 +20,8 @@ type Logger interface {
 	Println(v ...any)
 }
 
-// Config is the configuration for a Vedirect instance.
+// Config is the configuration for a Vedirect instance. The empty configuration is valid and can be used as a default.
 type Config struct {
-	IOPort      IOPort // mandatory: an implementation of a serial port
 	DebugLogger Logger // optional: a logger for debug output; if nil, no debug output is written
 	IoLogger    Logger // optional: a logger for all io operations; if nil, no io output is written
 }
@@ -30,7 +29,8 @@ type Config struct {
 // Vedirect is the main struct for the VE.Direct serial protocol driver.
 // There should be one instance per physical device.
 type Vedirect struct {
-	cfg      *Config
+	ioPort   IOPort
+	cfg      Config
 	reader   *bufio.Reader
 	lastSent time.Time
 
@@ -40,14 +40,11 @@ type Vedirect struct {
 }
 
 // NewVedirect creates a new Vedirect instance.
-func NewVedirect(cfg *Config) (*Vedirect, error) {
-	if cfg.IOPort == nil {
-		return nil, ErrInvalidConfig
-	}
-
+func NewVedirect(ioPort IOPort, cfg Config) (*Vedirect, error) {
 	vd := &Vedirect{
+		ioPort:         ioPort,
 		cfg:            cfg,
-		reader:         bufio.NewReader(cfg.IOPort),
+		reader:         bufio.NewReader(ioPort),
 		logDebugIndent: 0,
 	}
 	if vd.cfg.IoLogger != nil {

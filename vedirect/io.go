@@ -8,7 +8,7 @@ func (vd *Vedirect) write(b []byte) (n int, err error) {
 		}()
 	}
 
-	n, err = vd.cfg.IOPort.Write(b)
+	n, err = vd.ioPort.Write(b)
 	if err != nil {
 		return
 	}
@@ -45,8 +45,8 @@ func (vd *Vedirect) flushReceiver() {
 		defer vd.debugPrintf("flushReceiver end")
 	}
 
-	if err := vd.cfg.IOPort.Flush(); err != nil {
+	if err := vd.ioPort.Flush(); err != nil {
 		vd.debugPrintf("err=%v", err)
 	}
-	vd.reader.Reset(vd.cfg.IOPort)
+	vd.reader.Reset(vd.ioPort)
 }

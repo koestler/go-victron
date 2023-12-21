@@ -11,49 +11,35 @@ import (
 	"time"
 )
 
-// Config is the configuration for the Api.
-// SerialDevice is the only mandatory field.
-type Config struct {
-	SerialDevice string          // mandatory: the file path of the serial device: E.g. /dev/ttyUSB0
-	DebugLogger  vedirect.Logger // optional: a logger for debug output; if nil, no debug output is written
-	IoLogger     vedirect.Logger // optional: a logger for all io operations; if nil, no io output is written
-}
-
-type Api struct {
+type RegisterApi struct {
 	IoHandle  *serial.Port
 	Vd        *vedirect.Vedirect
 	Product   veproduct.Product
 	Registers veregisters.RegisterList
 }
 
-// NewApi creates a new Api instance and tries to connect to the device:
+// NewRegistertApi creates a new RegisterApi instance and tries to connect to the device:
 // - opens the serial port
 // - sends a ping
 // - gets the device id and uses it to get the product type
 // - gets the register list for the product type
-// Make sure to defer Api.Close() after creating a new Api instance.
-func NewApi(config *Config) (*Api, error) {
-	sa := Api{}
+// Make sure to defer RegisterApi.Close() after creating a new RegisterApi instance.
+func NewRegistertApi(serialDevice string, vdConfig vedirect.Config) (*RegisterApi, error) {
+	sa := RegisterApi{}
 
 	serialConfig := serial.Config{
-		Name:        config.SerialDevice,
+		Name:        serialDevice,
 		Baud:        19200,
 		ReadTimeout: time.Millisecond * 200,
 	}
 
 	if ioHandle, err := serial.OpenPort(&serialConfig); err != nil {
-		return nil, fmt.Errorf("cannot open port %s: %w", config.SerialDevice, err)
+		return nil, fmt.Errorf("cannot open port %s: %w", serialDevice, err)
 	} else {
 		sa.IoHandle = ioHandle
 	}
 
-	vdConfig := vedirect.Config{
-		IOPort:      sa.IoHandle,
-		IoLogger:    config.IoLogger,
-		DebugLogger: config.DebugLogger,
-	}
-
-	if vd, err := vedirect.NewVedirect(&vdConfig); err != nil {
+	if vd, err := vedirect.NewVedirect(sa.IoHandle, vdConfig); err != nil {
 		return nil, fmt.Errorf("cannot create vedirect: %w", err)
 	} else {
 		sa.Vd = vd
@@ -86,12 +72,12 @@ func NewApi(config *Config) (*Api, error) {
 }
 
 // Close closes the underlying serial port.
-func (sa *Api) Close() error {
+func (sa *RegisterApi) Close() error {
 	return sa.IoHandle.Close()
 }
 
-// FetchNumberRegister fetches a single number register and converts it to a float64.
-func (sa *Api) FetchNumberRegister(r veregisters.NumberRegisterStruct) (value float64, err error) {
+// ReadNumberRegister fetches a single number register and converts it to a float64.
+func (sa *RegisterApi) ReadNumberRegister(r veregisters.NumberRegisterStruct) (value float64, err error) {
 	if r.Signed {
 		var intValue int64
 		intValue, err = sa.Vd.GetInt(r.Address)
@@ -111,8 +97,8 @@ func (sa *Api) FetchNumberRegister(r veregisters.NumberRegisterStruct) (value fl
 	return
 }
 
-// FetchTextRegister fetches a single text register.
-func (sa *Api) FetchTextRegister(r veregisters.TextRegisterStruct) (value string, err error) {
+// ReadTextRegister fetches a single text register.
+func (sa *RegisterApi) ReadTextRegister(r veregisters.TextRegisterStruct) (value string, err error) {
 	value, err = sa.Vd.GetString(r.Address)
 	if err != nil {
 		return "", fmt.Errorf("fetching text register failed: %w", err)
@@ -120,8 +106,8 @@ func (sa *Api) FetchTextRegister(r veregisters.TextRegisterStruct) (value string
 	return
 }
 
-// FetchEnumRegister fetches a single enum register and decodes the enum to enum index and enum value.
-func (sa *Api) FetchEnumRegister(r veregisters.EnumRegisterStruct) (enumIdx int, enumValue string, err error) {
+// ReadEnumRegister fetches a single enum register and decodes the enum to enum index and enum value.
+func (sa *RegisterApi) ReadEnumRegister(r veregisters.EnumRegisterStruct) (enumIdx int, enumValue string, err error) {
 	var intValue uint64
 
 	intValue, err = sa.Vd.GetUint(r.Address)
@@ -152,9 +138,9 @@ type RegisterValues struct {
 	EnumValues   map[string]EnumRegisterValue
 }
 
-// FetchRegisterList fetches all registers from the given list and returns them as a RegisterValues struct.
+// ReadRegisterList fetches all registers from the given list and returns them as a RegisterValues struct.
 // When an error occurs, fetching is aborted and the error is returned.
-func (sa *Api) FetchRegisterList(rl veregisters.RegisterList) (RegisterValues, error) {
+func (sa *RegisterApi) ReadRegisterList(rl veregisters.RegisterList) (RegisterValues, error) {
 	rv := RegisterValues{
 		NumberValues: make(map[string]NumberRegisterValue),
 		TextValues:   make(map[string]TextRegisterValue),
@@ -162,7 +148,7 @@ func (sa *Api) FetchRegisterList(rl veregisters.RegisterList) (RegisterValues, e
 	}
 
 	for _, r := range rl.NumberRegisters {
-		v, err := sa.FetchNumberRegister(r)
+		v, err := sa.ReadNumberRegister(r)
 		if err != nil {
 			return rv, err
 		}
@@ -173,7 +159,7 @@ func (sa *Api) FetchRegisterList(rl veregisters.RegisterList) (RegisterValues, e
 	}
 
 	for _, r := range rl.TextRegisters {
-		v, err := sa.FetchTextRegister(r)
+		v, err := sa.ReadTextRegister(r)
 		if err != nil {
 			return rv, err
 		}
@@ -184,7 +170,7 @@ func (sa *Api) FetchRegisterList(rl veregisters.RegisterList) (RegisterValues, e
 	}
 
 	for _, r := range rl.EnumRegisters {
-		idx, v, err := sa.FetchEnumRegister(r)
+		idx, v, err := sa.ReadEnumRegister(r)
 		if err != nil {
 			return rv, err
 		}
@@ -198,26 +184,26 @@ func (sa *Api) FetchRegisterList(rl veregisters.RegisterList) (RegisterValues, e
 	return rv, nil
 }
 
-// FetchAllRegisters fetches all available registers and returns them as a RegisterValues struct.
-func (sa *Api) FetchAllRegisters() (RegisterValues, error) {
-	return sa.FetchRegisterList(sa.Registers)
+// ReadAllRegisters fetches all available registers and returns them as a RegisterValues struct.
+func (sa *RegisterApi) ReadAllRegisters() (RegisterValues, error) {
+	return sa.ReadRegisterList(sa.Registers)
 }
 
 // StreamRegisterList fetches all registers from the given list and calls the given handlers for each register.
 // When an error occurs, fetching is aborted and the error is returned.
 // This is useful since fetching all registers of a device can take up to a second. This way, you can start processing
 // the values as soon as they are available.
-func (sa *Api) StreamRegisterList(
+func (sa *RegisterApi) StreamRegisterList(
 	rl veregisters.RegisterList,
 	handlers struct {
-	number func(register veregisters.NumberRegisterStruct, value float64)
-	text   func(register veregisters.TextRegisterStruct, value string)
-	enum   func(register veregisters.EnumRegisterStruct, enumIdx int, enumValue string)
-},
+		number func(register veregisters.NumberRegisterStruct, value float64)
+		text   func(register veregisters.TextRegisterStruct, value string)
+		enum   func(register veregisters.EnumRegisterStruct, enumIdx int, enumValue string)
+	},
 ) error {
 	if handlers.number != nil {
 		for _, r := range rl.NumberRegisters {
-			v, err := sa.FetchNumberRegister(r)
+			v, err := sa.ReadNumberRegister(r)
 			if err != nil {
 				return err
 			}
@@ -227,7 +213,7 @@ func (sa *Api) StreamRegisterList(
 
 	if handlers.text != nil {
 		for _, r := range rl.TextRegisters {
-			v, err := sa.FetchTextRegister(r)
+			v, err := sa.ReadTextRegister(r)
 			if err != nil {
 				return err
 			}
@@ -237,7 +223,7 @@ func (sa *Api) StreamRegisterList(
 
 	if handlers.enum != nil {
 		for _, r := range rl.EnumRegisters {
-			v, ev, err := sa.FetchEnumRegister(r)
+			v, ev, err := sa.ReadEnumRegister(r)
 			if err != nil {
 				return err
 			}
