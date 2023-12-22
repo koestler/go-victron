@@ -37,7 +37,7 @@ func runVedirect(cmd *cobra.Command, args []string) {
 	}
 
 	if ioLog, err := cmd.Flags().GetString("io-log"); err == nil && ioLog != "" {
-		fl, err := newFileLogger(ioLog)
+		fl, err := vedirectapi.NewFileLogger(ioLog)
 		if err != nil {
 			fmt.Printf("error creating io log file: %s\n", err)
 			return
