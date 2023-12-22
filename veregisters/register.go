@@ -119,3 +119,96 @@ func NewEnumRegisterStruct[K constraints.Integer, M map[K]string](
 		}(),
 	}
 }
+
+type Register interface {
+	Category() string
+	Name() string
+	Description() string
+	Sort() int
+	Address() uint16
+	Static() bool
+	Writable() bool
+}
+
+type NumberRegister interface {
+	Register
+	Unit() string
+	Signed() bool
+	Factor() int
+	Offset() float64
+}
+
+type TextRegister interface {
+	Register
+}
+
+type EnumRegister interface {
+	Register
+	Bit() int
+	Enum() map[int]string
+}
+
+// Category return the category of the register (e.g. "Essential").
+func (r RegisterStruct) Category() string {
+	return r.category
+}
+
+// Name return the technical name of the register (e.g. "PanelVoltage").
+func (r RegisterStruct) Name() string {
+	return r.name
+}
+
+// Description return the description of the register (e.g. "Panel Voltage").
+func (r RegisterStruct) Description() string {
+	return r.description
+}
+
+// Sort return the sort order of the registers.
+func (r RegisterStruct) Sort() int {
+	return r.sort
+}
+
+// Address return the memory address used to fetch register from the device.
+func (r RegisterStruct) Address() uint16 {
+	return r.address
+}
+
+// Static return true when the register is static and not updated by the device.
+func (r RegisterStruct) Static() bool {
+	return r.static
+}
+
+// Writable return true when the register can be written to.
+func (r RegisterStruct) Writable() bool {
+	return r.writable
+}
+
+// Unit return the unit of the number (e.g. "V" for volt).
+func (r NumberRegisterStruct) Unit() string {
+	return r.unit
+}
+
+// Signed return true when the number is signed.
+func (r NumberRegisterStruct) Signed() bool {
+	return r.signed
+}
+
+// Factor return the factor to multiply the number with (e.g. 10 when the number is in 0.1V resolution).
+func (r NumberRegisterStruct) Factor() int {
+	return r.factor
+}
+
+// Offset return the offset to add to the number.
+func (r NumberRegisterStruct) Offset() float64 {
+	return r.offset
+}
+
+// Bit return the bit to use as a boolean 0/1.
+func (r EnumRegisterStruct) Bit() int {
+	return r.bit
+}
+
+// Enum return the enum map of enum index to enum string value.
+func (r EnumRegisterStruct) Enum() map[int]string {
+	return r.enum
+}
