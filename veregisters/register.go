@@ -41,6 +41,7 @@ type EnumRegisterStruct struct {
 // NewNumberRegisterStruct is a shortcut to create a RegisterStruct and embed it into a NumberRegisterStruct.
 func NewNumberRegisterStruct(
 	category, name, description string,
+	sort int,
 	address uint16,
 	static bool,
 	writable bool,
@@ -48,7 +49,6 @@ func NewNumberRegisterStruct(
 	factor int,
 	offset float64,
 	unit string,
-	sort int,
 ) NumberRegisterStruct {
 	return NumberRegisterStruct{
 		RegisterStruct{
@@ -70,10 +70,10 @@ func NewNumberRegisterStruct(
 // NewTextRegisterStruct is a shortcut to create a RegisterStruct and embed it into a TextRegisterStruct.
 func NewTextRegisterStruct(
 	category, name, description string,
+	sort int,
 	address uint16,
 	static bool,
 	writable bool,
-	sort int,
 ) TextRegisterStruct {
 	return TextRegisterStruct{
 		RegisterStruct{
@@ -92,12 +92,12 @@ func NewTextRegisterStruct(
 // Also, different key types for the enum map are supported as long as they are integers.
 func NewEnumRegisterStruct[K constraints.Integer, M map[K]string](
 	category, name, description string,
+	sort int,
 	address uint16,
 	bit int,
 	static bool,
 	writable bool,
 	enum M,
-	sort int,
 ) EnumRegisterStruct {
 	return EnumRegisterStruct{
 		RegisterStruct{
