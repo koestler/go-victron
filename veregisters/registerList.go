@@ -26,3 +26,11 @@ func (rl *RegisterList) AppendTextRegisterStruct(r ...TextRegisterStruct) {
 func (rl *RegisterList) AppendEnumRegisterStruct(r ...EnumRegisterStruct) {
 	rl.EnumRegisters = append(rl.EnumRegisters, r...)
 }
+
+// FilterRegister removes all registers from the list for which the filter function return false.
+// This is useful since the user does not need to care about the different register types.
+func (rl *RegisterList) FilterRegister(f func(r Register) bool) {
+	rl.NumberRegisters = filterRegisters(rl.NumberRegisters, f)
+	rl.TextRegisters = filterRegisters(rl.TextRegisters, f)
+	rl.EnumRegisters = filterRegisters(rl.EnumRegisters, f)
+}

@@ -1,17 +1,6 @@
 package veregisters
 
-// FilterFunc is a function that returns true if the register should be kept.
-type FilterFunc func(r Register) bool
-
-// FilterRegister removes all registers from the list for which the filter function return false.
-// This is useful since the user does not need to care about the different register types.
-func (rl *RegisterList) FilterRegister(f func(r Register) bool) {
-	rl.NumberRegisters = filterRegisters(rl.NumberRegisters, f)
-	rl.TextRegisters = filterRegisters(rl.TextRegisters, f)
-	rl.EnumRegisters = filterRegisters(rl.EnumRegisters, f)
-}
-
-func filterRegisters[R Register](inp []R, f FilterFunc) (oup []R) {
+func filterRegisters[R Register](inp []R, f func(r Register) bool) (oup []R) {
 	oup = make([]R, 0)
 	for _, r := range inp {
 		if f(r) {
