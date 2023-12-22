@@ -9,6 +9,7 @@ type RegisterList struct {
 	EnumRegisters   []EnumRegisterStruct
 }
 
+// NewRegisterList creates a new RegisterList.
 func NewRegisterList() RegisterList {
 	return RegisterList{
 		NumberRegisters: make([]NumberRegisterStruct, 0),
@@ -17,14 +18,22 @@ func NewRegisterList() RegisterList {
 	}
 }
 
+// Len returns the number of registers in the list.
+func (rl *RegisterList) Len() int {
+	return len(rl.NumberRegisters) + len(rl.TextRegisters) + len(rl.EnumRegisters)
+}
+
+// AppendNumberRegisterStruct appends the given NumberRegisterStructs to the list.
 func (rl *RegisterList) AppendNumberRegisterStruct(r ...NumberRegisterStruct) {
 	rl.NumberRegisters = append(rl.NumberRegisters, r...)
 }
 
+// AppendTextRegisterStruct appends the given TextRegisterStructs to the list.
 func (rl *RegisterList) AppendTextRegisterStruct(r ...TextRegisterStruct) {
 	rl.TextRegisters = append(rl.TextRegisters, r...)
 }
 
+// AppendEnumRegisterStruct appends the given EnumRegisterStructs to the list.
 func (rl *RegisterList) AppendEnumRegisterStruct(r ...EnumRegisterStruct) {
 	rl.EnumRegisters = append(rl.EnumRegisters, r...)
 }
@@ -39,7 +48,7 @@ func (rl *RegisterList) FilterRegister(f func(r Register) bool) {
 
 // GetRegisters returns all types of registers sorted by their sort value in a common interface slice.
 func (rl *RegisterList) GetRegisters() []Register {
-	oup := make([]Register, 0, len(rl.NumberRegisters)+len(rl.TextRegisters)+len(rl.EnumRegisters))
+	oup := make([]Register, 0, rl.Len())
 
 	for _, r := range rl.NumberRegisters {
 		oup = append(oup, r)
