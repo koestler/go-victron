@@ -8,6 +8,7 @@ import (
 	"github.com/koestler/go-victron/veproduct"
 	"github.com/koestler/go-victron/veregisters"
 	"github.com/tarm/serial"
+	"strings"
 	"time"
 )
 
@@ -95,24 +96,26 @@ func (sa *RegisterApi) ReadNumberRegister(r veregisters.NumberRegisterStruct) (v
 	}
 
 	value = value/float64(r.Factor()) + r.Offset()
-
 	return
 }
 
 // ReadTextRegister fetches a single text register.
 func (sa *RegisterApi) ReadTextRegister(r veregisters.TextRegisterStruct) (value string, err error) {
 	value, err = sa.Vd.GetString(r.Address())
+
 	if err != nil {
 		return "", fmt.Errorf("fetching text register failed: %w", err)
 	}
+
+	value = strings.TrimSpace(value) // various devices have trailing spaces in their text registers
 	return
 }
 
 // ReadEnumRegister fetches a single enum register and decodes the enum to enum index and enum value.
 func (sa *RegisterApi) ReadEnumRegister(r veregisters.EnumRegisterStruct) (enumIdx int, enumValue string, err error) {
 	var intValue uint64
-
 	intValue, err = sa.Vd.GetUint(r.Address())
+
 	if err != nil {
 		return 0, "", fmt.Errorf("fetching enum register failed: %w", err)
 	}
