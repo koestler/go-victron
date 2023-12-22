@@ -19,10 +19,10 @@ type RegisterStruct struct {
 // NumberRegisterStruct is for registers that store numeric (integer or float) values.
 type NumberRegisterStruct struct {
 	RegisterStruct
-	unit   string  // the unit of the number (e.g. "V" for volt)
 	signed bool    // when true, the number is signed
 	factor int     // the factor to multiply the number with (e.g. 10 when the number is in 0.1V resolution)
 	offset float64 // the offset to add to the number
+	unit   string  // the unit of the number (e.g. "V" for volt)
 }
 
 // TextRegisterStruct is for registers that store text values.
@@ -60,10 +60,10 @@ func NewNumberRegisterStruct(
 			static,
 			writable,
 		},
-		unit,
 		signed,
 		factor,
 		offset,
+		unit,
 	}
 }
 
@@ -183,11 +183,6 @@ func (r RegisterStruct) Writable() bool {
 	return r.writable
 }
 
-// Unit return the unit of the number (e.g. "V" for volt).
-func (r NumberRegisterStruct) Unit() string {
-	return r.unit
-}
-
 // Signed return true when the number is signed.
 func (r NumberRegisterStruct) Signed() bool {
 	return r.signed
@@ -201,6 +196,11 @@ func (r NumberRegisterStruct) Factor() int {
 // Offset return the offset to add to the number.
 func (r NumberRegisterStruct) Offset() float64 {
 	return r.offset
+}
+
+// Unit return the unit of the number (e.g. "V" for volt).
+func (r NumberRegisterStruct) Unit() string {
+	return r.unit
 }
 
 // Bit return the bit to use as a boolean 0/1.
