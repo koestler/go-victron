@@ -148,13 +148,13 @@ func (sa *RegisterApi) ReadRegisterList(rl veregisters.RegisterList) (rv Registe
 	}
 
 	err = sa.StreamRegisterList(rl, ValueHandler{
-		number: func(v NumberRegisterValue) {
+		Number: func(v NumberRegisterValue) {
 			rv.NumberValues[v.Name()] = v
 		},
-		text: func(v TextRegisterValue) {
+		Text: func(v TextRegisterValue) {
 			rv.TextValues[v.Name()] = v
 		},
-		enum: func(v EnumRegisterValue) {
+		Enum: func(v EnumRegisterValue) {
 			rv.EnumValues[v.Name()] = v
 		},
 	})
@@ -165,9 +165,9 @@ func (sa *RegisterApi) ReadRegisterList(rl veregisters.RegisterList) (rv Registe
 // ValueHandler is a container for handlers for number, text and enum registers values.
 // This is made such that new register types can be added without breaking the api.
 type ValueHandler struct {
-	number func(v NumberRegisterValue)
-	text   func(v TextRegisterValue)
-	enum   func(v EnumRegisterValue)
+	Number func(v NumberRegisterValue)
+	Text   func(v TextRegisterValue)
+	Enum   func(v EnumRegisterValue)
 }
 
 // StreamRegisterList fetches all registers from the given list and calls the given handlers for each register.
@@ -178,39 +178,39 @@ func (sa *RegisterApi) StreamRegisterList(
 	rl veregisters.RegisterList,
 	handlers ValueHandler,
 ) error {
-	if handlers.number != nil {
+	if handlers.Number != nil {
 		for _, r := range rl.NumberRegisters {
 			v, err := sa.ReadNumberRegister(r)
 			if err != nil {
 				return err
 			}
-			handlers.number(NumberRegisterValue{
+			handlers.Number(NumberRegisterValue{
 				NumberRegisterStruct: r,
 				value:                v,
 			})
 		}
 	}
 
-	if handlers.text != nil {
+	if handlers.Text != nil {
 		for _, r := range rl.TextRegisters {
 			v, err := sa.ReadTextRegister(r)
 			if err != nil {
 				return err
 			}
-			handlers.text(TextRegisterValue{
+			handlers.Text(TextRegisterValue{
 				TextRegisterStruct: r,
 				value:              v,
 			})
 		}
 	}
 
-	if handlers.enum != nil {
+	if handlers.Enum != nil {
 		for _, r := range rl.EnumRegisters {
 			idx, v, err := sa.ReadEnumRegister(r)
 			if err != nil {
 				return err
 			}
-			handlers.enum(EnumRegisterValue{
+			handlers.Enum(EnumRegisterValue{
 				EnumRegisterStruct: r,
 				enumIdx:            idx,
 				enumValue:          v,
