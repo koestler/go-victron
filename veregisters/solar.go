@@ -16,7 +16,7 @@ func AppendSolar(rl *RegisterList) {
 // AppendSolarProduct appends all registers of the Product category to the given RegisterList.
 func AppendSolarProduct(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"ProductId",
 			"Product id",
@@ -29,7 +29,7 @@ func AppendSolarProduct(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"GroupId",
 			"Group id",
@@ -44,7 +44,7 @@ func AppendSolarProduct(rl *RegisterList) {
 		),
 	)
 	rl.AppendTextRegisterStruct(
-		NewTextRegisterStruct(
+		newTextRegisterStruct(
 			"Product",
 			"SerialNumber",
 			"Serial number",
@@ -53,7 +53,7 @@ func AppendSolarProduct(rl *RegisterList) {
 			true,
 			false,
 		),
-		NewTextRegisterStruct(
+		newTextRegisterStruct(
 			"Product",
 			"ModelName",
 			"Model name",
@@ -69,7 +69,7 @@ func AppendSolarProduct(rl *RegisterList) {
 // AppendSolarGeneric appends all registers of the Generic category to the given RegisterList.
 func AppendSolarGeneric(rl *RegisterList) {
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Generic",
 			"DeviceMode",
 			"Device mode",
@@ -83,7 +83,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 				1: "Charger on",
 			},
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Essential",
 			"State",
 			"Device state",
@@ -102,7 +102,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 // AppendSolarSettings appends all registers of the Settings category to the given RegisterList.
 func AppendSolarSettings(rl *RegisterList) {
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Settings",
 			"AdaptiveMode",
 			"Adaptive mode",
@@ -117,7 +117,7 @@ func AppendSolarSettings(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"AutomaticEqualisationMode",
 			"Automatic equalisation mode",
@@ -130,7 +130,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"BatteryAbsorptionTimeLimit",
 			"Battery absorption time limit",
@@ -143,7 +143,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"h",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"BatteryAbsorptionVoltage",
 			"Battery absorption voltage",
@@ -156,7 +156,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"BatteryFloatVoltage",
 			"Battery float voltage",
@@ -169,7 +169,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"BatteryEqualisationVoltage",
 			"Battery equalisation voltage",
@@ -182,7 +182,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"BatteryTempCompensation",
 			"Battery temperature compensation",
@@ -197,7 +197,7 @@ func AppendSolarSettings(rl *RegisterList) {
 		),
 	)
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Settings",
 			"BatteryType",
 			"Battery type",
@@ -219,7 +219,7 @@ func AppendSolarSettings(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"BatteryMaximumCurrent",
 			"Battery maximum current",
@@ -232,7 +232,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"BatteryVoltage",
 			"Battery voltage",
@@ -247,7 +247,7 @@ func AppendSolarSettings(rl *RegisterList) {
 		),
 	)
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Settings",
 			"BatteryVoltageSetting",
 			"Battery voltage setting",
@@ -263,7 +263,7 @@ func AppendSolarSettings(rl *RegisterList) {
 				48: "48V battery",
 			},
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Settings",
 			"BmsPresent",
 			"BMS present",
@@ -278,7 +278,7 @@ func AppendSolarSettings(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"TailCurrent",
 			"Tail current",
@@ -291,7 +291,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"LowTempCurrent",
 			"Low temperature charge current",
@@ -306,7 +306,7 @@ func AppendSolarSettings(rl *RegisterList) {
 		),
 	)
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Settings",
 			"AutoEqualiseStop",
 			"Auto equalise stop on voltage",
@@ -321,7 +321,7 @@ func AppendSolarSettings(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"EqualisationCurrentLevel",
 			"Equalisation current level",
@@ -334,7 +334,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"%",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"EqualisationDuration",
 			"Equalisation duration",
@@ -347,7 +347,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"h",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"ReBulkVoltageOffset",
 			"Re-bulk voltage offset",
@@ -360,7 +360,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Settings",
 			"BatteryLowTemperatureLevel",
 			"Battery low temperature level",
@@ -379,7 +379,7 @@ func AppendSolarSettings(rl *RegisterList) {
 // AppendSolarChargerData appends all registers of the Charger category to the given RegisterList.
 func AppendSolarChargerData(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"BatteryTemperature",
 			"Battery temperature",
@@ -392,7 +392,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			-273.15, // unit outputs temp in K
 			"°C",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Charger",
 			"ChargerMaximumCurrent",
 			"Charger maximum current",
@@ -405,7 +405,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Charger",
 			"SystemYield",
 			"System yield",
@@ -418,7 +418,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0,
 			"kWh",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Charger",
 			"SystemYieldResettable",
 			"System yield (resettable)",
@@ -431,7 +431,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0,
 			"kWh",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Charger",
 			"ChargerInternalTemperature",
 			"Charger internal temperature",
@@ -446,7 +446,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 		),
 	)
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Generic",
 			"ChargerErrorCode",
 			"Charger error",
@@ -458,7 +458,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"ChargerCurrent",
 			"Charger current",
@@ -471,7 +471,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"ChargerVoltage",
 			"Charger voltage",
@@ -485,7 +485,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"V",
 		),
 		// skipped Additional charger state info (bitmask)
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"YieldToday",
 			"Yield today",
@@ -498,7 +498,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0,
 			"kWh",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Charger",
 			"MaximumPowerToday",
 			"Maximum power today",
@@ -511,7 +511,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0,
 			"W",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"YieldYesterday",
 			"Yield yesterday",
@@ -524,7 +524,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0,
 			"kWh",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Charger",
 			"MaximumPowerYesterday",
 			"Maximum power yesterday",
@@ -548,7 +548,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 // AppendSolarPanelData appends all registers of the Panel category to the given RegisterList.
 func AppendSolarPanelData(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"PanelPower",
 			"Panel power",
@@ -561,7 +561,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			0,
 			"W",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Panel",
 			"PanelVoltage",
 			"Panel voltage",
@@ -574,7 +574,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Panel",
 			"PanelCurrent",
 			"Panel current",
@@ -587,7 +587,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Panel",
 			"PanelMaximumVoltage",
 			"Panel maximum voltage",
@@ -602,7 +602,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 		),
 	)
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Panel",
 			"TrackerMode",
 			"Tracker mode",

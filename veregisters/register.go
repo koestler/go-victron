@@ -38,8 +38,8 @@ type EnumRegisterStruct struct {
 	enum map[int]string // a map uf enum index to enum string value
 }
 
-// NewNumberRegisterStruct is a shortcut to create a RegisterStruct and embed it into a NumberRegisterStruct.
-func NewNumberRegisterStruct(
+// newNumberRegisterStruct is a shortcut to create a RegisterStruct and embed it into a NumberRegisterStruct.
+func newNumberRegisterStruct(
 	category, name, description string,
 	sort int,
 	address uint16,
@@ -67,8 +67,8 @@ func NewNumberRegisterStruct(
 	}
 }
 
-// NewTextRegisterStruct is a shortcut to create a RegisterStruct and embed it into a TextRegisterStruct.
-func NewTextRegisterStruct(
+// newTextRegisterStruct is a shortcut to create a RegisterStruct and embed it into a TextRegisterStruct.
+func newTextRegisterStruct(
 	category, name, description string,
 	sort int,
 	address uint16,
@@ -88,9 +88,9 @@ func NewTextRegisterStruct(
 	}
 }
 
-// NewEnumRegisterStruct is a shortcut to create a RegisterStruct and embed it into a EnumRegisterStruct.
+// newEnumRegisterStruct is a shortcut to create a RegisterStruct and embed it into a EnumRegisterStruct.
 // Also, different key types for the enum map are supported as long as they are integers.
-func NewEnumRegisterStruct[K constraints.Integer, M map[K]string](
+func newEnumRegisterStruct[K constraints.Integer, M map[K]string](
 	category, name, description string,
 	sort int,
 	address uint16,

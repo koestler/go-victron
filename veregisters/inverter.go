@@ -21,7 +21,7 @@ func AppendInverter(rl *RegisterList) {
 // AppendInverterProduct appends all registers of the Product category to the given RegisterList.
 func AppendInverterProduct(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"ProductId",
 			"Product id",
@@ -34,7 +34,7 @@ func AppendInverterProduct(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"ProductRevision",
 			"Hardware Revision",
@@ -47,7 +47,7 @@ func AppendInverterProduct(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"AppVer",
 			"Software Revision",
@@ -62,7 +62,7 @@ func AppendInverterProduct(rl *RegisterList) {
 		),
 	)
 	rl.AppendTextRegisterStruct(
-		NewTextRegisterStruct(
+		newTextRegisterStruct(
 			"Product",
 			"SerialNumber",
 			"Serial number",
@@ -71,7 +71,7 @@ func AppendInverterProduct(rl *RegisterList) {
 			true,
 			false,
 		),
-		NewTextRegisterStruct(
+		newTextRegisterStruct(
 			"Product",
 			"ModelName",
 			"Model name",
@@ -82,7 +82,7 @@ func AppendInverterProduct(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"ACOutRatedPower",
 			"AC Out Rated Power",
@@ -96,7 +96,7 @@ func AppendInverterProduct(rl *RegisterList) {
 			"VA",
 		),
 		// skipping capabilities
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"ACOutNomVoltage",
 			"AC Out Nominal Voltage",
@@ -109,7 +109,7 @@ func AppendInverterProduct(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"BatVoltage",
 			"Battery Voltage",
@@ -128,7 +128,7 @@ func AppendInverterProduct(rl *RegisterList) {
 // AppendInverterGeneric appends all registers of the Generic category to the given RegisterList.
 func AppendInverterGeneric(rl *RegisterList) {
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Essential",
 			"DeviceState",
 			"Device state",
@@ -139,7 +139,7 @@ func AppendInverterGeneric(rl *RegisterList) {
 			victronDefinitions.GetInverterStateMap(),
 		),
 		// todo: add device off reason, device warning reason and alarm reason (all bit masks)
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Operation",
 			"DeviceMode",
 			"Device mode",
@@ -160,7 +160,7 @@ var inactiveActiveEnum = map[int]string{
 // AppendInverterOffReasons appends all registers of the Off Reasons category to the given RegisterList.
 func AppendInverterOffReasons(rl *RegisterList) {
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Off Reasons",
 			"DeviceOffReasonNoInputPower",
 			"No input power",
@@ -170,7 +170,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Off Reasons",
 			"DeviceOffReasonPowerButton",
 			"Soft power button or SW controller",
@@ -180,7 +180,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Off Reasons",
 			"DeviceOffReasonRemoteInput",
 			"HW remote input connector",
@@ -190,7 +190,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Off Reasons",
 			"DeviceOffReasonInternal",
 			"Internal reason (see alarm reason)",
@@ -200,7 +200,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Off Reasons",
 			"DeviceOffReasonPayGo",
 			"PayGo, out of credit, need token",
@@ -216,7 +216,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 // AppendInverterWarningReasons appends all registers of the Warning Reasons category to the given RegisterList.
 func AppendInverterWarningReasons(rl *RegisterList) {
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonLowBatVoltage",
 			"Low battery voltage",
@@ -226,7 +226,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonHighBatVoltage",
 			"High battery voltage",
@@ -236,7 +236,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonLowTemp",
 			"Low temperature",
@@ -246,7 +246,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonHighTemp",
 			"High temperature",
@@ -256,7 +256,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonOverload",
 			"Overload",
@@ -266,7 +266,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonPoorDC",
 			"Poor DC connection",
@@ -276,7 +276,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonLowAcVoltage",
 			"Low AC-output voltage",
@@ -286,7 +286,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			false,
 			inactiveActiveEnum,
 		),
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Warning Reasons",
 			"DeviceWarningReasonHighAcVoltage",
 			"High AC-output voltage",
@@ -302,7 +302,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 // AppendInverterHistory appends all registers of the History category to the given RegisterList.
 func AppendInverterHistory(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"History",
 			"HistoryTime",
 			"Time",
@@ -315,7 +315,7 @@ func AppendInverterHistory(rl *RegisterList) {
 			0,
 			"s",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"History",
 			"HistoryEnergy",
 			"Energy",
@@ -334,7 +334,7 @@ func AppendInverterHistory(rl *RegisterList) {
 // AppendInverterOperation appends all registers of the Operation category to the given RegisterList.
 func AppendInverterOperation(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"AcOutCurrent",
 			"AC Output Current",
@@ -347,7 +347,7 @@ func AppendInverterOperation(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"AcOutVoltage",
 			"AC Output Voltage",
@@ -362,7 +362,7 @@ func AppendInverterOperation(rl *RegisterList) {
 		),
 		/*
 			todo: use capabilities register to determine if this is needed (howto test?)
-			NewNumberRegisterStruct(
+			newNumberRegisterStruct(
 				"Essential",
 				"AcOutApparentPower",
 				"AC Output Apparent Power",
@@ -375,7 +375,7 @@ func AppendInverterOperation(rl *RegisterList) {
 				"VA",
 			),
 		*/
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Operation",
 			"InvLoopGetIinv",
 			"Inverter Loop get I inv",
@@ -388,7 +388,7 @@ func AppendInverterOperation(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"DcChannel1Voltage",
 			"Input Battery Voltage",
@@ -407,7 +407,7 @@ func AppendInverterOperation(rl *RegisterList) {
 // AppendInverterAcOutControl appends all registers of the AC-out settings category to the given RegisterList.
 func AppendInverterAcOutControl(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"AC-out settings",
 			"AcOutVoltageSetpoint",
 			"Voltage Setpoint",
@@ -420,7 +420,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"AC-out settings",
 			"AcOutVoltageSetpointMin",
 			"Voltage Setpoint Minimum",
@@ -433,7 +433,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"AC-out settings",
 			"AcOutVoltageSetpointMax",
 			"Voltage Setpoint Maximum",
@@ -448,7 +448,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 		),
 		/*
 			// todo: activate via capabilities?
-			NewNumberRegisterStruct(
+			newNumberRegisterStruct(
 				"AC-out settings",
 				"AcLoadSensePowerThreshold",
 				"Load Sense Power Threshold",
@@ -460,7 +460,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 				0,
 				"VA",
 			),
-			NewNumberRegisterStruct(
+			newNumberRegisterStruct(
 				"AC-out settings",
 				"AcLoadSensePowerClear",
 				"Load Sense Power Clear",
@@ -475,7 +475,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 		*/
 	)
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"AC-out settings",
 			"InvWaveSet50HzNot60Hz",
 			"Frequency",
@@ -490,7 +490,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"AC-out settings",
 			"InvOperEcoModeInvMin",
 			"Inverter Eco Mode Inv Min",
@@ -503,7 +503,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"AC-out settings",
 			"InvOperEcoModeRetryTime",
 			"Inverter Eco Mode Retry Time",
@@ -516,7 +516,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 			0,
 			"s",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"AC-out settings",
 			"InvOperEcoLoadDetectPeriods",
 			"Inverter Eco Load Detect Periods",
@@ -535,7 +535,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 // AppendInverterBatteryControl appends all registers of the Battery settings category to the given RegisterList.
 func AppendInverterBatteryControl(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"ShutdownLowVoltageSet",
 			"Shutdown Low Voltage",
@@ -548,7 +548,7 @@ func AppendInverterBatteryControl(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"AlarmLowVoltageSet",
 			"Alarm Low Voltage Set",
@@ -561,7 +561,7 @@ func AppendInverterBatteryControl(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"AlarmLowVoltageClear",
 			"Alarm Low Voltage Clear",
@@ -574,7 +574,7 @@ func AppendInverterBatteryControl(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"VoltageRangeMin",
 			"Voltage Range Min",
@@ -587,7 +587,7 @@ func AppendInverterBatteryControl(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"VoltageRangeMax",
 			"Voltage Range Max",
@@ -606,7 +606,7 @@ func AppendInverterBatteryControl(rl *RegisterList) {
 // AppendInverterDynamicCutoff appends all registers of the Dynamic Cutoff category to the given RegisterList.
 func AppendInverterDynamicCutoff(rl *RegisterList) {
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Dynamic Cutoff",
 			"InvProtUbatDynCutoffEnable",
 			"Dynamic Cutoff Enable",
@@ -621,7 +621,7 @@ func AppendInverterDynamicCutoff(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"InvProtUbatDynCutoffFactor",
 			"Factor",
@@ -634,7 +634,7 @@ func AppendInverterDynamicCutoff(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"InvProtUbatDynCutoffFactor2000",
 			"Factor 2000",
@@ -647,7 +647,7 @@ func AppendInverterDynamicCutoff(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"InvProtUbatDynCutoffFactor250",
 			"Factor 250",
@@ -660,7 +660,7 @@ func AppendInverterDynamicCutoff(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"InvProtUbatDynCutoffFactor5",
 			"Factor 5",
@@ -673,7 +673,7 @@ func AppendInverterDynamicCutoff(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Battery settings",
 			"InvProtUbatDynCutoffVoltage",
 			"Voltage",

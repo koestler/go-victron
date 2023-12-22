@@ -12,7 +12,7 @@ func AppendBmv(rl *RegisterList) {
 // AppendBmvProduct appends all registers of the Product category to the given RegisterList.
 func AppendBmvProduct(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"ProductId",
 			"Product id",
@@ -25,7 +25,7 @@ func AppendBmvProduct(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"ProductRevision",
 			"Product revision",
@@ -40,7 +40,7 @@ func AppendBmvProduct(rl *RegisterList) {
 		),
 	)
 	rl.AppendTextRegisterStruct(
-		NewTextRegisterStruct(
+		newTextRegisterStruct(
 			"Product",
 			"SerialNumber",
 			"Serial number",
@@ -49,7 +49,7 @@ func AppendBmvProduct(rl *RegisterList) {
 			true,
 			false,
 		),
-		NewTextRegisterStruct(
+		newTextRegisterStruct(
 			"Product",
 			"ModelName",
 			"Model name",
@@ -58,7 +58,7 @@ func AppendBmvProduct(rl *RegisterList) {
 			true,
 			false,
 		),
-		NewTextRegisterStruct(
+		newTextRegisterStruct(
 			"Product",
 			"Description",
 			"Description",
@@ -69,7 +69,7 @@ func AppendBmvProduct(rl *RegisterList) {
 		),
 	)
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Product",
 			"Uptime",
 			"Device uptime",
@@ -89,7 +89,7 @@ func AppendBmvProduct(rl *RegisterList) {
 // AppendBmvMonitor appends all registers of the Monitor category to the given RegisterList.
 func AppendBmvMonitor(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"Power",
 			"Power",
@@ -102,7 +102,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0,
 			"W",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"CurrentHighRes",
 			"Current",
@@ -115,7 +115,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0,
 			"A",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"MainVoltage",
 			"Main voltage",
@@ -128,7 +128,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Monitor",
 			"AuxVoltage",
 			"Aux (starter) voltage",
@@ -141,7 +141,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Monitor",
 			"Consumed",
 			"Consumed",
@@ -154,7 +154,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0,
 			"Ah",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"SOC",
 			"State of charge",
@@ -167,7 +167,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0,
 			"%",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Monitor",
 			"TTG",
 			"Time to go",
@@ -180,7 +180,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0,
 			"min",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Essential",
 			"BatteryTemperature",
 			"Battery Temperature",
@@ -193,7 +193,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			-273.15, // unit outputs temp in K
 			"°C",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Monitor",
 			"MidPointVoltage",
 			"Mid-point voltage",
@@ -206,7 +206,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Monitor",
 			"MidPointVoltageDeviation",
 			"Mid-point voltage deviation",
@@ -221,7 +221,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 		),
 	)
 	rl.AppendEnumRegisterStruct(
-		NewEnumRegisterStruct(
+		newEnumRegisterStruct(
 			"Monitor",
 			"SynchronizationState",
 			"Synchronization state",
@@ -240,7 +240,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 // AppendBmvHistoric appends all registers of the Historic category to the given RegisterList.
 func AppendBmvHistoric(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"DepthOfTheDeepestDischarge",
 			"Depth of the deepest discharge",
@@ -253,7 +253,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"Ah",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"DepthOfTheLastDischarge",
 			"Depth of the last discharge",
@@ -266,7 +266,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"Ah",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"DepthOfTheAverageDischarge",
 			"Depth of the average discharge",
@@ -279,7 +279,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"Ah",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"NumberOfCycles",
 			"Number of cycles",
@@ -292,7 +292,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"NumberOfFullDischarges",
 			"Number of full discharges",
@@ -305,7 +305,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"CumulativeAmpHours",
 			"Cumulative amp hours",
@@ -318,7 +318,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"Ah",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"MainVoltageMinimum",
 			"Minimum voltage",
@@ -331,7 +331,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"MainVoltageMaximum",
 			"Maximum voltage",
@@ -344,7 +344,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"TimeSinceFullCharge",
 			"Time since full charge",
@@ -357,7 +357,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"s",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"NumberOfAutomaticSynchronizations",
 			"Number of automatic synchronizations",
@@ -370,7 +370,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"NumberOfLowMainVoltageAlarms",
 			"Number of low voltage alarms",
@@ -383,7 +383,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"NumberOfHighMainVoltageAlarms",
 			"Number of high voltage alarms",
@@ -396,7 +396,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"AuxVoltageMinimum",
 			"Minimum starter voltage",
@@ -409,7 +409,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"AuxVoltageMaximum",
 			"Maximum starter voltage",
@@ -422,7 +422,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"V",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"AmountOfDischargedEnergy",
 			"Amount of discharged energy",
@@ -435,7 +435,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0,
 			"kWh",
 		),
-		NewNumberRegisterStruct(
+		newNumberRegisterStruct(
 			"Historic",
 			"AmountOfChargedEnergy",
 			"Amount of charged energy",
