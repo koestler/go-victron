@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"github.com/koestler/go-victron/vedirect"
 	"github.com/koestler/go-victron/vedirectapi"
@@ -57,7 +58,7 @@ func runVedirect(cmd *cobra.Command, args []string) {
 	time1 := time.Now()
 
 	var values vedirectapi.RegisterValues
-	if rv, err := api.ReadAllRegisters(); err != nil {
+	if rv, err := api.ReadAllRegisters(context.Background()); err != nil {
 		fmt.Printf("error fetching registers: %s\n", err)
 	} else {
 		values = rv

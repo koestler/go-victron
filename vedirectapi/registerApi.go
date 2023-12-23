@@ -3,6 +3,7 @@
 package vedirectapi
 
 import (
+	"context"
 	"fmt"
 	"github.com/koestler/go-victron/vedirect"
 	"github.com/koestler/go-victron/veproduct"
@@ -20,6 +21,8 @@ type RegisterApi struct {
 	Product   veproduct.Product
 	Registers veregisters.RegisterList
 }
+
+var ErrCtxDone = fmt.Errorf("context done")
 
 // NewRegistertApi creates a new RegisterApi instance and tries to connect to the device:
 // - opens the serial port
@@ -137,30 +140,34 @@ func (sa *RegisterApi) ReadEnumRegister(r veregisters.EnumRegisterStruct) (enumI
 }
 
 // ReadAllRegisters fetches all available registers and returns them as a RegisterValues struct.
-func (sa *RegisterApi) ReadAllRegisters() (RegisterValues, error) {
-	return sa.ReadRegisterList(sa.Registers)
+func (sa *RegisterApi) ReadAllRegisters(ctx context.Context) (RegisterValues, error) {
+	return sa.ReadRegisterList(ctx, sa.Registers)
 }
 
 // ReadRegisterList fetches all registers from the given list and returns them as a RegisterValues struct.
 // When an error occurs, fetching is aborted and the error is returned.
-func (sa *RegisterApi) ReadRegisterList(rl veregisters.RegisterList) (rv RegisterValues, err error) {
+func (sa *RegisterApi) ReadRegisterList(
+	ctx context.Context,
+	rl veregisters.RegisterList,
+) (rv RegisterValues, err error) {
 	rv = RegisterValues{
 		NumberValues: make(map[string]NumberRegisterValue, len(rl.NumberRegisters)),
 		TextValues:   make(map[string]TextRegisterValue, len(rl.TextRegisters)),
 		EnumValues:   make(map[string]EnumRegisterValue, len(rl.EnumRegisters)),
 	}
 
-	err = sa.StreamRegisterList(rl, ValueHandler{
-		Number: func(v NumberRegisterValue) {
-			rv.NumberValues[v.Name()] = v
-		},
-		Text: func(v TextRegisterValue) {
-			rv.TextValues[v.Name()] = v
-		},
-		Enum: func(v EnumRegisterValue) {
-			rv.EnumValues[v.Name()] = v
-		},
-	})
+	err = sa.StreamRegisterList(
+		ctx, rl, ValueHandler{
+			Number: func(v NumberRegisterValue) {
+				rv.NumberValues[v.Name()] = v
+			},
+			Text: func(v TextRegisterValue) {
+				rv.TextValues[v.Name()] = v
+			},
+			Enum: func(v EnumRegisterValue) {
+				rv.EnumValues[v.Name()] = v
+			},
+		})
 
 	return
 }
@@ -178,11 +185,17 @@ type ValueHandler struct {
 // This is useful since fetching all registers of a device can take up to a second. This way, you can start processing
 // the values as soon as they are available.
 func (sa *RegisterApi) StreamRegisterList(
+	ctx context.Context,
 	rl veregisters.RegisterList,
 	handlers ValueHandler,
 ) error {
 	if handlers.Number != nil {
 		for _, r := range rl.NumberRegisters {
+			select {
+			case <-ctx.Done():
+				return ErrCtxDone
+			default:
+			}
 			v, err := sa.ReadNumberRegister(r)
 			if err != nil {
 				return err
@@ -196,6 +209,11 @@ func (sa *RegisterApi) StreamRegisterList(
 
 	if handlers.Text != nil {
 		for _, r := range rl.TextRegisters {
+			select {
+			case <-ctx.Done():
+				return ErrCtxDone
+			default:
+			}
 			v, err := sa.ReadTextRegister(r)
 			if err != nil {
 				return err
@@ -209,6 +227,11 @@ func (sa *RegisterApi) StreamRegisterList(
 
 	if handlers.Enum != nil {
 		for _, r := range rl.EnumRegisters {
+			select {
+			case <-ctx.Done():
+				return ErrCtxDone
+			default:
+			}
 			idx, v, err := sa.ReadEnumRegister(r)
 			if err != nil {
 				return err
