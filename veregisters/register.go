@@ -120,7 +120,17 @@ func newEnumRegisterStruct[K constraints.Integer, M map[K]string](
 	}
 }
 
+type Type uint
+
+const (
+	Undefined Type = iota
+	Number
+	Text
+	Enum
+)
+
 type Register interface {
+	Type() Type
 	Category() string
 	Name() string
 	Description() string
@@ -138,14 +148,15 @@ type NumberRegister interface {
 	Offset() float64
 }
 
-type TextRegister interface {
-	Register
-}
-
 type EnumRegister interface {
 	Register
 	Bit() int
 	Enum() map[int]string
+}
+
+// Type return the type of the register.
+func (r RegisterStruct) Type() Type {
+	return Undefined
 }
 
 // Category return the category of the register (e.g. "Essential").
@@ -183,6 +194,11 @@ func (r RegisterStruct) Writable() bool {
 	return r.writable
 }
 
+// Type return the type of the register.
+func (r NumberRegisterStruct) Type() Type {
+	return Number
+}
+
 // Signed return true when the number is signed.
 func (r NumberRegisterStruct) Signed() bool {
 	return r.signed
@@ -201,6 +217,16 @@ func (r NumberRegisterStruct) Offset() float64 {
 // Unit return the unit of the number (e.g. "V" for volt).
 func (r NumberRegisterStruct) Unit() string {
 	return r.unit
+}
+
+// Type return the type of the register.
+func (r TextRegisterStruct) Type() Type {
+	return Text
+}
+
+// Type return the type of the register.
+func (r EnumRegisterStruct) Type() Type {
+	return Enum
 }
 
 // Bit return the bit to use as a boolean 0/1.
