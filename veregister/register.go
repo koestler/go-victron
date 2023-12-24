@@ -1,5 +1,5 @@
-// Package veregisters contains the register definitions for the VE.Direct protocol.
-package veregisters
+// Package veregister contains the register definitions for the VE.Direct protocol.
+package veregister
 
 import (
 	"golang.org/x/exp/constraints"

@@ -1,5 +1,5 @@
 // Package vedirectapi implements an easy to use api to connect to VE.Direct devices and read their values.
-// It utilizes  the low level vedirect, veregisters and veproduct packages and intatiates a connection using the serial package.
+// It utilizes  the low level vedirect, veregister and veproduct packages and intatiates a connection using the serial package.
 package vedirectapi
 
 import (
@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/koestler/go-victron/vedirect"
 	"github.com/koestler/go-victron/veproduct"
-	"github.com/koestler/go-victron/veregisters"
+	"github.com/koestler/go-victron/veregister"
 	"github.com/tarm/serial"
 	"strings"
 	"time"
@@ -19,7 +19,7 @@ type RegisterApi struct {
 	IoHandle  *serial.Port
 	Vd        *vedirect.Vedirect
 	Product   veproduct.Product
-	Registers veregisters.RegisterList
+	Registers veregister.RegisterList
 }
 
 var ErrCtxDone = fmt.Errorf("context done")
@@ -68,7 +68,7 @@ func NewRegistertApi(serialDevice string, vdConfig vedirect.Config) (*RegisterAp
 	}
 
 	// get register list
-	if rl, err := veregisters.GetRegisterListByProductType(sa.Product.Type()); err != nil {
+	if rl, err := veregister.GetRegisterListByProductType(sa.Product.Type()); err != nil {
 		return nil, fmt.Errorf("cannot get register list: %w", err)
 	} else {
 		sa.Registers = rl
@@ -83,7 +83,7 @@ func (sa *RegisterApi) Close() error {
 }
 
 // ReadNumberRegister fetches a single number register and converts it to a float64.
-func (sa *RegisterApi) ReadNumberRegister(r veregisters.NumberRegisterStruct) (value float64, err error) {
+func (sa *RegisterApi) ReadNumberRegister(r veregister.NumberRegisterStruct) (value float64, err error) {
 	if r.Signed() {
 		var intValue int64
 		intValue, err = sa.Vd.GetInt(r.Address())
@@ -103,7 +103,7 @@ func (sa *RegisterApi) ReadNumberRegister(r veregisters.NumberRegisterStruct) (v
 }
 
 // ReadTextRegister fetches a single text register.
-func (sa *RegisterApi) ReadTextRegister(r veregisters.TextRegisterStruct) (value string, err error) {
+func (sa *RegisterApi) ReadTextRegister(r veregister.TextRegisterStruct) (value string, err error) {
 	value, err = sa.Vd.GetString(r.Address())
 
 	if err != nil {
@@ -115,7 +115,7 @@ func (sa *RegisterApi) ReadTextRegister(r veregisters.TextRegisterStruct) (value
 }
 
 // ReadEnumRegister fetches a single enum register and decodes the enum to enum index and enum value.
-func (sa *RegisterApi) ReadEnumRegister(r veregisters.EnumRegisterStruct) (enumIdx int, enumValue string, err error) {
+func (sa *RegisterApi) ReadEnumRegister(r veregister.EnumRegisterStruct) (enumIdx int, enumValue string, err error) {
 	var intValue uint64
 	intValue, err = sa.Vd.GetUint(r.Address())
 
@@ -148,7 +148,7 @@ func (sa *RegisterApi) ReadAllRegisters(ctx context.Context) (RegisterValues, er
 // When an error occurs, fetching is aborted and the error is returned.
 func (sa *RegisterApi) ReadRegisterList(
 	ctx context.Context,
-	rl veregisters.RegisterList,
+	rl veregister.RegisterList,
 ) (rv RegisterValues, err error) {
 	rv = RegisterValues{
 		NumberValues: make(map[string]NumberRegisterValue, len(rl.NumberRegisters)),
@@ -186,7 +186,7 @@ type ValueHandler struct {
 // the values as soon as they are available.
 func (sa *RegisterApi) StreamRegisterList(
 	ctx context.Context,
-	rl veregisters.RegisterList,
+	rl veregister.RegisterList,
 	handlers ValueHandler,
 ) error {
 	if handlers.Number != nil {

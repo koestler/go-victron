@@ -2,32 +2,32 @@ package vedirectapi
 
 import (
 	"fmt"
-	"github.com/koestler/go-victron/veregisters"
+	"github.com/koestler/go-victron/veregister"
 	"sort"
 )
 
 // RegisterValue is a common interface for Number, Text and Enum Registers and their values.
 type RegisterValue interface {
-	veregisters.Register
+	veregister.Register
 	GenericValue() interface{}
 	String() string
 }
 
 // NumberRegisterValue is a container for Number Registers and their values.
 type NumberRegisterValue struct {
-	veregisters.NumberRegisterStruct
+	veregister.NumberRegisterStruct
 	value float64
 }
 
 // TextRegisterValue is a container for Text Registers and their values.
 type TextRegisterValue struct {
-	veregisters.TextRegisterStruct
+	veregister.TextRegisterStruct
 	value string
 }
 
 // EnumRegisterValue is a container for Enum Registers and their values.
 type EnumRegisterValue struct {
-	veregisters.EnumRegisterStruct
+	veregister.EnumRegisterStruct
 	enumIdx   int
 	enumValue string
 }

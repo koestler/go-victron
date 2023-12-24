@@ -1,4 +1,4 @@
-package veregisters
+package veregister
 
 import "github.com/koestler/go-victron/veconst"
 

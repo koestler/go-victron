@@ -1,4 +1,4 @@
-package veregisters
+package veregister
 
 func filterRegisters[R Register](inp []R, f func(r Register) bool) (oup []R) {
 	oup = make([]R, 0)

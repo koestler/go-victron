@@ -1,4 +1,4 @@
-package veregisters
+package veregister
 
 import "fmt"
 
