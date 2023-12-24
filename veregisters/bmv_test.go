@@ -10,18 +10,6 @@ func TestAppendBmv(t *testing.T) {
 	rl := RegisterList{}
 	AppendBmv(&rl)
 
-	if len(rl.NumberRegisters) != 29 {
-		t.Errorf("unexpected number of number registers: %d", len(rl.NumberRegisters))
-	}
-
-	if len(rl.TextRegisters) != 3 {
-		t.Errorf("unexpected number of text registers: %d", len(rl.TextRegisters))
-	}
-
-	if len(rl.EnumRegisters) != 1 {
-		t.Errorf("unexpected number of enum registers: %d", len(rl.EnumRegisters))
-	}
-
 	expected := []string{
 		"Number: category=Essential, name=Power, desription=Power, sort=0, address=0xED8E, static=false, writable=false, signed=true, factor=1, offset=0.000000, unit=W",
 		"Number: category=Essential, name=CurrentHighRes, desription=Current, sort=1, address=0xED8C, static=false, writable=false, signed=true, factor=1000, offset=0.000000, unit=A",
