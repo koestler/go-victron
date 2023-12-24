@@ -77,11 +77,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 			0x0200, -1,
 			false,
 			false,
-			map[int]string{
-				0: "Charger off",
-				4: "Charger off",
-				1: "Charger on",
-			},
+			veconst.GetSolarChargerDeviceModeStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Essential",
@@ -110,10 +106,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDFE, -1,
 			true,
 			false,
-			map[int]string{
-				0: "off",
-				1: "on",
-			},
+			veconst.GetBooleanOffOnStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
