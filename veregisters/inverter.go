@@ -152,11 +152,6 @@ func AppendInverterGeneric(rl *RegisterList) {
 	)
 }
 
-var inactiveActiveEnum = map[int]string{
-	0: "inactive",
-	1: "active",
-}
-
 // AppendInverterOffReasons appends all registers of the Off Reasons category to the given RegisterList.
 func AppendInverterOffReasons(rl *RegisterList) {
 	rl.AppendEnumRegisterStruct(
@@ -168,7 +163,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 0,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Off Reasons",
@@ -178,7 +173,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 2,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Off Reasons",
@@ -188,7 +183,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 3,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Off Reasons",
@@ -198,7 +193,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 4,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Off Reasons",
@@ -208,7 +203,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 5,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 	)
 }
@@ -224,7 +219,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 0,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -234,7 +229,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 1,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -244,7 +239,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 5,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -254,7 +249,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 6,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -264,7 +259,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 8,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -274,7 +269,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 9,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -284,7 +279,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 10,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -294,7 +289,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 11,
 			false,
 			false,
-			inactiveActiveEnum,
+			veconsts.GetBooleanInactiveActiveStringMap(),
 		),
 	)
 }
@@ -483,10 +478,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 			0xEB03, -1,
 			true,
 			false,
-			map[int]string{
-				0: "60 Hz",
-				1: "50 Hz",
-			},
+			veconsts.GetInverterFrequencyStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -614,10 +606,7 @@ func AppendInverterDynamicCutoff(rl *RegisterList) {
 			0xEBBA, -1,
 			true,
 			false,
-			map[int]string{
-				0: "Disabled",
-				1: "Enabled",
-			},
+			veconsts.GetBooleanDisabledEnabledStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(

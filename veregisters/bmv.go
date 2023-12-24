@@ -231,7 +231,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0xEEB6, -1,
 			false,
 			false,
-			veconsts.GetBooleanStringMap(),
+			veconsts.GetBooleanFalseTrueStringMap(),
 		),
 	)
 }
