@@ -198,17 +198,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDF1, -1,
 			false,
 			false,
-			map[int]string{
-				1:   "Gel Victron Long Life (14.1V)",
-				2:   "Gel Victron Deep discharge (14.3V)",
-				3:   "Gel Victron Deep discharge (14.4V)",
-				4:   "AGM Victron Deep discharge (14.7V)",
-				5:   "Tubular plate cyclic mode 1 (14.9V)",
-				6:   "Tubular plate cyclic mode 2 (15.1V)",
-				7:   "Tubular plate cyclic mode 3 (15.3V)",
-				8:   "LiFEPO4 (14.2V)",
-				255: "User defined",
-			},
+			veconst.GetSolarChargerBatteryTypeStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -248,13 +238,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDEA, -1,
 			false,
 			false,
-			map[int]string{
-				0:  "Auto detection at startup",
-				12: "12V battery",
-				24: "24V battery",
-				36: "36V battery",
-				48: "48V battery",
-			},
+			veconst.GetSolarChargerBatteryVoltageStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Settings",
@@ -264,10 +248,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDE8, -1,
 			false,
 			false,
-			map[int]string{
-				0: "no",
-				1: "yes",
-			},
+			veconst.GetBooleanNoYesStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -307,10 +288,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDE5, -1,
 			false,
 			false,
-			map[int]string{
-				0: "no",
-				1: "yes",
-			},
+			veconst.GetBooleanNoYesStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -603,11 +581,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			0xEDB3, -1,
 			false,
 			false,
-			map[int]string{
-				0: "off",
-				1: "voltage/current limited",
-				2: "MPP tracker",
-			},
+			veconst.GetSolarChargerTrackerModeStringMap(),
 		),
 	)
 }
