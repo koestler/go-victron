@@ -1,4 +1,4 @@
-package veconsts
+package veconst
 
 type BooleanDisabledEnabled byte
 

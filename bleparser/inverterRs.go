@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/veconsts"
+	"github.com/koestler/go-victron/veconst"
 	"math"
 )
 
@@ -17,13 +17,13 @@ import (
 // 80         | 16         | AC out power          | 1W      | -32768 .. 32766 W   | 0x7FFF
 
 type InverterRsRecord struct {
-	DeviceState    veconsts.InverterState     `Description:"Device state"`
-	ChargerError   veconsts.SolarChargerError `Description:"Charger error"`
-	BatteryVoltage float64                    `Description:"Battery voltage" Unit:"V"`
-	BatteryCurrent float64                    `Description:"Battery current" Unit:"A"`
-	PvPower        float64                    `Description:"PV power" Unit:"W"`
-	YieldToday     float64                    `Description:"Yield today" Unit:"Wh"`
-	AcOutPower     float64                    `Description:"AC out power" Unit:"W"`
+	DeviceState    veconst.InverterState     `Description:"Device state"`
+	ChargerError   veconst.SolarChargerError `Description:"Charger error"`
+	BatteryVoltage float64                   `Description:"Battery voltage" Unit:"V"`
+	BatteryCurrent float64                   `Description:"Battery current" Unit:"A"`
+	PvPower        float64                   `Description:"PV power" Unit:"W"`
+	YieldToday     float64                   `Description:"Yield today" Unit:"Wh"`
+	AcOutPower     float64                   `Description:"AC out power" Unit:"W"`
 }
 
 func DecodeInverterRsRecord(inp []byte) (ret InverterRsRecord, err error) {
@@ -32,10 +32,10 @@ func DecodeInverterRsRecord(inp []byte) (ret InverterRsRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = veconsts.InverterState(inp[0])
-	ret.ChargerError = veconsts.SolarChargerError(inp[1])
+	ret.DeviceState = veconst.InverterState(inp[0])
+	ret.ChargerError = veconst.SolarChargerError(inp[1])
 	if !ret.ChargerError.Exists() {
-		ret.ChargerError = veconsts.SolarChargerErrorUnknown
+		ret.ChargerError = veconst.SolarChargerErrorUnknown
 	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {

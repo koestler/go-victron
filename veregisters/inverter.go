@@ -1,6 +1,6 @@
 package veregisters
 
-import "github.com/koestler/go-victron/veconsts"
+import "github.com/koestler/go-victron/veconst"
 
 // AppendInverter appends all registers of phoenix inverters to the given RegisterList.
 // The list is based on:
@@ -136,7 +136,7 @@ func AppendInverterGeneric(rl *RegisterList) {
 			0x0201, -1,
 			false,
 			false,
-			veconsts.GetInverterStateStringMap(),
+			veconst.GetInverterStateStringMap(),
 		),
 		// todo: add device off reason, device warning reason and alarm reason (all bit masks)
 		newEnumRegisterStruct(
@@ -147,7 +147,7 @@ func AppendInverterGeneric(rl *RegisterList) {
 			0x0200, -1,
 			false,
 			false,
-			veconsts.GetInverterModeMap(),
+			veconst.GetInverterModeMap(),
 		),
 	)
 }
@@ -163,7 +163,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 0,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Off Reasons",
@@ -173,7 +173,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 2,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Off Reasons",
@@ -183,7 +183,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 3,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Off Reasons",
@@ -193,7 +193,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 4,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Off Reasons",
@@ -203,7 +203,7 @@ func AppendInverterOffReasons(rl *RegisterList) {
 			0x0207, 5,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 	)
 }
@@ -219,7 +219,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 0,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -229,7 +229,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 1,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -239,7 +239,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 5,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -249,7 +249,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 6,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -259,7 +259,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 8,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -269,7 +269,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 9,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -279,7 +279,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 10,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Warning Reasons",
@@ -289,7 +289,7 @@ func AppendInverterWarningReasons(rl *RegisterList) {
 			0x031C, 11,
 			false,
 			false,
-			veconsts.GetBooleanInactiveActiveStringMap(),
+			veconst.GetBooleanInactiveActiveStringMap(),
 		),
 	)
 }
@@ -478,7 +478,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 			0xEB03, -1,
 			true,
 			false,
-			veconsts.GetInverterFrequencyStringMap(),
+			veconst.GetInverterFrequencyStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -606,7 +606,7 @@ func AppendInverterDynamicCutoff(rl *RegisterList) {
 			0xEBBA, -1,
 			true,
 			false,
-			veconsts.GetBooleanDisabledEnabledStringMap(),
+			veconst.GetBooleanDisabledEnabledStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(

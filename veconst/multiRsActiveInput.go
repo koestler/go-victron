@@ -1,4 +1,4 @@
-package veconsts
+package veconst
 
 type MultiRsActiveInput uint8
 

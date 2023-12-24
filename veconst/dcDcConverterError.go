@@ -1,4 +1,4 @@
-package veconsts
+package veconst
 
 type DcDcConverterError uint16
 

@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/hex"
-	"github.com/koestler/go-victron/veconsts"
+	"github.com/koestler/go-victron/veconst"
 	"math"
 	"testing"
 )
@@ -18,7 +18,7 @@ func TestDecodeBatteryMonitorRecord(t *testing.T) {
 			AuxVoltage:     math.NaN(),
 			MidVoltage:     math.NaN(),
 			Temperature:    math.NaN(),
-			AuxMode:        veconsts.BmvAuxModeDisabled,
+			AuxMode:        veconst.BmvAuxModeDisabled,
 			BatteryCurrent: 0.0,
 			ConsumedAh:     -50.0,
 			StateOfCharge:  50.0,
@@ -30,7 +30,7 @@ func TestDecodeBatteryMonitorRecord(t *testing.T) {
 			AuxVoltage:     -0.02,
 			MidVoltage:     math.NaN(),
 			Temperature:    math.NaN(),
-			AuxMode:        veconsts.BmvAuxModeStarterVoltage,
+			AuxMode:        veconst.BmvAuxModeStarterVoltage,
 			BatteryCurrent: 0.0,
 			ConsumedAh:     0.0,
 			StateOfCharge:  100.0,
@@ -42,7 +42,7 @@ func TestDecodeBatteryMonitorRecord(t *testing.T) {
 			AuxVoltage:     math.NaN(),
 			MidVoltage:     655.34,
 			Temperature:    math.NaN(),
-			AuxMode:        veconsts.BmvAuxModeMidpointVoltage,
+			AuxMode:        veconst.BmvAuxModeMidpointVoltage,
 			BatteryCurrent: 0.0,
 			ConsumedAh:     0.0,
 			StateOfCharge:  100.0,
@@ -54,7 +54,7 @@ func TestDecodeBatteryMonitorRecord(t *testing.T) {
 			AuxVoltage:     math.NaN(),
 			MidVoltage:     math.NaN(),
 			Temperature:    22.5,
-			AuxMode:        veconsts.BmvAuxModeTemperature,
+			AuxMode:        veconst.BmvAuxModeTemperature,
 			BatteryCurrent: math.NaN(),
 			ConsumedAh:     math.NaN(),
 			StateOfCharge:  math.NaN(),
@@ -66,7 +66,7 @@ func TestDecodeBatteryMonitorRecord(t *testing.T) {
 			AuxVoltage:     math.NaN(),
 			MidVoltage:     math.NaN(),
 			Temperature:    17.5,
-			AuxMode:        veconsts.BmvAuxModeTemperature,
+			AuxMode:        veconst.BmvAuxModeTemperature,
 			BatteryCurrent: math.NaN(),
 			ConsumedAh:     math.NaN(),
 			StateOfCharge:  math.NaN(),

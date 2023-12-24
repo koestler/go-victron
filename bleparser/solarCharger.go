@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/veconsts"
+	"github.com/koestler/go-victron/veconst"
 	"math"
 )
 
@@ -17,13 +17,13 @@ import (
 // 80         | 9          | Load current          | 0.1A    | 0 .. 51.0 A         | 0x1FF
 
 type SolarChargerRecord struct {
-	DeviceState    veconsts.SolarChargerState `Description:"Device state"`
-	ChargerError   veconsts.SolarChargerError `Description:"Charger error"`
-	BatteryVoltage float64                    `Description:"Battery voltage" Unit:"V"`
-	BatteryCurrent float64                    `Description:"Battery current" Unit:"A"`
-	YieldToday     float64                    `Description:"Yield today" Unit:"Wh"`
-	PvPower        float64                    `Description:"PV power" Unit:"W"`
-	LoadCurrent    float64                    `Description:"Load current" Unit:"A"`
+	DeviceState    veconst.SolarChargerState `Description:"Device state"`
+	ChargerError   veconst.SolarChargerError `Description:"Charger error"`
+	BatteryVoltage float64                   `Description:"Battery voltage" Unit:"V"`
+	BatteryCurrent float64                   `Description:"Battery current" Unit:"A"`
+	YieldToday     float64                   `Description:"Yield today" Unit:"Wh"`
+	PvPower        float64                   `Description:"PV power" Unit:"W"`
+	LoadCurrent    float64                   `Description:"Load current" Unit:"A"`
 }
 
 func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
@@ -32,14 +32,14 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = veconsts.SolarChargerState(inp[0])
+	ret.DeviceState = veconst.SolarChargerState(inp[0])
 	if !ret.DeviceState.Exists() {
-		ret.DeviceState = veconsts.SolarChargerStateUnavailable
+		ret.DeviceState = veconst.SolarChargerStateUnavailable
 	}
 
-	ret.ChargerError = veconsts.SolarChargerError(inp[1])
+	ret.ChargerError = veconst.SolarChargerError(inp[1])
 	if !ret.ChargerError.Exists() {
-		ret.ChargerError = veconsts.SolarChargerErrorUnknown
+		ret.ChargerError = veconst.SolarChargerErrorUnknown
 	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {

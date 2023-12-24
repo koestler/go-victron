@@ -1,4 +1,4 @@
-package veconsts
+package veconst
 
 type InverterMode uint8
 

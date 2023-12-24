@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/veconsts"
+	"github.com/koestler/go-victron/veconst"
 	"math"
 )
 
@@ -17,13 +17,13 @@ import (
 // 66         | 8          | 2          | 22         | Battery current       | 0.001A  | -4194 .. 4194 A     | 0x3FFFFF
 
 type DcEnergyMeterRecord struct {
-	BmvMonitorMode int16                         `Description:"BMV monitor mode"`
-	BatteryVoltage float64                       `Description:"Battery voltage" Unit:"V"`
-	AlarmReason    uint16                        `Description:"Alarm reason"`
-	AuxVoltage     float64                       `Description:"Aux voltage" Unit:"V"`
-	Temperature    float64                       `Description:"Temperature" Unit:"K"`
-	AuxMode        veconsts.DcEnergyMeterAuxMode `Description:"Aux mode"`
-	BatteryCurrent float64                       `Description:"Battery current" Unit:"A"`
+	BmvMonitorMode int16                        `Description:"BMV monitor mode"`
+	BatteryVoltage float64                      `Description:"Battery voltage" Unit:"V"`
+	AlarmReason    uint16                       `Description:"Alarm reason"`
+	AuxVoltage     float64                      `Description:"Aux voltage" Unit:"V"`
+	Temperature    float64                      `Description:"Temperature" Unit:"K"`
+	AuxMode        veconst.DcEnergyMeterAuxMode `Description:"Aux mode"`
+	BatteryCurrent float64                      `Description:"Battery current" Unit:"A"`
 }
 
 func DecodeDcEnergyMeterRecord(inp []byte) (ret DcEnergyMeterRecord, err error) {
@@ -42,15 +42,15 @@ func DecodeDcEnergyMeterRecord(inp []byte) (ret DcEnergyMeterRecord, err error) 
 
 	ret.AlarmReason = binary.LittleEndian.Uint16(inp[4:6])
 
-	ret.AuxMode = veconsts.DcEnergyMeterAuxMode(inp[8] & 0x3)
+	ret.AuxMode = veconst.DcEnergyMeterAuxMode(inp[8] & 0x3)
 	switch ret.AuxMode {
-	case veconsts.DcEnergyMeterAuxModeAuxVoltage:
+	case veconst.DcEnergyMeterAuxModeAuxVoltage:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0x7FFF {
 			ret.AuxVoltage = float64(int16(v)) / 100
 		} else {
 			ret.AuxVoltage = math.NaN()
 		}
-	case veconsts.DcEnergyMeterAuxModeTemperature:
+	case veconst.DcEnergyMeterAuxModeTemperature:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
 			ret.Temperature = float64(v) / 100
 		} else {

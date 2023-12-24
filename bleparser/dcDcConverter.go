@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/veconsts"
+	"github.com/koestler/go-victron/veconst"
 	"math"
 )
 
@@ -15,11 +15,11 @@ import (
 // 48         | 32         | Off reason            |         | 0 .. 0xFFFFFFFF     |
 
 type DcDcConverterRecord struct {
-	DeviceState   veconsts.DcDcConverterState `Description:"Device state"`
-	ChargerError  veconsts.DcDcConverterError `Description:"Charger error"`
-	InputVoltage  float64                     `Description:"Input voltage" Unit:"V"`
-	OutputVoltage float64                     `Description:"Output voltage" Unit:"V"`
-	OffReason     uint32                      `Description:"Off reason"`
+	DeviceState   veconst.DcDcConverterState `Description:"Device state"`
+	ChargerError  veconst.DcDcConverterError `Description:"Charger error"`
+	InputVoltage  float64                    `Description:"Input voltage" Unit:"V"`
+	OutputVoltage float64                    `Description:"Output voltage" Unit:"V"`
+	OffReason     uint32                     `Description:"Off reason"`
 }
 
 func DecodeDcDcConverterRecord(inp []byte) (ret DcDcConverterRecord, err error) {
@@ -28,14 +28,14 @@ func DecodeDcDcConverterRecord(inp []byte) (ret DcDcConverterRecord, err error) 
 		return
 	}
 
-	ret.DeviceState = veconsts.DcDcConverterState(inp[0])
+	ret.DeviceState = veconst.DcDcConverterState(inp[0])
 	if !ret.DeviceState.Exists() {
-		ret.DeviceState = veconsts.DcDcConverterStateUnavailable
+		ret.DeviceState = veconst.DcDcConverterStateUnavailable
 	}
 
-	ret.ChargerError = veconsts.DcDcConverterError(inp[1])
+	ret.ChargerError = veconst.DcDcConverterError(inp[1])
 	if !ret.ChargerError.Exists() {
-		ret.ChargerError = veconsts.DcDcConverterErrorUnknown
+		ret.ChargerError = veconst.DcDcConverterErrorUnknown
 	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0xFFFF {

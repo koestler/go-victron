@@ -1,4 +1,4 @@
-package veconsts
+package veconst
 
 type DcDcConverterState uint16
 
