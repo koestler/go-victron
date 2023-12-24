@@ -18,8 +18,8 @@ var inverterModeMap = map[InverterMode]string{
 	InverterModeHibernate:  "Hibernate",
 }
 
-// GetInverterModeMap returns a map of InverterMode values to their string representation.
-func GetInverterModeMap() map[InverterMode]string {
+// InverterModeStringMap returns a map of InverterMode values to their string representation.
+func InverterModeStringMap() map[InverterMode]string {
 	ret := make(map[InverterMode]string, len(inverterModeMap))
 	for k, v := range inverterModeMap {
 		ret[k] = v

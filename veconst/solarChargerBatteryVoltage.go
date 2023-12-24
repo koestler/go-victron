@@ -1,6 +1,6 @@
 package veconst
 
-type SolarChargerBatteryVoltage byte
+type SolarChargerBatteryVoltage uint8
 
 const (
 	SolarChargerBatteryVoltageAutoDetect SolarChargerBatteryVoltage = 0
@@ -18,8 +18,8 @@ var solarChargerBatteryVoltageMap = map[SolarChargerBatteryVoltage]string{
 	SolarChargerBatteryVoltage48V:        "48V battery",
 }
 
-// GetSolarChargerBatteryVoltageStringMap returns a map of SolarChargerBatteryVoltage values to their string representation.
-func GetSolarChargerBatteryVoltageStringMap() map[SolarChargerBatteryVoltage]string {
+// SolarChargerBatteryVoltageStringMap returns a map of SolarChargerBatteryVoltage values to their string representation.
+func SolarChargerBatteryVoltageStringMap() map[SolarChargerBatteryVoltage]string {
 	ret := make(map[SolarChargerBatteryVoltage]string, len(solarChargerBatteryVoltageMap))
 	for k, v := range solarChargerBatteryVoltageMap {
 		ret[k] = v

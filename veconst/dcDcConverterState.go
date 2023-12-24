@@ -1,6 +1,6 @@
 package veconst
 
-type DcDcConverterState uint16
+type DcDcConverterState uint8
 
 const (
 	DcDcConverterStateNotCharging        DcDcConverterState = 0
@@ -28,8 +28,8 @@ var dcDcConverterStateMap = map[DcDcConverterState]string{
 	DcDcConverterStateUnavailable:        "Unavailable",
 }
 
-// GetDcDcConverterStateStringMap returns a map of DcDcConverterState values to their string representation.
-func GetDcDcConverterStateStringMap() map[DcDcConverterState]string {
+// DcDcConverterStateStringMap returns a map of DcDcConverterState values to their string representation.
+func DcDcConverterStateStringMap() map[DcDcConverterState]string {
 	ret := make(map[DcDcConverterState]string, len(dcDcConverterStateMap))
 	for k, v := range dcDcConverterStateMap {
 		ret[k] = v

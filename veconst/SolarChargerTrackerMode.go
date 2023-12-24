@@ -1,6 +1,6 @@
 package veconst
 
-type SolarChargerTrackerMode byte
+type SolarChargerTrackerMode uint8
 
 const (
 	SolarChargerTrackerModeOff                   SolarChargerTrackerMode = 0
@@ -14,8 +14,8 @@ var solarChargerTrackerModeMap = map[SolarChargerTrackerMode]string{
 	SolarChargerTrackerModeMPPTracker:            "MPP tracker",
 }
 
-// GetSolarChargerTrackerModeStringMap returns a map of SolarChargerTrackerMode values to their string representation.
-func GetSolarChargerTrackerModeStringMap() map[SolarChargerTrackerMode]string {
+// SolarChargerTrackerModeStringMap returns a map of SolarChargerTrackerMode values to their string representation.
+func SolarChargerTrackerModeStringMap() map[SolarChargerTrackerMode]string {
 	ret := make(map[SolarChargerTrackerMode]string, len(solarChargerTrackerModeMap))
 	for k, v := range solarChargerTrackerModeMap {
 		ret[k] = v

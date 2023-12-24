@@ -14,8 +14,8 @@ var dcEnergyMeterAuxModeMap = map[DcEnergyMeterAuxMode]string{
 	DcEnergyMeterAuxModeDisabled:    "Disabled",
 }
 
-// GetDcEnergyMeterAuxModeStringMap returns a map of DcEnergyMeterAuxMode values to their string representation.
-func GetDcEnergyMeterAuxModeStringMap() map[DcEnergyMeterAuxMode]string {
+// DcEnergyMeterAuxModeStringMap returns a map of DcEnergyMeterAuxMode values to their string representation.
+func DcEnergyMeterAuxModeStringMap() map[DcEnergyMeterAuxMode]string {
 	ret := make(map[DcEnergyMeterAuxMode]string, len(dcEnergyMeterAuxModeMap))
 	for k, v := range dcEnergyMeterAuxModeMap {
 		ret[k] = v

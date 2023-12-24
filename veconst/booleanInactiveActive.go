@@ -1,6 +1,6 @@
 package veconst
 
-type BooleanInactiveActive byte
+type BooleanInactiveActive uint8
 
 const (
 	BooleanInactive BooleanInactiveActive = 0
@@ -12,8 +12,8 @@ var booleanInactiveActiveMap = map[BooleanInactiveActive]string{
 	BooleanActive:   "Active",
 }
 
-// GetBooleanInactiveActiveStringMap returns a map of BooleanInactiveActive values to their string representation.
-func GetBooleanInactiveActiveStringMap() map[BooleanInactiveActive]string {
+// BooleanInactiveActiveStringMap returns a map of BooleanInactiveActive values to their string representation.
+func BooleanInactiveActiveStringMap() map[BooleanInactiveActive]string {
 	ret := make(map[BooleanInactiveActive]string, len(booleanInactiveActiveMap))
 	for k, v := range booleanInactiveActiveMap {
 		ret[k] = v

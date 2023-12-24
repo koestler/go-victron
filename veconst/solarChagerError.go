@@ -1,6 +1,6 @@
 package veconst
 
-type SolarChargerError uint16
+type SolarChargerError uint8
 
 const (
 	SolarChargerErrorNoError                           SolarChargerError = 0
@@ -48,8 +48,8 @@ var solarChargerErrorMap = map[SolarChargerError]string{
 	SolarChargerErrorUnknown:                           "Unknown error",
 }
 
-// GetSolarChargerErrorStringMap returns a map of SolarChargerError values to their string representation.
-func GetSolarChargerErrorStringMap() map[SolarChargerError]string {
+// SolarChargerErrorStringMap returns a map of SolarChargerError values to their string representation.
+func SolarChargerErrorStringMap() map[SolarChargerError]string {
 	ret := make(map[SolarChargerError]string, len(solarChargerErrorMap))
 	for k, v := range solarChargerErrorMap {
 		ret[k] = v

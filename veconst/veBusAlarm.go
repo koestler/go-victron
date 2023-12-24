@@ -16,8 +16,8 @@ var veBusAlarmMap = map[VeBusAlarm]string{
 	VeBusAlarmUndefined: "Undefined",
 }
 
-// GetVeBusAlarmStringMap returns a map of VeBusAlarm values to their string representation.
-func GetVeBusAlarmStringMap() map[VeBusAlarm]string {
+// VeBusAlarmStringMap returns a map of VeBusAlarm values to their string representation.
+func VeBusAlarmStringMap() map[VeBusAlarm]string {
 	ret := make(map[VeBusAlarm]string, len(veBusAlarmMap))
 	for k, v := range veBusAlarmMap {
 		ret[k] = v

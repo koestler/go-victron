@@ -14,8 +14,8 @@ var solarChargerDeviceModeMap = map[SolarChargerDeviceMode]string{
 	SolarChargerDeviceModeOn:   "Charger On",
 }
 
-// GetSolarChargerDeviceModeStringMap returns a map of SolarChargerDeviceMode to their string representation.
-func GetSolarChargerDeviceModeStringMap() map[SolarChargerDeviceMode]string {
+// SolarChargerDeviceModeStringMap returns a map of SolarChargerDeviceMode to their string representation.
+func SolarChargerDeviceModeStringMap() map[SolarChargerDeviceMode]string {
 	ret := make(map[SolarChargerDeviceMode]string, len(solarChargerDeviceModeMap))
 	for k, v := range solarChargerDeviceModeMap {
 		ret[k] = v

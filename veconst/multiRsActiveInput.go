@@ -16,8 +16,8 @@ var multiRsActiveInputMap = map[MultiRsActiveInput]string{
 	MultiRsActiveInputUnknown:      "Unknown",
 }
 
-// GetMultiRsActiveInputStringMap returns a map of MultiRsActiveInput values to their string representation.
-func GetMultiRsActiveInputStringMap() map[MultiRsActiveInput]string {
+// MultiRsActiveInputStringMap returns a map of MultiRsActiveInput values to their string representation.
+func MultiRsActiveInputStringMap() map[MultiRsActiveInput]string {
 	ret := make(map[MultiRsActiveInput]string, len(multiRsActiveInputMap))
 	for k, v := range multiRsActiveInputMap {
 		ret[k] = v

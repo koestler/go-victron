@@ -16,8 +16,8 @@ var bmvAuxModeMap = map[BmvAuxMode]string{
 	BmvAuxModeDisabled:        "Disabled",
 }
 
-// GetBmvAuxModeStringMap returns a map of BmvAuxMode values to their string representation.
-func GetBmvAuxModeStringMap() map[BmvAuxMode]string {
+// BmvAuxModeStringMap returns a map of BmvAuxMode values to their string representation.
+func BmvAuxModeStringMap() map[BmvAuxMode]string {
 	ret := make(map[BmvAuxMode]string, len(bmvAuxModeMap))
 	for k, v := range bmvAuxModeMap {
 		ret[k] = v

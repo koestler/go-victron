@@ -1,6 +1,6 @@
 package veconst
 
-type BooleanDisabledEnabled byte
+type BooleanDisabledEnabled uint8
 
 const (
 	BooleanDisabled BooleanDisabledEnabled = 0
@@ -12,8 +12,8 @@ var booleanDisabledEnabledMap = map[BooleanDisabledEnabled]string{
 	BooleanEnabled:  "Enabled",
 }
 
-// GetBooleanDisabledEnabledStringMap returns a map of BooleanDisabledEnabled values to their string representation.
-func GetBooleanDisabledEnabledStringMap() map[BooleanDisabledEnabled]string {
+// BooleanDisabledEnabledStringMap returns a map of BooleanDisabledEnabled values to their string representation.
+func BooleanDisabledEnabledStringMap() map[BooleanDisabledEnabled]string {
 	ret := make(map[BooleanDisabledEnabled]string, len(booleanDisabledEnabledMap))
 	for k, v := range booleanDisabledEnabledMap {
 		ret[k] = v

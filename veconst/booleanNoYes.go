@@ -1,6 +1,6 @@
 package veconst
 
-type BooleanNoYes byte
+type BooleanNoYes uint8
 
 const (
 	BooleanNo  BooleanNoYes = 0
@@ -12,8 +12,8 @@ var booleanNoYesMap = map[BooleanNoYes]string{
 	BooleanYes: "Yes",
 }
 
-// GetBooleanNoYesStringMap returns a map of BooleanNoYes values to their string representation.
-func GetBooleanNoYesStringMap() map[BooleanNoYes]string {
+// BooleanNoYesStringMap returns a map of BooleanNoYes values to their string representation.
+func BooleanNoYesStringMap() map[BooleanNoYes]string {
 	ret := make(map[BooleanNoYes]string, len(booleanNoYesMap))
 	for k, v := range booleanNoYesMap {
 		ret[k] = v

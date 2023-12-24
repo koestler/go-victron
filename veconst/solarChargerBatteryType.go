@@ -26,8 +26,8 @@ var solarChargerBatteryTypeMap = map[SolarChargerBatteryType]string{
 	SolarChargerBatteryTypeUserDefined:           "User defined",
 }
 
-// GetSolarChargerBatteryTypeStringMap returns a map of SolarChargerBatteryType values to their string representation.
-func GetSolarChargerBatteryTypeStringMap() map[SolarChargerBatteryType]string {
+// SolarChargerBatteryTypeStringMap returns a map of SolarChargerBatteryType values to their string representation.
+func SolarChargerBatteryTypeStringMap() map[SolarChargerBatteryType]string {
 	ret := make(map[SolarChargerBatteryType]string, len(solarChargerBatteryTypeMap))
 	for k, v := range solarChargerBatteryTypeMap {
 		ret[k] = v

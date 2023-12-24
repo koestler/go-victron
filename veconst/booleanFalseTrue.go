@@ -1,6 +1,6 @@
 package veconst
 
-type BooleanFalseTrue byte
+type BooleanFalseTrue uint8
 
 const (
 	BooleanFalse BooleanFalseTrue = 0
@@ -12,8 +12,8 @@ var booleanFalseTrueMap = map[BooleanFalseTrue]string{
 	BooleanTrue:  "True",
 }
 
-// GetBooleanFalseTrueStringMap returns a map of BooleanFalseTrue values to their string representation.
-func GetBooleanFalseTrueStringMap() map[BooleanFalseTrue]string {
+// BooleanFalseTrueStringMap returns a map of BooleanFalseTrue values to their string representation.
+func BooleanFalseTrueStringMap() map[BooleanFalseTrue]string {
 	ret := make(map[BooleanFalseTrue]string, len(booleanFalseTrueMap))
 	for k, v := range booleanFalseTrueMap {
 		ret[k] = v

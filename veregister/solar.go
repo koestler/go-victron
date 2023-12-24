@@ -77,7 +77,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 			0x0200, -1,
 			false,
 			false,
-			veconst.GetSolarChargerDeviceModeStringMap(),
+			veconst.SolarChargerDeviceModeStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Essential",
@@ -88,7 +88,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 			-1,
 			false,
 			false,
-			veconst.GetSolarChargerStateStringMap(),
+			veconst.SolarChargerStateStringMap(),
 		),
 		// skipped Remote control used
 		// skipped Device off Reason Bitmask
@@ -106,7 +106,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDFE, -1,
 			true,
 			false,
-			veconst.GetBooleanOffOnStringMap(),
+			veconst.BooleanOffOnStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -198,7 +198,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDF1, -1,
 			false,
 			false,
-			veconst.GetSolarChargerBatteryTypeStringMap(),
+			veconst.SolarChargerBatteryTypeStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -238,7 +238,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDEA, -1,
 			false,
 			false,
-			veconst.GetSolarChargerBatteryVoltageStringMap(),
+			veconst.SolarChargerBatteryVoltageStringMap(),
 		),
 		newEnumRegisterStruct(
 			"Settings",
@@ -248,7 +248,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDE8, -1,
 			false,
 			false,
-			veconst.GetBooleanNoYesStringMap(),
+			veconst.BooleanNoYesStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -288,7 +288,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			0xEDE5, -1,
 			false,
 			false,
-			veconst.GetBooleanNoYesStringMap(),
+			veconst.BooleanNoYesStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -425,7 +425,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0xEDDA, -1,
 			false,
 			false,
-			veconst.GetSolarChargerErrorStringMap(),
+			veconst.SolarChargerErrorStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
@@ -581,7 +581,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			0xEDB3, -1,
 			false,
 			false,
-			veconst.GetSolarChargerTrackerModeStringMap(),
+			veconst.SolarChargerTrackerModeStringMap(),
 		),
 	)
 }

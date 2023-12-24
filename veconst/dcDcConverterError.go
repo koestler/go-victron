@@ -1,6 +1,6 @@
 package veconst
 
-type DcDcConverterError uint16
+type DcDcConverterError uint8
 
 const (
 	DcDcConverterErrorNoError                           DcDcConverterError = 0
@@ -48,8 +48,8 @@ var dcDcConverterErrorMap = map[DcDcConverterError]string{
 	DcDcConverterErrorUnknown:                           "Unknown error",
 }
 
-// GetDcDcConverterErrorStringMap returns a map of DcDcConverterError values to their string representation.
-func GetDcDcConverterErrorStringMap() map[DcDcConverterError]string {
+// DcDcConverterErrorStringMap returns a map of DcDcConverterError values to their string representation.
+func DcDcConverterErrorStringMap() map[DcDcConverterError]string {
 	ret := make(map[DcDcConverterError]string, len(dcDcConverterErrorMap))
 	for k, v := range dcDcConverterErrorMap {
 		ret[k] = v

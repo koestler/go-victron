@@ -1,6 +1,6 @@
 package veconst
 
-type SolarChargerState uint16
+type SolarChargerState uint8
 
 const (
 	SolarChargerStateNotCharging        SolarChargerState = 0
@@ -28,8 +28,8 @@ var solarChargerStateMap = map[SolarChargerState]string{
 	SolarChargerStateUnavailable:        "Unavailable",
 }
 
-// GetSolarChargerStateStringMap returns a map of SolarChargerState values to their string representation.
-func GetSolarChargerStateStringMap() map[SolarChargerState]string {
+// SolarChargerStateStringMap returns a map of SolarChargerState values to their string representation.
+func SolarChargerStateStringMap() map[SolarChargerState]string {
 	ret := make(map[SolarChargerState]string, len(solarChargerStateMap))
 	for k, v := range solarChargerStateMap {
 		ret[k] = v

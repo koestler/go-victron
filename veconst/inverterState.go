@@ -16,8 +16,8 @@ var inverterStateMap = map[InverterState]string{
 	InverterStateInverting: "Inverting",
 }
 
-// GetInverterStateStringMap returns a map of InverterState values to their string representation.
-func GetInverterStateStringMap() map[InverterState]string {
+// InverterStateStringMap returns a map of InverterState values to their string representation.
+func InverterStateStringMap() map[InverterState]string {
 	ret := make(map[InverterState]string, len(inverterStateMap))
 	for k, v := range inverterStateMap {
 		ret[k] = v

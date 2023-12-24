@@ -1,6 +1,6 @@
 package veconst
 
-type BooleanOffOn byte
+type BooleanOffOn uint8
 
 const (
 	BooleanOff BooleanOffOn = 0
@@ -12,8 +12,8 @@ var booleanOffOnMap = map[BooleanOffOn]string{
 	BooleanOn:  "On",
 }
 
-// GetBooleanOffOnStringMap returns a map of BooleanOffOn values to their string representation.
-func GetBooleanOffOnStringMap() map[BooleanOffOn]string {
+// BooleanOffOnStringMap returns a map of BooleanOffOn values to their string representation.
+func BooleanOffOnStringMap() map[BooleanOffOn]string {
 	ret := make(map[BooleanOffOn]string, len(booleanOffOnMap))
 	for k, v := range booleanOffOnMap {
 		ret[k] = v

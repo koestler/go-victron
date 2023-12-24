@@ -12,8 +12,8 @@ var inverterFrequencyMap = map[InverterFrequency]string{
 	InverterFrequency50Hz: "50 Hz",
 }
 
-// GetInverterFrequencyStringMap returns a map of InverterFrequency values to their string representation.
-func GetInverterFrequencyStringMap() map[InverterFrequency]string {
+// InverterFrequencyStringMap returns a map of InverterFrequency values to their string representation.
+func InverterFrequencyStringMap() map[InverterFrequency]string {
 	ret := make(map[InverterFrequency]string, len(inverterFrequencyMap))
 	for k, v := range inverterFrequencyMap {
 		ret[k] = v
