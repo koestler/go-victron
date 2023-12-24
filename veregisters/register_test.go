@@ -3,7 +3,7 @@ package veregisters
 import "fmt"
 
 func (r RegisterStruct) testString() string {
-	return fmt.Sprintf("category=%s, name=%s, desription=%s, sort=%d, address=0x%X, static=%t, writable=%t",
+	return fmt.Sprintf("category=%s, name=%s, description=%s, sort=%d, address=0x%X, static=%t, writable=%t",
 		r.category, r.name, r.description, r.sort, r.address, r.static, r.writable,
 	)
 }
