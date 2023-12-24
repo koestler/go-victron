@@ -136,7 +136,7 @@ func AppendInverterGeneric(rl *RegisterList) {
 			0x0201, -1,
 			false,
 			false,
-			veconsts.GetInverterStateMap(),
+			veconsts.GetInverterStateStringMap(),
 		),
 		// todo: add device off reason, device warning reason and alarm reason (all bit masks)
 		newEnumRegisterStruct(

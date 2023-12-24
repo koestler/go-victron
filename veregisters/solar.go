@@ -92,7 +92,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 			-1,
 			false,
 			false,
-			veconsts.GetSolarChargerStateMap(),
+			veconsts.GetSolarChargerStateStringMap(),
 		),
 		// skipped Remote control used
 		// skipped Device off Reason Bitmask
@@ -454,7 +454,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0xEDDA, -1,
 			false,
 			false,
-			veconsts.GetSolarChargerErrorMap(),
+			veconsts.GetSolarChargerErrorStringMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(
