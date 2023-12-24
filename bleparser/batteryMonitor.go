@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veconsts"
 	"math"
 )
 
@@ -20,16 +20,16 @@ import (
 // 108        | 13         | 4          | 10         | State of charge       | 0.1%    | 0 .. 100%           | 0x3FF
 
 type BatteryMonitorRecord struct {
-	Ttg            float64                       `Description:"Time to go" Unit:"s"`
-	BatteryVoltage float64                       `Description:"Battery voltage" Unit:"V"`
-	AlarmReason    uint16                        `Description:"Alarm reason"`
-	AuxVoltage     float64                       `Description:"Aux voltage" Unit:"V"`
-	MidVoltage     float64                       `Description:"Mid voltage" Unit:"V"`
-	Temperature    float64                       `Description:"Temperature" Unit:"°C"`
-	AuxMode        victronDefinitions.BmvAuxMode `Description:"Aux mode"`
-	BatteryCurrent float64                       `Description:"Battery current" Unit:"A"`
-	ConsumedAh     float64                       `Description:"Consumed Ah" Unit:"Ah"`
-	StateOfCharge  float64                       `Description:"State of charge" Unit:"%"`
+	Ttg            float64             `Description:"Time to go" Unit:"s"`
+	BatteryVoltage float64             `Description:"Battery voltage" Unit:"V"`
+	AlarmReason    uint16              `Description:"Alarm reason"`
+	AuxVoltage     float64             `Description:"Aux voltage" Unit:"V"`
+	MidVoltage     float64             `Description:"Mid voltage" Unit:"V"`
+	Temperature    float64             `Description:"Temperature" Unit:"°C"`
+	AuxMode        veconsts.BmvAuxMode `Description:"Aux mode"`
+	BatteryCurrent float64             `Description:"Battery current" Unit:"A"`
+	ConsumedAh     float64             `Description:"Consumed Ah" Unit:"Ah"`
+	StateOfCharge  float64             `Description:"State of charge" Unit:"%"`
 }
 
 func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error) {
@@ -52,21 +52,21 @@ func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error
 
 	ret.AlarmReason = binary.LittleEndian.Uint16(inp[4:6])
 
-	ret.AuxMode = victronDefinitions.BmvAuxMode(inp[8] & 0x3)
+	ret.AuxMode = veconsts.BmvAuxMode(inp[8] & 0x3)
 	ret.AuxVoltage = math.NaN()
 	ret.MidVoltage = math.NaN()
 	ret.Temperature = math.NaN()
 
 	switch ret.AuxMode {
-	case victronDefinitions.BmvAuxModeStarterVoltage:
+	case veconsts.BmvAuxModeStarterVoltage:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0x7FFF {
 			ret.AuxVoltage = float64(int16(v)) / 100
 		}
-	case victronDefinitions.BmvAuxModeMidpointVoltage:
+	case veconsts.BmvAuxModeMidpointVoltage:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
 			ret.MidVoltage = float64(v) / 100
 		}
-	case victronDefinitions.BmvAuxModeTemperature:
+	case veconsts.BmvAuxModeTemperature:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0xFFFF {
 			ret.Temperature = float64(v)/100 - 273.15
 		}

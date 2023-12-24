@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veconsts"
 	"math"
 )
 
@@ -19,15 +19,15 @@ import (
 // 96         | 12         | 0          | 16         | Yield today           | 0.01kWh | 0 .. 655.34 kWh     | 0xFFFF
 
 type MultiRsRecord struct {
-	DeviceState     victronDefinitions.InverterState      `Description:"Device state"`
-	ChargerError    victronDefinitions.SolarChargerError  `Description:"Charger error"`
-	BatteryCurrent  float64                               `Description:"Battery current" Unit:"A"`
-	BatteryVoltage  float64                               `Description:"Battery voltage" Unit:"V"`
-	ActiveAcIn      victronDefinitions.MultiRsActiveInput `Description:"Active AC in"`
-	ActiveAcInPower float64                               `Description:"Active AC in power" Unit:"W"`
-	AcOutPower      float64                               `Description:"AC out power" Unit:"W"`
-	PvPower         float64                               `Description:"PV power" Unit:"W"`
-	YieldToday      float64                               `Description:"Yield today" Unit:"Wh"`
+	DeviceState     veconsts.InverterState      `Description:"Device state"`
+	ChargerError    veconsts.SolarChargerError  `Description:"Charger error"`
+	BatteryCurrent  float64                     `Description:"Battery current" Unit:"A"`
+	BatteryVoltage  float64                     `Description:"Battery voltage" Unit:"V"`
+	ActiveAcIn      veconsts.MultiRsActiveInput `Description:"Active AC in"`
+	ActiveAcInPower float64                     `Description:"Active AC in power" Unit:"W"`
+	AcOutPower      float64                     `Description:"AC out power" Unit:"W"`
+	PvPower         float64                     `Description:"PV power" Unit:"W"`
+	YieldToday      float64                     `Description:"Yield today" Unit:"Wh"`
 }
 
 func DecodeMultiRsRecord(inp []byte) (ret MultiRsRecord, err error) {
@@ -36,8 +36,8 @@ func DecodeMultiRsRecord(inp []byte) (ret MultiRsRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = victronDefinitions.InverterState(inp[0])
-	ret.ChargerError = victronDefinitions.SolarChargerError(inp[1])
+	ret.DeviceState = veconsts.InverterState(inp[0])
+	ret.ChargerError = veconsts.SolarChargerError(inp[1])
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
 		ret.BatteryCurrent = float64(int16(v)) / 10
@@ -51,7 +51,7 @@ func DecodeMultiRsRecord(inp []byte) (ret MultiRsRecord, err error) {
 		ret.BatteryVoltage = math.NaN()
 	}
 
-	ret.ActiveAcIn = victronDefinitions.MultiRsActiveInput((inp[5] >> 6) & 0x3)
+	ret.ActiveAcIn = veconsts.MultiRsActiveInput((inp[5] >> 6) & 0x3)
 
 	if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0x7FFF {
 		ret.ActiveAcInPower = float64(int16(v))

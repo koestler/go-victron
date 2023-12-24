@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veconsts"
 	"math"
 )
 
@@ -17,13 +17,13 @@ import (
 // 80         | 16         | AC out power          | 1W      | -32768 .. 32766 W   | 0x7FFF
 
 type InverterRsRecord struct {
-	DeviceState    victronDefinitions.InverterState     `Description:"Device state"`
-	ChargerError   victronDefinitions.SolarChargerError `Description:"Charger error"`
-	BatteryVoltage float64                              `Description:"Battery voltage" Unit:"V"`
-	BatteryCurrent float64                              `Description:"Battery current" Unit:"A"`
-	PvPower        float64                              `Description:"PV power" Unit:"W"`
-	YieldToday     float64                              `Description:"Yield today" Unit:"Wh"`
-	AcOutPower     float64                              `Description:"AC out power" Unit:"W"`
+	DeviceState    veconsts.InverterState     `Description:"Device state"`
+	ChargerError   veconsts.SolarChargerError `Description:"Charger error"`
+	BatteryVoltage float64                    `Description:"Battery voltage" Unit:"V"`
+	BatteryCurrent float64                    `Description:"Battery current" Unit:"A"`
+	PvPower        float64                    `Description:"PV power" Unit:"W"`
+	YieldToday     float64                    `Description:"Yield today" Unit:"Wh"`
+	AcOutPower     float64                    `Description:"AC out power" Unit:"W"`
 }
 
 func DecodeInverterRsRecord(inp []byte) (ret InverterRsRecord, err error) {
@@ -32,12 +32,12 @@ func DecodeInverterRsRecord(inp []byte) (ret InverterRsRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = victronDefinitions.InverterState(inp[0])
-	ret.ChargerError = victronDefinitions.SolarChargerError(inp[1])
+	ret.DeviceState = veconsts.InverterState(inp[0])
+	ret.ChargerError = veconsts.SolarChargerError(inp[1])
 	{
-		sm := victronDefinitions.GetSolarChargerErrorMap()
+		sm := veconsts.GetSolarChargerErrorMap()
 		if _, ok := sm[ret.ChargerError]; !ok {
-			ret.ChargerError = victronDefinitions.SolarChargerErrorUnknown
+			ret.ChargerError = veconsts.SolarChargerErrorUnknown
 		}
 	}
 

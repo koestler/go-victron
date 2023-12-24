@@ -1,6 +1,6 @@
 package veregisters
 
-import "github.com/koestler/go-victron/victronDefinitions"
+import "github.com/koestler/go-victron/veconsts"
 
 // AppendSolar appends all registers of solar chargers to the given RegisterList.
 // The list is based on:
@@ -92,7 +92,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 			-1,
 			false,
 			false,
-			victronDefinitions.GetSolarChargerStateMap(),
+			veconsts.GetSolarChargerStateMap(),
 		),
 		// skipped Remote control used
 		// skipped Device off Reason Bitmask
@@ -454,7 +454,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			0xEDDA, -1,
 			false,
 			false,
-			victronDefinitions.GetSolarChargerErrorMap(),
+			veconsts.GetSolarChargerErrorMap(),
 		),
 	)
 	rl.AppendNumberRegisterStruct(

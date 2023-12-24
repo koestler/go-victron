@@ -1,6 +1,6 @@
 package veregisters
 
-import "github.com/koestler/go-victron/victronDefinitions"
+import "github.com/koestler/go-victron/veconsts"
 
 // AppendInverter appends all registers of phoenix inverters to the given RegisterList.
 // The list is based on:
@@ -136,7 +136,7 @@ func AppendInverterGeneric(rl *RegisterList) {
 			0x0201, -1,
 			false,
 			false,
-			victronDefinitions.GetInverterStateMap(),
+			veconsts.GetInverterStateMap(),
 		),
 		// todo: add device off reason, device warning reason and alarm reason (all bit masks)
 		newEnumRegisterStruct(
@@ -147,7 +147,7 @@ func AppendInverterGeneric(rl *RegisterList) {
 			0x0200, -1,
 			false,
 			false,
-			victronDefinitions.GetInverterModeMap(),
+			veconsts.GetInverterModeMap(),
 		),
 	)
 }

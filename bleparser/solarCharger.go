@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veconsts"
 	"math"
 )
 
@@ -17,13 +17,13 @@ import (
 // 80         | 9          | Load current          | 0.1A    | 0 .. 51.0 A         | 0x1FF
 
 type SolarChargerRecord struct {
-	DeviceState    victronDefinitions.SolarChargerState `Description:"Device state"`
-	ChargerError   victronDefinitions.SolarChargerError `Description:"Charger error"`
-	BatteryVoltage float64                              `Description:"Battery voltage" Unit:"V"`
-	BatteryCurrent float64                              `Description:"Battery current" Unit:"A"`
-	YieldToday     float64                              `Description:"Yield today" Unit:"Wh"`
-	PvPower        float64                              `Description:"PV power" Unit:"W"`
-	LoadCurrent    float64                              `Description:"Load current" Unit:"A"`
+	DeviceState    veconsts.SolarChargerState `Description:"Device state"`
+	ChargerError   veconsts.SolarChargerError `Description:"Charger error"`
+	BatteryVoltage float64                    `Description:"Battery voltage" Unit:"V"`
+	BatteryCurrent float64                    `Description:"Battery current" Unit:"A"`
+	YieldToday     float64                    `Description:"Yield today" Unit:"Wh"`
+	PvPower        float64                    `Description:"PV power" Unit:"W"`
+	LoadCurrent    float64                    `Description:"Load current" Unit:"A"`
 }
 
 func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
@@ -32,19 +32,19 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = victronDefinitions.SolarChargerState(inp[0])
+	ret.DeviceState = veconsts.SolarChargerState(inp[0])
 	{
-		sm := victronDefinitions.GetSolarChargerStateMap()
+		sm := veconsts.GetSolarChargerStateMap()
 		if _, ok := sm[ret.DeviceState]; !ok {
-			ret.DeviceState = victronDefinitions.SolarChargerStateUnavailable
+			ret.DeviceState = veconsts.SolarChargerStateUnavailable
 		}
 	}
 
-	ret.ChargerError = victronDefinitions.SolarChargerError(inp[1])
+	ret.ChargerError = veconsts.SolarChargerError(inp[1])
 	{
-		sm := victronDefinitions.GetSolarChargerErrorMap()
+		sm := veconsts.GetSolarChargerErrorMap()
 		if _, ok := sm[ret.ChargerError]; !ok {
-			ret.ChargerError = victronDefinitions.SolarChargerErrorUnknown
+			ret.ChargerError = veconsts.SolarChargerErrorUnknown
 		}
 	}
 

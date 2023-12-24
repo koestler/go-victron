@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veconsts"
 	"math"
 )
 
@@ -20,16 +20,16 @@ import (
 // 95         | 11         | 7          | 7          | Soc                   | 1%      | 0 .. 126 %          | 0x7F
 
 type VeBusRecord struct {
-	DeviceState     victronDefinitions.InverterState      `Description:"Device state"`
-	VeBusError      victronDefinitions.SolarChargerError  `Description:"VE.Bus error"`
-	BatteryCurrent  float64                               `Description:"Battery current" Unit:"A"`
-	BatteryVoltage  float64                               `Description:"Battery voltage" Unit:"V"`
-	ActiveAcIn      victronDefinitions.MultiRsActiveInput `Description:"Active AC in"`
-	ActiveAcInPower float64                               `Description:"Active AC in power" Unit:"W"`
-	AcOutPower      float64                               `Description:"AC out power" Unit:"W"`
-	Alarm           victronDefinitions.VeBusAlarm         `Description:"Alarm"`
-	Temperature     float64                               `Description:"Temperature" Unit:"°C"`
-	Soc             float64                               `Description:"State of charge" Unit:"%"`
+	DeviceState     veconsts.InverterState      `Description:"Device state"`
+	VeBusError      veconsts.SolarChargerError  `Description:"VE.Bus error"`
+	BatteryCurrent  float64                     `Description:"Battery current" Unit:"A"`
+	BatteryVoltage  float64                     `Description:"Battery voltage" Unit:"V"`
+	ActiveAcIn      veconsts.MultiRsActiveInput `Description:"Active AC in"`
+	ActiveAcInPower float64                     `Description:"Active AC in power" Unit:"W"`
+	AcOutPower      float64                     `Description:"AC out power" Unit:"W"`
+	Alarm           veconsts.VeBusAlarm         `Description:"Alarm"`
+	Temperature     float64                     `Description:"Temperature" Unit:"°C"`
+	Soc             float64                     `Description:"State of charge" Unit:"%"`
 }
 
 func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
@@ -38,8 +38,8 @@ func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = victronDefinitions.InverterState(inp[0])
-	ret.VeBusError = victronDefinitions.SolarChargerError(inp[1])
+	ret.DeviceState = veconsts.InverterState(inp[0])
+	ret.VeBusError = veconsts.SolarChargerError(inp[1])
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
 		ret.BatteryCurrent = float64(int16(v)) / 10
@@ -53,7 +53,7 @@ func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
 		ret.BatteryVoltage = math.NaN()
 	}
 
-	ret.ActiveAcIn = victronDefinitions.MultiRsActiveInput((inp[5] >> 6) & 0x3)
+	ret.ActiveAcIn = veconsts.MultiRsActiveInput((inp[5] >> 6) & 0x3)
 
 	if v := binary.LittleEndian.Uint32(inp[6:9]) & 0x7FFFF; v != 0x7FFFF {
 		ret.ActiveAcInPower = float64(int32(v))
@@ -67,7 +67,7 @@ func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
 		ret.AcOutPower = math.NaN()
 	}
 
-	ret.Alarm = victronDefinitions.VeBusAlarm((inp[10] >> 6) & 0x3)
+	ret.Alarm = veconsts.VeBusAlarm((inp[10] >> 6) & 0x3)
 
 	if v := inp[11] & 0x7F; v != 0x7F {
 		ret.Temperature = float64(int8(v))

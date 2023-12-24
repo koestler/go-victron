@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veconsts"
 	"math"
 )
 
@@ -15,11 +15,11 @@ import (
 // 48         | 32         | Off reason            |         | 0 .. 0xFFFFFFFF     |
 
 type DcDcConverterRecord struct {
-	DeviceState   victronDefinitions.DcDcConverterState `Description:"Device state"`
-	ChargerError  victronDefinitions.DcDcConverterError `Description:"Charger error"`
-	InputVoltage  float64                               `Description:"Input voltage" Unit:"V"`
-	OutputVoltage float64                               `Description:"Output voltage" Unit:"V"`
-	OffReason     uint32                                `Description:"Off reason"`
+	DeviceState   veconsts.DcDcConverterState `Description:"Device state"`
+	ChargerError  veconsts.DcDcConverterError `Description:"Charger error"`
+	InputVoltage  float64                     `Description:"Input voltage" Unit:"V"`
+	OutputVoltage float64                     `Description:"Output voltage" Unit:"V"`
+	OffReason     uint32                      `Description:"Off reason"`
 }
 
 func DecodeDcDcConverterRecord(inp []byte) (ret DcDcConverterRecord, err error) {
@@ -28,19 +28,19 @@ func DecodeDcDcConverterRecord(inp []byte) (ret DcDcConverterRecord, err error) 
 		return
 	}
 
-	ret.DeviceState = victronDefinitions.DcDcConverterState(inp[0])
+	ret.DeviceState = veconsts.DcDcConverterState(inp[0])
 	{
-		sm := victronDefinitions.GetDcDcConverterStateMap()
+		sm := veconsts.GetDcDcConverterStateMap()
 		if _, ok := sm[ret.DeviceState]; !ok {
-			ret.DeviceState = victronDefinitions.DcDcConverterStateUnavailable
+			ret.DeviceState = veconsts.DcDcConverterStateUnavailable
 		}
 	}
 
-	ret.ChargerError = victronDefinitions.DcDcConverterError(inp[1])
+	ret.ChargerError = veconsts.DcDcConverterError(inp[1])
 	{
-		sm := victronDefinitions.GetDcDcConverterErrorMap()
+		sm := veconsts.GetDcDcConverterErrorMap()
 		if _, ok := sm[ret.ChargerError]; !ok {
-			ret.ChargerError = victronDefinitions.DcDcConverterErrorUnknown
+			ret.ChargerError = veconsts.DcDcConverterErrorUnknown
 		}
 	}
 

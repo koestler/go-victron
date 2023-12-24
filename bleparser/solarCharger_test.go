@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/hex"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veconsts"
 	"math"
 	"testing"
 )
@@ -12,8 +12,8 @@ import (
 func TestDecodeSolarChargeRecord(t *testing.T) {
 	cases := map[string]SolarChargerRecord{
 		"04006c050e000300130000fe409ac069": {
-			DeviceState:    victronDefinitions.SolarChargerStateAbsorptionCharging,
-			ChargerError:   victronDefinitions.SolarChargerErrorNoError,
+			DeviceState:    veconsts.SolarChargerStateAbsorptionCharging,
+			ChargerError:   veconsts.SolarChargerErrorNoError,
 			BatteryVoltage: 13.88,
 			BatteryCurrent: 1.4,
 			YieldToday:     30.0,
@@ -21,8 +21,8 @@ func TestDecodeSolarChargeRecord(t *testing.T) {
 			LoadCurrent:    0.0,
 		},
 		"0300f80402000200030000fe8c9a5572": {
-			DeviceState:    victronDefinitions.SolarChargerStateBulkCharging,
-			ChargerError:   victronDefinitions.SolarChargerErrorNoError,
+			DeviceState:    veconsts.SolarChargerStateBulkCharging,
+			ChargerError:   veconsts.SolarChargerErrorNoError,
 			BatteryVoltage: 12.72,
 			BatteryCurrent: 0.2,
 			YieldToday:     20.0,
@@ -30,8 +30,8 @@ func TestDecodeSolarChargeRecord(t *testing.T) {
 			LoadCurrent:    0.0,
 		},
 		"0300fb09650032000901ffff31bc45ad": {
-			DeviceState:    victronDefinitions.SolarChargerStateBulkCharging,
-			ChargerError:   victronDefinitions.SolarChargerErrorNoError,
+			DeviceState:    veconsts.SolarChargerStateBulkCharging,
+			ChargerError:   veconsts.SolarChargerErrorNoError,
 			BatteryVoltage: 25.55,
 			BatteryCurrent: 10.1,
 			YieldToday:     500.0,

@@ -1,4 +1,4 @@
-package victronDefinitions
+package veconsts
 
 type BmvAuxMode uint8
 

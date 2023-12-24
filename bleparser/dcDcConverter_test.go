@@ -2,7 +2,7 @@ package bleparser
 
 import (
 	"encoding/hex"
-	"github.com/koestler/go-victron/victronDefinitions"
+	"github.com/koestler/go-victron/veconsts"
 	"math"
 	"testing"
 )
@@ -12,8 +12,8 @@ import (
 func TestDecodeDcDcConverterRecord(t *testing.T) {
 	cases := map[string]DcDcConverterRecord{
 		"00002305ff7f80000000cbdd494cc5d1": {
-			DeviceState:   victronDefinitions.DcDcConverterStateNotCharging,
-			ChargerError:  victronDefinitions.DcDcConverterErrorNoError,
+			DeviceState:   veconsts.DcDcConverterStateNotCharging,
+			ChargerError:  veconsts.DcDcConverterErrorNoError,
 			InputVoltage:  13.15,
 			OutputVoltage: math.NaN(),
 			OffReason:     0x00000080,
