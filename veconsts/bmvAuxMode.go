@@ -1,39 +1,39 @@
 package veconsts
 
-type AuxMode uint8
+type BmvAuxMode uint8
 
 const (
-	AuxModeVoltage         AuxMode = 0
-	AuxModeMidpointVoltage AuxMode = 1
-	AuxModeTemperature     AuxMode = 2
-	AuxModeDisabled        AuxMode = 3
+	BmvAuxModeStarterVoltage  BmvAuxMode = 0
+	BmvAuxModeMidpointVoltage BmvAuxMode = 1
+	BmvAuxModeTemperature     BmvAuxMode = 2
+	BmvAuxModeDisabled        BmvAuxMode = 3
 )
 
-var auxModeMap = map[AuxMode]string{
-	AuxModeVoltage:         "Aux voltage",
-	AuxModeMidpointVoltage: "Mid-point voltage",
-	AuxModeTemperature:     "Temperature",
-	AuxModeDisabled:        "Disabled",
+var bmvAuxModeMap = map[BmvAuxMode]string{
+	BmvAuxModeStarterVoltage:  "Starter voltage",
+	BmvAuxModeMidpointVoltage: "Mid-point voltage",
+	BmvAuxModeTemperature:     "Temperature",
+	BmvAuxModeDisabled:        "Disabled",
 }
 
-// AuxModeStringMap returns a map of AuxMode values to their string representation.
-func AuxModeStringMap() map[AuxMode]string {
-	ret := make(map[AuxMode]string, len(auxModeMap))
-	for k, v := range auxModeMap {
+// GetBmvAuxModeStringMap returns a map of BmvAuxMode values to their string representation.
+func GetBmvAuxModeStringMap() map[BmvAuxMode]string {
+	ret := make(map[BmvAuxMode]string, len(bmvAuxModeMap))
+	for k, v := range bmvAuxModeMap {
 		ret[k] = v
 	}
 	return ret
 }
 
-// Exists returns true if the AuxMode exists.
-func (s AuxMode) Exists() bool {
-	_, ok := auxModeMap[s]
+// Exists returns true if the BmvAuxMode exists.
+func (s BmvAuxMode) Exists() bool {
+	_, ok := bmvAuxModeMap[s]
 	return ok
 }
 
-// String returns the string representation of a AuxMode.
-func (s AuxMode) String() string {
-	if v, ok := auxModeMap[s]; ok {
+// String returns the string representation of a BmvAuxMode.
+func (s BmvAuxMode) String() string {
+	if v, ok := bmvAuxModeMap[s]; ok {
 		return v
 	}
 	return ""
