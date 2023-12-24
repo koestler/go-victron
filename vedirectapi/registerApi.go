@@ -1,5 +1,5 @@
 // Package vedirectapi implements an easy to use api to connect to VE.Direct devices and read their values.
-// It utilizes  the low level vedirect, veregister and veproduct packages and intatiates a connection using the serial package.
+// It utilizes the low level vedirect, veregister and veproduct packages and intatiates a connection using the serial package.
 package vedirectapi
 
 import (
