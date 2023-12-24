@@ -1,5 +1,7 @@
 package veregisters
 
+import "github.com/koestler/go-victron/veconsts"
+
 // AppendBmv appends all registers of BMV units to the given RegisterList.
 // The list is based on:
 // https://www.victronenergy.com/upload/documents/BMV-7xx-HEX-Protocol.pdf
@@ -229,10 +231,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0xEEB6, -1,
 			false,
 			false,
-			map[int]string{
-				0: "false",
-				1: "true",
-			},
+			veconsts.GetBooleanStringMap(),
 		),
 	)
 }
