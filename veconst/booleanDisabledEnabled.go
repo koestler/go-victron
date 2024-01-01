@@ -1,6 +1,7 @@
 package veconst
 
 type BooleanDisabledEnabled uint8
+type BooleanDisabledEnabledFactoryType struct{}
 
 const (
 	BooleanDisabled BooleanDisabledEnabled = 0
@@ -11,17 +12,18 @@ var booleanDisabledEnabledMap = map[BooleanDisabledEnabled]string{
 	BooleanDisabled: "Disabled",
 	BooleanEnabled:  "Enabled",
 }
-
-type BooleanDisabledEnabledFactoryType struct{}
-
 var BooleanDisabledEnabledFactory BooleanDisabledEnabledFactoryType
 
-func (f BooleanDisabledEnabledFactoryType) NewEnum(v int) (Enum, error) {
+func (f BooleanDisabledEnabledFactoryType) New(v int) (BooleanDisabledEnabled, error) {
 	s := BooleanDisabledEnabled(v)
 	if _, ok := booleanDisabledEnabledMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return BooleanDisabled, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f BooleanDisabledEnabledFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f BooleanDisabledEnabledFactoryType) IntToStringMap() map[int]string {

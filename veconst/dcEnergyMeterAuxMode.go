@@ -1,6 +1,7 @@
 package veconst
 
 type DcEnergyMeterAuxMode uint8
+type DcEnergyMeterAuxModeFactoryType struct{}
 
 const (
 	DcEnergyMeterAuxModeAuxVoltage  DcEnergyMeterAuxMode = 0
@@ -13,17 +14,18 @@ var dcEnergyMeterAuxModeMap = map[DcEnergyMeterAuxMode]string{
 	DcEnergyMeterAuxModeTemperature: "Temperature",
 	DcEnergyMeterAuxModeDisabled:    "Disabled",
 }
-
-type DcEnergyMeterAuxModeFactoryType struct{}
-
 var DcEnergyMeterAuxModeFactory DcEnergyMeterAuxModeFactoryType
 
-func (f DcEnergyMeterAuxModeFactoryType) NewEnum(v int) (Enum, error) {
+func (f DcEnergyMeterAuxModeFactoryType) New(v int) (DcEnergyMeterAuxMode, error) {
 	s := DcEnergyMeterAuxMode(v)
 	if _, ok := dcEnergyMeterAuxModeMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return DcEnergyMeterAuxModeDisabled, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f DcEnergyMeterAuxModeFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f DcEnergyMeterAuxModeFactoryType) IntToStringMap() map[int]string {

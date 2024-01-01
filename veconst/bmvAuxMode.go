@@ -1,6 +1,7 @@
 package veconst
 
 type BmvAuxMode uint8
+type BmvAuxModeFactoryType struct{}
 
 const (
 	BmvAuxModeStarterVoltage  BmvAuxMode = 0
@@ -15,17 +16,18 @@ var bmvAuxModeMap = map[BmvAuxMode]string{
 	BmvAuxModeTemperature:     "Temperature",
 	BmvAuxModeDisabled:        "Disabled",
 }
-
-type BmvAuxModeFactoryType struct{}
-
 var BmvAuxModeFactory BmvAuxModeFactoryType
 
-func (f BmvAuxModeFactoryType) NewEnum(v int) (Enum, error) {
+func (f BmvAuxModeFactoryType) New(v int) (BmvAuxMode, error) {
 	s := BmvAuxMode(v)
 	if _, ok := bmvAuxModeMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return BmvAuxModeDisabled, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f BmvAuxModeFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f BmvAuxModeFactoryType) IntToStringMap() map[int]string {

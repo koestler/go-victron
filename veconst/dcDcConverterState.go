@@ -1,6 +1,7 @@
 package veconst
 
 type DcDcConverterState uint8
+type DcDcConverterStateFactoryType struct{}
 
 const (
 	DcDcConverterStateNotCharging        DcDcConverterState = 0
@@ -27,17 +28,18 @@ var dcDcConverterStateMap = map[DcDcConverterState]string{
 	DcDcConverterStateExternalControl:    "External Control",
 	DcDcConverterStateUnavailable:        "Unavailable",
 }
-
-type DcDcConverterStateFactoryType struct{}
-
 var DcDcConverterStateFactory DcDcConverterStateFactoryType
 
-func (f DcDcConverterStateFactoryType) NewEnum(v int) (Enum, error) {
+func (f DcDcConverterStateFactoryType) New(v int) (DcDcConverterState, error) {
 	s := DcDcConverterState(v)
 	if _, ok := dcDcConverterStateMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return DcDcConverterStateUnavailable, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f DcDcConverterStateFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f DcDcConverterStateFactoryType) IntToStringMap() map[int]string {

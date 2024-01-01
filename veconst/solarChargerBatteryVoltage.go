@@ -1,6 +1,7 @@
 package veconst
 
 type SolarChargerBatteryVoltage uint8
+type SolarChargerBatteryVoltageFactoryType struct{}
 
 const (
 	SolarChargerBatteryVoltageAutoDetect SolarChargerBatteryVoltage = 0
@@ -17,17 +18,18 @@ var solarChargerBatteryVoltageMap = map[SolarChargerBatteryVoltage]string{
 	SolarChargerBatteryVoltage36V:        "36V battery",
 	SolarChargerBatteryVoltage48V:        "48V battery",
 }
-
-type SolarChargerBatteryVoltageFactoryType struct{}
-
 var SolarChargerBatteryVoltageFactory SolarChargerBatteryVoltageFactoryType
 
-func (f SolarChargerBatteryVoltageFactoryType) NewEnum(v int) (Enum, error) {
+func (f SolarChargerBatteryVoltageFactoryType) New(v int) (SolarChargerBatteryVoltage, error) {
 	s := SolarChargerBatteryVoltage(v)
 	if _, ok := solarChargerBatteryVoltageMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return SolarChargerBatteryVoltageAutoDetect, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f SolarChargerBatteryVoltageFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f SolarChargerBatteryVoltageFactoryType) IntToStringMap() map[int]string {

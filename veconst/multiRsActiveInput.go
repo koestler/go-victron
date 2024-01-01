@@ -1,6 +1,7 @@
 package veconst
 
 type MultiRsActiveInput uint8
+type MultiRsActiveInputFactoryType struct{}
 
 const (
 	MultiRsActiveInputAC1          MultiRsActiveInput = 0
@@ -15,17 +16,18 @@ var multiRsActiveInputMap = map[MultiRsActiveInput]string{
 	MultiRsActiveInputNotConnected: "Not Connected",
 	MultiRsActiveInputUnknown:      "Unknown",
 }
-
-type MultiRsActiveInputFactoryType struct{}
-
 var MultiRsActiveInputFactory MultiRsActiveInputFactoryType
 
-func (f MultiRsActiveInputFactoryType) NewEnum(v int) (Enum, error) {
+func (f MultiRsActiveInputFactoryType) New(v int) (MultiRsActiveInput, error) {
 	s := MultiRsActiveInput(v)
 	if _, ok := multiRsActiveInputMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return MultiRsActiveInputUnknown, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f MultiRsActiveInputFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f MultiRsActiveInputFactoryType) IntToStringMap() map[int]string {

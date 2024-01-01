@@ -1,6 +1,7 @@
 package veconst
 
 type InverterMode uint8
+type InverterModeFactoryType struct{}
 
 const (
 	InverterModeInverterOn InverterMode = 2
@@ -17,17 +18,18 @@ var inverterModeMap = map[InverterMode]string{
 	InverterModeEcoMode:    "Eco mode",
 	InverterModeHibernate:  "Hibernate",
 }
-
-type InverterModeFactoryType struct{}
-
 var InverterModeFactory InverterModeFactoryType
 
-func (f InverterModeFactoryType) NewEnum(v int) (Enum, error) {
+func (f InverterModeFactoryType) New(v int) (InverterMode, error) {
 	s := InverterMode(v)
 	if _, ok := inverterModeMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return InverterModeHibernate, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f InverterModeFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f InverterModeFactoryType) IntToStringMap() map[int]string {

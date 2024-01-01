@@ -1,6 +1,7 @@
 package veconst
 
 type VeBusAlarm uint8
+type VeBusAlarmFactoryType struct{}
 
 const (
 	VeBusAlarmNoAlarm   VeBusAlarm = 0
@@ -15,17 +16,18 @@ var veBusAlarmMap = map[VeBusAlarm]string{
 	VeBusAlarmAlarm:     "Alarm",
 	VeBusAlarmUndefined: "Undefined",
 }
-
-type VeBusAlarmFactoryType struct{}
-
 var VeBusAlarmFactory VeBusAlarmFactoryType
 
-func (f VeBusAlarmFactoryType) NewEnum(v int) (Enum, error) {
+func (f VeBusAlarmFactoryType) New(v int) (VeBusAlarm, error) {
 	s := VeBusAlarm(v)
 	if _, ok := veBusAlarmMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return VeBusAlarmUndefined, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f VeBusAlarmFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f VeBusAlarmFactoryType) IntToStringMap() map[int]string {

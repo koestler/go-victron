@@ -1,6 +1,7 @@
 package veconst
 
 type DcDcConverterError uint8
+type DcDcConverterErrorFactoryType struct{}
 
 const (
 	DcDcConverterErrorNoError                           DcDcConverterError = 0
@@ -47,17 +48,18 @@ var dcDcConverterErrorMap = map[DcDcConverterError]string{
 	DcDcConverterErrorSettingsDataInvalid:               "Settings data invalid / corrupted (use restore to defaults and set to recover)",
 	DcDcConverterErrorUnknown:                           "Unknown error",
 }
-
-type DcDcConverterErrorFactoryType struct{}
-
 var DcDcConverterErrorFactory DcDcConverterErrorFactoryType
 
-func (f DcDcConverterErrorFactoryType) NewEnum(v int) (Enum, error) {
+func (f DcDcConverterErrorFactoryType) New(v int) (DcDcConverterError, error) {
 	s := DcDcConverterError(v)
 	if _, ok := dcDcConverterErrorMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return DcDcConverterErrorUnknown, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f DcDcConverterErrorFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f DcDcConverterErrorFactoryType) IntToStringMap() map[int]string {

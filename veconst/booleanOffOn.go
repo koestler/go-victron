@@ -1,6 +1,7 @@
 package veconst
 
 type BooleanOffOn uint8
+type BooleanOffOnFactoryType struct{}
 
 const (
 	BooleanOff BooleanOffOn = 0
@@ -11,17 +12,18 @@ var booleanOffOnMap = map[BooleanOffOn]string{
 	BooleanOff: "Off",
 	BooleanOn:  "On",
 }
-
-type BooleanOffOnFactoryType struct{}
-
 var BooleanOffOnFactory BooleanOffOnFactoryType
 
-func (f BooleanOffOnFactoryType) NewEnum(v int) (Enum, error) {
+func (f BooleanOffOnFactoryType) New(v int) (BooleanOffOn, error) {
 	s := BooleanOffOn(v)
 	if _, ok := booleanOffOnMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return BooleanOff, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f BooleanOffOnFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f BooleanOffOnFactoryType) IntToStringMap() map[int]string {

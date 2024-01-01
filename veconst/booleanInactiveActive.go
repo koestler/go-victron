@@ -1,6 +1,7 @@
 package veconst
 
 type BooleanInactiveActive uint8
+type BooleanInactiveActiveFactoryType struct{}
 
 const (
 	BooleanInactive BooleanInactiveActive = 0
@@ -11,17 +12,18 @@ var booleanInactiveActiveMap = map[BooleanInactiveActive]string{
 	BooleanInactive: "Inactive",
 	BooleanActive:   "Active",
 }
-
-type BooleanInactiveActiveFactoryType struct{}
-
 var BooleanInactiveActiveFactory BooleanInactiveActiveFactoryType
 
-func (f BooleanInactiveActiveFactoryType) NewEnum(v int) (Enum, error) {
+func (f BooleanInactiveActiveFactoryType) New(v int) (BooleanInactiveActive, error) {
 	s := BooleanInactiveActive(v)
 	if _, ok := booleanInactiveActiveMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return BooleanInactive, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f BooleanInactiveActiveFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f BooleanInactiveActiveFactoryType) IntToStringMap() map[int]string {

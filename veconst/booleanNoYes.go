@@ -1,6 +1,7 @@
 package veconst
 
 type BooleanNoYes uint8
+type BooleanNoYesFactoryType struct{}
 
 const (
 	BooleanNo  BooleanNoYes = 0
@@ -11,17 +12,18 @@ var booleanNoYesMap = map[BooleanNoYes]string{
 	BooleanNo:  "No",
 	BooleanYes: "Yes",
 }
-
-type BooleanNoYesFactoryType struct{}
-
 var BooleanNoYesFactory BooleanNoYesFactoryType
 
-func (f BooleanNoYesFactoryType) NewEnum(v int) (Enum, error) {
+func (f BooleanNoYesFactoryType) New(v int) (BooleanNoYes, error) {
 	s := BooleanNoYes(v)
 	if _, ok := booleanNoYesMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return BooleanNo, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f BooleanNoYesFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f BooleanNoYesFactoryType) IntToStringMap() map[int]string {

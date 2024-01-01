@@ -1,6 +1,7 @@
 package veconst
 
 type InverterState uint8
+type InverterStateFactoryType struct{}
 
 const (
 	InverterStateOff       InverterState = 0
@@ -15,17 +16,18 @@ var inverterStateMap = map[InverterState]string{
 	InverterStateFault:     "Fault",
 	InverterStateInverting: "Inverting",
 }
-
-type InverterStateFactoryType struct{}
-
 var InverterStateFactory InverterStateFactoryType
 
-func (f InverterStateFactoryType) NewEnum(v int) (Enum, error) {
+func (f InverterStateFactoryType) New(v int) (InverterState, error) {
 	s := InverterState(v)
 	if _, ok := inverterStateMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return InverterStateOff, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f InverterStateFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f InverterStateFactoryType) IntToStringMap() map[int]string {

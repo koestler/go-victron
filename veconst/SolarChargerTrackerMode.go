@@ -1,6 +1,7 @@
 package veconst
 
 type SolarChargerTrackerMode uint8
+type SolarChargerTrackerModeFactoryType struct{}
 
 const (
 	SolarChargerTrackerModeOff                   SolarChargerTrackerMode = 0
@@ -13,17 +14,18 @@ var solarChargerTrackerModeMap = map[SolarChargerTrackerMode]string{
 	SolarChargerTrackerModeVoltageCurrentLimited: "Voltage/current limited",
 	SolarChargerTrackerModeMPPTracker:            "MPP tracker",
 }
-
-type SolarChargerTrackerModeFactoryType struct{}
-
 var SolarChargerTrackerModeFactory SolarChargerTrackerModeFactoryType
 
-func (f SolarChargerTrackerModeFactoryType) NewEnum(v int) (Enum, error) {
+func (f SolarChargerTrackerModeFactoryType) New(v int) (SolarChargerTrackerMode, error) {
 	s := SolarChargerTrackerMode(v)
 	if _, ok := solarChargerTrackerModeMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return SolarChargerTrackerModeOff, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f SolarChargerTrackerModeFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f SolarChargerTrackerModeFactoryType) IntToStringMap() map[int]string {

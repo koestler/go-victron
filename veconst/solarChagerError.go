@@ -1,6 +1,7 @@
 package veconst
 
 type SolarChargerError uint8
+type SolarChargerErrorFactoryType struct{}
 
 const (
 	SolarChargerErrorNoError                           SolarChargerError = 0
@@ -47,17 +48,18 @@ var solarChargerErrorMap = map[SolarChargerError]string{
 	SolarChargerErrorSettingsDataInvalid:               "Settings data invalid / corrupted (use restore to defaults and set to recover)",
 	SolarChargerErrorUnknown:                           "Unknown error",
 }
-
-type SolarChargerErrorFactoryType struct{}
-
 var SolarChargerErrorFactory SolarChargerErrorFactoryType
 
-func (f SolarChargerErrorFactoryType) NewEnum(v int) (Enum, error) {
+func (f SolarChargerErrorFactoryType) New(v int) (SolarChargerError, error) {
 	s := SolarChargerError(v)
 	if _, ok := solarChargerErrorMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return SolarChargerErrorUnknown, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f SolarChargerErrorFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f SolarChargerErrorFactoryType) IntToStringMap() map[int]string {

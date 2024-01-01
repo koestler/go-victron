@@ -1,6 +1,7 @@
 package veconst
 
 type InverterFrequency uint8
+type InverterFrequencyFactoryType struct{}
 
 const (
 	InverterFrequency60Hz InverterFrequency = 0
@@ -11,17 +12,18 @@ var inverterFrequencyMap = map[InverterFrequency]string{
 	InverterFrequency60Hz: "60 Hz",
 	InverterFrequency50Hz: "50 Hz",
 }
-
-type InverterFrequencyFactoryType struct{}
-
 var InverterFrequencyFactory InverterFrequencyFactoryType
 
-func (f InverterFrequencyFactoryType) NewEnum(v int) (Enum, error) {
+func (f InverterFrequencyFactoryType) New(v int) (InverterFrequency, error) {
 	s := InverterFrequency(v)
 	if _, ok := inverterFrequencyMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return InverterFrequency60Hz, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f InverterFrequencyFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f InverterFrequencyFactoryType) IntToStringMap() map[int]string {

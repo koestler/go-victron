@@ -1,6 +1,7 @@
 package veconst
 
 type BooleanFalseTrue uint8
+type BooleanFalseTrueFactoryType struct{}
 
 const (
 	BooleanFalse BooleanFalseTrue = 0
@@ -11,17 +12,18 @@ var booleanFalseTrueMap = map[BooleanFalseTrue]string{
 	BooleanFalse: "False",
 	BooleanTrue:  "True",
 }
-
-type BooleanFalseTrueFactoryType struct{}
-
 var BooleanFalseTrueFactory BooleanFalseTrueFactoryType
 
-func (f BooleanFalseTrueFactoryType) NewEnum(v int) (Enum, error) {
+func (f BooleanFalseTrueFactoryType) New(v int) (BooleanFalseTrue, error) {
 	s := BooleanFalseTrue(v)
 	if _, ok := booleanFalseTrueMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return BooleanFalse, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f BooleanFalseTrueFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f BooleanFalseTrueFactoryType) IntToStringMap() map[int]string {

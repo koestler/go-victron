@@ -1,6 +1,7 @@
 package veconst
 
 type SolarChargerDeviceMode uint8
+type SolarChargerDeviceModeFactoryType struct{}
 
 const (
 	SolarChargerDeviceModeOff  SolarChargerDeviceMode = 0
@@ -13,17 +14,18 @@ var solarChargerDeviceModeMap = map[SolarChargerDeviceMode]string{
 	SolarChargerDeviceModeOff4: "Charger Off",
 	SolarChargerDeviceModeOn:   "Charger On",
 }
-
-type SolarChargerDeviceModeFactoryType struct{}
-
 var SolarChargerDeviceModeFactory SolarChargerDeviceModeFactoryType
 
-func (f SolarChargerDeviceModeFactoryType) NewEnum(v int) (Enum, error) {
+func (f SolarChargerDeviceModeFactoryType) New(v int) (SolarChargerDeviceMode, error) {
 	s := SolarChargerDeviceMode(v)
 	if _, ok := solarChargerDeviceModeMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return SolarChargerDeviceModeOff, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f SolarChargerDeviceModeFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f SolarChargerDeviceModeFactoryType) IntToStringMap() map[int]string {

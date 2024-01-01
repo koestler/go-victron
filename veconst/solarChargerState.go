@@ -1,6 +1,7 @@
 package veconst
 
 type SolarChargerState uint8
+type SolarChargerStateFactoryType struct{}
 
 const (
 	SolarChargerStateNotCharging        SolarChargerState = 0
@@ -27,17 +28,18 @@ var solarChargerStateMap = map[SolarChargerState]string{
 	SolarChargerStateExternalControl:    "External Control",
 	SolarChargerStateUnavailable:        "Unavailable",
 }
-
-type SolarChargerStateFactoryType struct{}
-
 var SolarChargerStateFactory SolarChargerStateFactoryType
 
-func (f SolarChargerStateFactoryType) NewEnum(v int) (Enum, error) {
+func (f SolarChargerStateFactoryType) New(v int) (SolarChargerState, error) {
 	s := SolarChargerState(v)
 	if _, ok := solarChargerStateMap[s]; !ok {
-		return nil, ErrInvalidEnumIdx
+		return SolarChargerStateUnavailable, ErrInvalidEnumIdx
 	}
 	return s, nil
+}
+
+func (f SolarChargerStateFactoryType) NewEnum(v int) (Enum, error) {
+	return f.New(v)
 }
 
 func (f SolarChargerStateFactoryType) IntToStringMap() map[int]string {
