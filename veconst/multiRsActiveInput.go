@@ -18,7 +18,7 @@ var multiRsActiveInputMap = map[MultiRsActiveInput]string{
 }
 var MultiRsActiveInputFactory MultiRsActiveInputFactoryType
 
-func (f MultiRsActiveInputFactoryType) New(v int) (MultiRsActiveInput, error) {
+func (f MultiRsActiveInputFactoryType) New(v uint8) (MultiRsActiveInput, error) {
 	s := MultiRsActiveInput(v)
 	if _, ok := multiRsActiveInputMap[s]; !ok {
 		return MultiRsActiveInputUnknown, ErrInvalidEnumIdx
@@ -27,7 +27,7 @@ func (f MultiRsActiveInputFactoryType) New(v int) (MultiRsActiveInput, error) {
 }
 
 func (f MultiRsActiveInputFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(v)
+	return f.New(uint8(v))
 }
 
 func (f MultiRsActiveInputFactoryType) IntToStringMap() map[int]string {
@@ -47,9 +47,4 @@ func (s MultiRsActiveInput) String() string {
 		return v
 	}
 	return ""
-}
-
-func (s MultiRsActiveInput) Exists() bool {
-	_, ok := multiRsActiveInputMap[s]
-	return ok
 }

@@ -6,7 +6,6 @@ import "errors"
 type Enum interface {
 	Idx() int
 	String() string
-	Exists() bool
 }
 
 type EnumFactory interface {

@@ -14,7 +14,7 @@ var booleanNoYesMap = map[BooleanNoYes]string{
 }
 var BooleanNoYesFactory BooleanNoYesFactoryType
 
-func (f BooleanNoYesFactoryType) New(v int) (BooleanNoYes, error) {
+func (f BooleanNoYesFactoryType) New(v uint8) (BooleanNoYes, error) {
 	s := BooleanNoYes(v)
 	if _, ok := booleanNoYesMap[s]; !ok {
 		return BooleanNo, ErrInvalidEnumIdx
@@ -23,7 +23,7 @@ func (f BooleanNoYesFactoryType) New(v int) (BooleanNoYes, error) {
 }
 
 func (f BooleanNoYesFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(v)
+	return f.New(uint8(v))
 }
 
 func (f BooleanNoYesFactoryType) IntToStringMap() map[int]string {
@@ -43,9 +43,4 @@ func (s BooleanNoYes) String() string {
 		return v
 	}
 	return ""
-}
-
-func (s BooleanNoYes) Exists() bool {
-	_, ok := booleanNoYesMap[s]
-	return ok
 }

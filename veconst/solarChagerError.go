@@ -50,7 +50,7 @@ var solarChargerErrorMap = map[SolarChargerError]string{
 }
 var SolarChargerErrorFactory SolarChargerErrorFactoryType
 
-func (f SolarChargerErrorFactoryType) New(v int) (SolarChargerError, error) {
+func (f SolarChargerErrorFactoryType) New(v uint8) (SolarChargerError, error) {
 	s := SolarChargerError(v)
 	if _, ok := solarChargerErrorMap[s]; !ok {
 		return SolarChargerErrorUnknown, ErrInvalidEnumIdx
@@ -59,7 +59,7 @@ func (f SolarChargerErrorFactoryType) New(v int) (SolarChargerError, error) {
 }
 
 func (f SolarChargerErrorFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(v)
+	return f.New(uint8(v))
 }
 
 func (f SolarChargerErrorFactoryType) IntToStringMap() map[int]string {
@@ -79,9 +79,4 @@ func (s SolarChargerError) String() string {
 		return v
 	}
 	return ""
-}
-
-func (s SolarChargerError) Exists() bool {
-	_, ok := solarChargerErrorMap[s]
-	return ok
 }

@@ -14,7 +14,7 @@ var inverterFrequencyMap = map[InverterFrequency]string{
 }
 var InverterFrequencyFactory InverterFrequencyFactoryType
 
-func (f InverterFrequencyFactoryType) New(v int) (InverterFrequency, error) {
+func (f InverterFrequencyFactoryType) New(v uint8) (InverterFrequency, error) {
 	s := InverterFrequency(v)
 	if _, ok := inverterFrequencyMap[s]; !ok {
 		return InverterFrequency60Hz, ErrInvalidEnumIdx
@@ -23,7 +23,7 @@ func (f InverterFrequencyFactoryType) New(v int) (InverterFrequency, error) {
 }
 
 func (f InverterFrequencyFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(v)
+	return f.New(uint8(v))
 }
 
 func (f InverterFrequencyFactoryType) IntToStringMap() map[int]string {
@@ -43,9 +43,4 @@ func (s InverterFrequency) String() string {
 		return v
 	}
 	return ""
-}
-
-func (s InverterFrequency) Exists() bool {
-	_, ok := inverterFrequencyMap[s]
-	return ok
 }

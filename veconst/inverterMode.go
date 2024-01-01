@@ -20,7 +20,7 @@ var inverterModeMap = map[InverterMode]string{
 }
 var InverterModeFactory InverterModeFactoryType
 
-func (f InverterModeFactoryType) New(v int) (InverterMode, error) {
+func (f InverterModeFactoryType) New(v uint8) (InverterMode, error) {
 	s := InverterMode(v)
 	if _, ok := inverterModeMap[s]; !ok {
 		return InverterModeHibernate, ErrInvalidEnumIdx
@@ -29,7 +29,7 @@ func (f InverterModeFactoryType) New(v int) (InverterMode, error) {
 }
 
 func (f InverterModeFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(v)
+	return f.New(uint8(v))
 }
 
 func (f InverterModeFactoryType) IntToStringMap() map[int]string {
@@ -49,9 +49,4 @@ func (s InverterMode) String() string {
 		return v
 	}
 	return ""
-}
-
-func (s InverterMode) Exists() bool {
-	_, ok := inverterModeMap[s]
-	return ok
 }

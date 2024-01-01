@@ -32,11 +32,8 @@ func DecodeInverterRsRecord(inp []byte) (ret InverterRsRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = veconst.InverterState(inp[0])
-	ret.ChargerError = veconst.SolarChargerError(inp[1])
-	if !ret.ChargerError.Exists() {
-		ret.ChargerError = veconst.SolarChargerErrorUnknown
-	}
+	ret.DeviceState, _ = veconst.InverterStateFactory.New(inp[0])
+	ret.ChargerError, _ = veconst.SolarChargerErrorFactory.New(inp[1])
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
 		ret.BatteryVoltage = float64(int16(v)) / 100

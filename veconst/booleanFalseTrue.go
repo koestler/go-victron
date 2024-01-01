@@ -14,7 +14,7 @@ var booleanFalseTrueMap = map[BooleanFalseTrue]string{
 }
 var BooleanFalseTrueFactory BooleanFalseTrueFactoryType
 
-func (f BooleanFalseTrueFactoryType) New(v int) (BooleanFalseTrue, error) {
+func (f BooleanFalseTrueFactoryType) New(v uint8) (BooleanFalseTrue, error) {
 	s := BooleanFalseTrue(v)
 	if _, ok := booleanFalseTrueMap[s]; !ok {
 		return BooleanFalse, ErrInvalidEnumIdx
@@ -23,7 +23,7 @@ func (f BooleanFalseTrueFactoryType) New(v int) (BooleanFalseTrue, error) {
 }
 
 func (f BooleanFalseTrueFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(v)
+	return f.New(uint8(v))
 }
 
 func (f BooleanFalseTrueFactoryType) IntToStringMap() map[int]string {
@@ -43,9 +43,4 @@ func (s BooleanFalseTrue) String() string {
 		return v
 	}
 	return ""
-}
-
-func (s BooleanFalseTrue) Exists() bool {
-	_, ok := booleanFalseTrueMap[s]
-	return ok
 }

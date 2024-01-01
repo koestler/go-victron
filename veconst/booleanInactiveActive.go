@@ -14,7 +14,7 @@ var booleanInactiveActiveMap = map[BooleanInactiveActive]string{
 }
 var BooleanInactiveActiveFactory BooleanInactiveActiveFactoryType
 
-func (f BooleanInactiveActiveFactoryType) New(v int) (BooleanInactiveActive, error) {
+func (f BooleanInactiveActiveFactoryType) New(v uint8) (BooleanInactiveActive, error) {
 	s := BooleanInactiveActive(v)
 	if _, ok := booleanInactiveActiveMap[s]; !ok {
 		return BooleanInactive, ErrInvalidEnumIdx
@@ -23,7 +23,7 @@ func (f BooleanInactiveActiveFactoryType) New(v int) (BooleanInactiveActive, err
 }
 
 func (f BooleanInactiveActiveFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(v)
+	return f.New(uint8(v))
 }
 
 func (f BooleanInactiveActiveFactoryType) IntToStringMap() map[int]string {
@@ -43,9 +43,4 @@ func (s BooleanInactiveActive) String() string {
 		return v
 	}
 	return ""
-}
-
-func (s BooleanInactiveActive) Exists() bool {
-	_, ok := booleanInactiveActiveMap[s]
-	return ok
 }

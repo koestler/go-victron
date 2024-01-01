@@ -18,7 +18,7 @@ var veBusAlarmMap = map[VeBusAlarm]string{
 }
 var VeBusAlarmFactory VeBusAlarmFactoryType
 
-func (f VeBusAlarmFactoryType) New(v int) (VeBusAlarm, error) {
+func (f VeBusAlarmFactoryType) New(v uint8) (VeBusAlarm, error) {
 	s := VeBusAlarm(v)
 	if _, ok := veBusAlarmMap[s]; !ok {
 		return VeBusAlarmUndefined, ErrInvalidEnumIdx
@@ -27,7 +27,7 @@ func (f VeBusAlarmFactoryType) New(v int) (VeBusAlarm, error) {
 }
 
 func (f VeBusAlarmFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(v)
+	return f.New(uint8(v))
 }
 
 func (f VeBusAlarmFactoryType) IntToStringMap() map[int]string {
@@ -47,9 +47,4 @@ func (s VeBusAlarm) String() string {
 		return v
 	}
 	return ""
-}
-
-func (s VeBusAlarm) Exists() bool {
-	_, ok := veBusAlarmMap[s]
-	return ok
 }
