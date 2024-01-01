@@ -35,7 +35,6 @@ type EnumRegisterStruct struct {
 	RegisterStruct
 	bit int // when positive, the specified bit is used as a boolean 0/1
 	// todo: remove this bit stuff; add a new multi enum register type instead
-	enumMap map[int]string // a map uf enum index to enum string value
 	factory veconst.EnumFactory
 }
 
@@ -98,7 +97,6 @@ func newEnumRegisterStruct(
 	bit int,
 	static bool,
 	writable bool,
-	enumMap map[int]string,
 	factory veconst.EnumFactory,
 ) EnumRegisterStruct {
 	return EnumRegisterStruct{
@@ -112,7 +110,6 @@ func newEnumRegisterStruct(
 			writable,
 		},
 		bit,
-		enumMap,
 		factory,
 	}
 }
@@ -229,11 +226,6 @@ func (r EnumRegisterStruct) Type() Type {
 // Bit returns the bit to use as a boolean 0/1.
 func (r EnumRegisterStruct) Bit() int {
 	return r.bit
-}
-
-// EnumMap returns the enum map of enum index to enum string value.
-func (r EnumRegisterStruct) EnumMap() map[int]string {
-	return r.enumMap
 }
 
 // Factory returns the enum factory.

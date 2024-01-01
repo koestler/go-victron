@@ -16,7 +16,11 @@ var bmvAuxModeMap = map[BmvAuxMode]string{
 	BmvAuxModeDisabled:        "Disabled",
 }
 
-func NewBmvAuxModeEnum(v int) (Enum, error) {
+type BmvAuxModeFactoryType struct{}
+
+var BmvAuxModeFactory BmvAuxModeFactoryType
+
+func (f BmvAuxModeFactoryType) NewEnum(v int) (Enum, error) {
 	s := BmvAuxMode(v)
 	if _, ok := bmvAuxModeMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -24,7 +28,7 @@ func NewBmvAuxModeEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func BmvAuxModeMap() map[int]string {
+func (f BmvAuxModeFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(bmvAuxModeMap))
 	for k, v := range bmvAuxModeMap {
 		ret[int(k)] = v
@@ -36,9 +40,14 @@ func (s BmvAuxMode) Idx() int {
 	return int(s)
 }
 
-func (s BmvAuxMode) Value() string {
+func (s BmvAuxMode) String() string {
 	if v, ok := bmvAuxModeMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s BmvAuxMode) Exists() bool {
+	_, ok := bmvAuxModeMap[s]
+	return ok
 }

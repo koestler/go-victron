@@ -16,7 +16,11 @@ var inverterStateMap = map[InverterState]string{
 	InverterStateInverting: "Inverting",
 }
 
-func NewInverterStateEnum(v int) (Enum, error) {
+type InverterStateFactoryType struct{}
+
+var InverterStateFactory InverterStateFactoryType
+
+func (f InverterStateFactoryType) NewEnum(v int) (Enum, error) {
 	s := InverterState(v)
 	if _, ok := inverterStateMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -24,7 +28,7 @@ func NewInverterStateEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func InverterStateMap() map[int]string {
+func (f InverterStateFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(inverterStateMap))
 	for k, v := range inverterStateMap {
 		ret[int(k)] = v
@@ -36,9 +40,14 @@ func (s InverterState) Idx() int {
 	return int(s)
 }
 
-func (s InverterState) Value() string {
+func (s InverterState) String() string {
 	if v, ok := inverterStateMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s InverterState) Exists() bool {
+	_, ok := inverterStateMap[s]
+	return ok
 }

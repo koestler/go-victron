@@ -3,11 +3,15 @@ package veconst
 
 import "errors"
 
-var ErrInvalidEnumIdx = errors.New("enum value does not exist")
-
 type Enum interface {
 	Idx() int
-	Value() string
+	String() string
+	Exists() bool
 }
 
-type EnumFactory func(v int) (Enum, error)
+type EnumFactory interface {
+	NewEnum(v int) (Enum, error)
+	IntToStringMap() map[int]string
+}
+
+var ErrInvalidEnumIdx = errors.New("enum value does not exist")

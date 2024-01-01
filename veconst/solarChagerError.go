@@ -48,7 +48,11 @@ var solarChargerErrorMap = map[SolarChargerError]string{
 	SolarChargerErrorUnknown:                           "Unknown error",
 }
 
-func NewSolarChargerErrorEnum(v int) (Enum, error) {
+type SolarChargerErrorFactoryType struct{}
+
+var SolarChargerErrorFactory SolarChargerErrorFactoryType
+
+func (f SolarChargerErrorFactoryType) NewEnum(v int) (Enum, error) {
 	s := SolarChargerError(v)
 	if _, ok := solarChargerErrorMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -56,7 +60,7 @@ func NewSolarChargerErrorEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func SolarChargerErrorMap() map[int]string {
+func (f SolarChargerErrorFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(solarChargerErrorMap))
 	for k, v := range solarChargerErrorMap {
 		ret[int(k)] = v
@@ -68,9 +72,14 @@ func (s SolarChargerError) Idx() int {
 	return int(s)
 }
 
-func (s SolarChargerError) Value() string {
+func (s SolarChargerError) String() string {
 	if v, ok := solarChargerErrorMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s SolarChargerError) Exists() bool {
+	_, ok := solarChargerErrorMap[s]
+	return ok
 }

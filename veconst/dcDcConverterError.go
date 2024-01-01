@@ -48,7 +48,11 @@ var dcDcConverterErrorMap = map[DcDcConverterError]string{
 	DcDcConverterErrorUnknown:                           "Unknown error",
 }
 
-func NewDcDcConverterErrorEnum(v int) (Enum, error) {
+type DcDcConverterErrorFactoryType struct{}
+
+var DcDcConverterErrorFactory DcDcConverterErrorFactoryType
+
+func (f DcDcConverterErrorFactoryType) NewEnum(v int) (Enum, error) {
 	s := DcDcConverterError(v)
 	if _, ok := dcDcConverterErrorMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -56,7 +60,7 @@ func NewDcDcConverterErrorEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func DcDcConverterErrorMap() map[int]string {
+func (f DcDcConverterErrorFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(dcDcConverterErrorMap))
 	for k, v := range dcDcConverterErrorMap {
 		ret[int(k)] = v
@@ -68,9 +72,14 @@ func (s DcDcConverterError) Idx() int {
 	return int(s)
 }
 
-func (s DcDcConverterError) Value() string {
+func (s DcDcConverterError) String() string {
 	if v, ok := dcDcConverterErrorMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s DcDcConverterError) Exists() bool {
+	_, ok := dcDcConverterErrorMap[s]
+	return ok
 }

@@ -18,7 +18,11 @@ var inverterModeMap = map[InverterMode]string{
 	InverterModeHibernate:  "Hibernate",
 }
 
-func NewInverterModeEnum(v int) (Enum, error) {
+type InverterModeFactoryType struct{}
+
+var InverterModeFactory InverterModeFactoryType
+
+func (f InverterModeFactoryType) NewEnum(v int) (Enum, error) {
 	s := InverterMode(v)
 	if _, ok := inverterModeMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -26,7 +30,7 @@ func NewInverterModeEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func InverterModeMap() map[int]string {
+func (f InverterModeFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(inverterModeMap))
 	for k, v := range inverterModeMap {
 		ret[int(k)] = v
@@ -38,9 +42,14 @@ func (s InverterMode) Idx() int {
 	return int(s)
 }
 
-func (s InverterMode) Value() string {
+func (s InverterMode) String() string {
 	if v, ok := inverterModeMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s InverterMode) Exists() bool {
+	_, ok := inverterModeMap[s]
+	return ok
 }

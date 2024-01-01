@@ -12,7 +12,11 @@ var booleanFalseTrueMap = map[BooleanFalseTrue]string{
 	BooleanTrue:  "True",
 }
 
-func NewBooleanFalseTrueEnum(v int) (Enum, error) {
+type BooleanFalseTrueFactoryType struct{}
+
+var BooleanFalseTrueFactory BooleanFalseTrueFactoryType
+
+func (f BooleanFalseTrueFactoryType) NewEnum(v int) (Enum, error) {
 	s := BooleanFalseTrue(v)
 	if _, ok := booleanFalseTrueMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -20,7 +24,7 @@ func NewBooleanFalseTrueEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func BooleanFalseTrueMap() map[int]string {
+func (f BooleanFalseTrueFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(booleanFalseTrueMap))
 	for k, v := range booleanFalseTrueMap {
 		ret[int(k)] = v
@@ -32,9 +36,14 @@ func (s BooleanFalseTrue) Idx() int {
 	return int(s)
 }
 
-func (s BooleanFalseTrue) Value() string {
+func (s BooleanFalseTrue) String() string {
 	if v, ok := booleanFalseTrueMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s BooleanFalseTrue) Exists() bool {
+	_, ok := booleanFalseTrueMap[s]
+	return ok
 }

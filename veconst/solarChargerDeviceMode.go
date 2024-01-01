@@ -14,7 +14,11 @@ var solarChargerDeviceModeMap = map[SolarChargerDeviceMode]string{
 	SolarChargerDeviceModeOn:   "Charger On",
 }
 
-func NewSolarChargerDeviceModeEnum(v int) (Enum, error) {
+type SolarChargerDeviceModeFactoryType struct{}
+
+var SolarChargerDeviceModeFactory SolarChargerDeviceModeFactoryType
+
+func (f SolarChargerDeviceModeFactoryType) NewEnum(v int) (Enum, error) {
 	s := SolarChargerDeviceMode(v)
 	if _, ok := solarChargerDeviceModeMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -22,7 +26,7 @@ func NewSolarChargerDeviceModeEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func SolarChargerDeviceModeMap() map[int]string {
+func (f SolarChargerDeviceModeFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(solarChargerDeviceModeMap))
 	for k, v := range solarChargerDeviceModeMap {
 		ret[int(k)] = v
@@ -34,9 +38,14 @@ func (s SolarChargerDeviceMode) Idx() int {
 	return int(s)
 }
 
-func (s SolarChargerDeviceMode) Value() string {
+func (s SolarChargerDeviceMode) String() string {
 	if v, ok := solarChargerDeviceModeMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s SolarChargerDeviceMode) Exists() bool {
+	_, ok := solarChargerDeviceModeMap[s]
+	return ok
 }

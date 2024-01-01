@@ -28,7 +28,11 @@ var solarChargerStateMap = map[SolarChargerState]string{
 	SolarChargerStateUnavailable:        "Unavailable",
 }
 
-func NewSolarChargerStateEnum(v int) (Enum, error) {
+type SolarChargerStateFactoryType struct{}
+
+var SolarChargerStateFactory SolarChargerStateFactoryType
+
+func (f SolarChargerStateFactoryType) NewEnum(v int) (Enum, error) {
 	s := SolarChargerState(v)
 	if _, ok := solarChargerStateMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -36,7 +40,7 @@ func NewSolarChargerStateEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func SolarChargerStateMap() map[int]string {
+func (f SolarChargerStateFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(solarChargerStateMap))
 	for k, v := range solarChargerStateMap {
 		ret[int(k)] = v
@@ -48,9 +52,14 @@ func (s SolarChargerState) Idx() int {
 	return int(s)
 }
 
-func (s SolarChargerState) Value() string {
+func (s SolarChargerState) String() string {
 	if v, ok := solarChargerStateMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s SolarChargerState) Exists() bool {
+	_, ok := solarChargerStateMap[s]
+	return ok
 }

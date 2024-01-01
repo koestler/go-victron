@@ -12,7 +12,11 @@ var booleanDisabledEnabledMap = map[BooleanDisabledEnabled]string{
 	BooleanEnabled:  "Enabled",
 }
 
-func NewBooleanDisabledEnabledEnum(v int) (Enum, error) {
+type BooleanDisabledEnabledFactoryType struct{}
+
+var BooleanDisabledEnabledFactory BooleanDisabledEnabledFactoryType
+
+func (f BooleanDisabledEnabledFactoryType) NewEnum(v int) (Enum, error) {
 	s := BooleanDisabledEnabled(v)
 	if _, ok := booleanDisabledEnabledMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -20,7 +24,7 @@ func NewBooleanDisabledEnabledEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func BooleanDisabledEnabledMap() map[int]string {
+func (f BooleanDisabledEnabledFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(booleanDisabledEnabledMap))
 	for k, v := range booleanDisabledEnabledMap {
 		ret[int(k)] = v
@@ -32,9 +36,14 @@ func (s BooleanDisabledEnabled) Idx() int {
 	return int(s)
 }
 
-func (s BooleanDisabledEnabled) Value() string {
+func (s BooleanDisabledEnabled) String() string {
 	if v, ok := booleanDisabledEnabledMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s BooleanDisabledEnabled) Exists() bool {
+	_, ok := booleanDisabledEnabledMap[s]
+	return ok
 }

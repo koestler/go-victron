@@ -28,7 +28,11 @@ var dcDcConverterStateMap = map[DcDcConverterState]string{
 	DcDcConverterStateUnavailable:        "Unavailable",
 }
 
-func NewDcDcConverterStateEnum(v int) (Enum, error) {
+type DcDcConverterStateFactoryType struct{}
+
+var DcDcConverterStateFactory DcDcConverterStateFactoryType
+
+func (f DcDcConverterStateFactoryType) NewEnum(v int) (Enum, error) {
 	s := DcDcConverterState(v)
 	if _, ok := dcDcConverterStateMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -36,7 +40,7 @@ func NewDcDcConverterStateEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func DcDcConverterStateMap() map[int]string {
+func (f DcDcConverterStateFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(dcDcConverterStateMap))
 	for k, v := range dcDcConverterStateMap {
 		ret[int(k)] = v
@@ -48,9 +52,14 @@ func (s DcDcConverterState) Idx() int {
 	return int(s)
 }
 
-func (s DcDcConverterState) Value() string {
+func (s DcDcConverterState) String() string {
 	if v, ok := dcDcConverterStateMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s DcDcConverterState) Exists() bool {
+	_, ok := dcDcConverterStateMap[s]
+	return ok
 }

@@ -12,7 +12,11 @@ var booleanNoYesMap = map[BooleanNoYes]string{
 	BooleanYes: "Yes",
 }
 
-func NewBooleanNoYesEnum(v int) (Enum, error) {
+type BooleanNoYesFactoryType struct{}
+
+var BooleanNoYesFactory BooleanNoYesFactoryType
+
+func (f BooleanNoYesFactoryType) NewEnum(v int) (Enum, error) {
 	s := BooleanNoYes(v)
 	if _, ok := booleanNoYesMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -20,7 +24,7 @@ func NewBooleanNoYesEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func BooleanNoYesMap() map[int]string {
+func (f BooleanNoYesFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(booleanNoYesMap))
 	for k, v := range booleanNoYesMap {
 		ret[int(k)] = v
@@ -32,9 +36,14 @@ func (s BooleanNoYes) Idx() int {
 	return int(s)
 }
 
-func (s BooleanNoYes) Value() string {
+func (s BooleanNoYes) String() string {
 	if v, ok := booleanNoYesMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s BooleanNoYes) Exists() bool {
+	_, ok := booleanNoYesMap[s]
+	return ok
 }

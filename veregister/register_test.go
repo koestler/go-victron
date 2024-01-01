@@ -19,5 +19,5 @@ func (r TextRegisterStruct) testString() string {
 }
 
 func (r EnumRegisterStruct) testString() string {
-	return fmt.Sprintf("Enum: %s, bit=%d, enum=%v", r.RegisterStruct.testString(), r.bit, r.enum)
+	return fmt.Sprintf("Enum: %s, bit=%d, enum=%v", r.RegisterStruct.testString(), r.bit, r.factory.IntToStringMap())
 }

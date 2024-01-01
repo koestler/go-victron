@@ -126,10 +126,9 @@ func (sa *RegisterApi) ReadEnumRegister(r veregister.EnumRegisterStruct) (enumId
 	if bit := r.Bit(); bit >= 0 {
 		intValue = (intValue >> bit) & 1
 	}
-	enumIdx = int(intValue)
 
-	if e, err := r.Factory()(enumIdx); err != nil {
-		return e.Idx(), e.Value(), nil
+	if e, err := r.Factory().NewEnum(int(intValue)); err != nil {
+		return e.Idx(), e.String(), nil
 	} else {
 		return 0, "", fmt.Errorf("decoding enum register '%s' failed: %w", r.Name(), err)
 	}

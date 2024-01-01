@@ -12,7 +12,11 @@ var booleanOffOnMap = map[BooleanOffOn]string{
 	BooleanOn:  "On",
 }
 
-func NewBooleanOffOnEnum(v int) (Enum, error) {
+type BooleanOffOnFactoryType struct{}
+
+var BooleanOffOnFactory BooleanOffOnFactoryType
+
+func (f BooleanOffOnFactoryType) NewEnum(v int) (Enum, error) {
 	s := BooleanOffOn(v)
 	if _, ok := booleanOffOnMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -20,7 +24,7 @@ func NewBooleanOffOnEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func BooleanOffOnMap() map[int]string {
+func (f BooleanOffOnFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(booleanOffOnMap))
 	for k, v := range booleanOffOnMap {
 		ret[int(k)] = v
@@ -32,9 +36,14 @@ func (s BooleanOffOn) Idx() int {
 	return int(s)
 }
 
-func (s BooleanOffOn) Value() string {
+func (s BooleanOffOn) String() string {
 	if v, ok := booleanOffOnMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s BooleanOffOn) Exists() bool {
+	_, ok := booleanOffOnMap[s]
+	return ok
 }

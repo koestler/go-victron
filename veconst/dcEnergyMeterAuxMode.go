@@ -14,7 +14,11 @@ var dcEnergyMeterAuxModeMap = map[DcEnergyMeterAuxMode]string{
 	DcEnergyMeterAuxModeDisabled:    "Disabled",
 }
 
-func NewDcEnergyMeterAuxModeEnum(v int) (Enum, error) {
+type DcEnergyMeterAuxModeFactoryType struct{}
+
+var DcEnergyMeterAuxModeFactory DcEnergyMeterAuxModeFactoryType
+
+func (f DcEnergyMeterAuxModeFactoryType) NewEnum(v int) (Enum, error) {
 	s := DcEnergyMeterAuxMode(v)
 	if _, ok := dcEnergyMeterAuxModeMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -22,7 +26,7 @@ func NewDcEnergyMeterAuxModeEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func DcEnergyMeterAuxModeMap() map[int]string {
+func (f DcEnergyMeterAuxModeFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(dcEnergyMeterAuxModeMap))
 	for k, v := range dcEnergyMeterAuxModeMap {
 		ret[int(k)] = v
@@ -34,9 +38,14 @@ func (s DcEnergyMeterAuxMode) Idx() int {
 	return int(s)
 }
 
-func (s DcEnergyMeterAuxMode) Value() string {
+func (s DcEnergyMeterAuxMode) String() string {
 	if v, ok := dcEnergyMeterAuxModeMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s DcEnergyMeterAuxMode) Exists() bool {
+	_, ok := dcEnergyMeterAuxModeMap[s]
+	return ok
 }

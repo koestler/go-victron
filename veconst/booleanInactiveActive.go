@@ -12,7 +12,11 @@ var booleanInactiveActiveMap = map[BooleanInactiveActive]string{
 	BooleanActive:   "Active",
 }
 
-func NewBooleanInactiveActiveEnum(v int) (Enum, error) {
+type BooleanInactiveActiveFactoryType struct{}
+
+var BooleanInactiveActiveFactory BooleanInactiveActiveFactoryType
+
+func (f BooleanInactiveActiveFactoryType) NewEnum(v int) (Enum, error) {
 	s := BooleanInactiveActive(v)
 	if _, ok := booleanInactiveActiveMap[s]; !ok {
 		return nil, ErrInvalidEnumIdx
@@ -20,7 +24,7 @@ func NewBooleanInactiveActiveEnum(v int) (Enum, error) {
 	return s, nil
 }
 
-func BooleanInactiveActiveMap() map[int]string {
+func (f BooleanInactiveActiveFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(booleanInactiveActiveMap))
 	for k, v := range booleanInactiveActiveMap {
 		ret[int(k)] = v
@@ -32,9 +36,14 @@ func (s BooleanInactiveActive) Idx() int {
 	return int(s)
 }
 
-func (s BooleanInactiveActive) Value() string {
+func (s BooleanInactiveActive) String() string {
 	if v, ok := booleanInactiveActiveMap[s]; ok {
 		return v
 	}
 	return ""
+}
+
+func (s BooleanInactiveActive) Exists() bool {
+	_, ok := booleanInactiveActiveMap[s]
+	return ok
 }
