@@ -16,23 +16,27 @@ var multiRsActiveInputMap = map[MultiRsActiveInput]string{
 	MultiRsActiveInputUnknown:      "Unknown",
 }
 
-// MultiRsActiveInputStringMap returns a map of MultiRsActiveInput values to their string representation.
-func MultiRsActiveInputStringMap() map[MultiRsActiveInput]string {
-	ret := make(map[MultiRsActiveInput]string, len(multiRsActiveInputMap))
+func NewMultiRsActiveInputEnum(v int) (Enum, error) {
+	s := MultiRsActiveInput(v)
+	if _, ok := multiRsActiveInputMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func MultiRsActiveInputMap() map[int]string {
+	ret := make(map[int]string, len(multiRsActiveInputMap))
 	for k, v := range multiRsActiveInputMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the MultiRsActiveInput exists.
-func (s MultiRsActiveInput) Exists() bool {
-	_, ok := multiRsActiveInputMap[s]
-	return ok
+func (s MultiRsActiveInput) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a MultiRsActiveInput.
-func (s MultiRsActiveInput) String() string {
+func (s MultiRsActiveInput) Value() string {
 	if v, ok := multiRsActiveInputMap[s]; ok {
 		return v
 	}

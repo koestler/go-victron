@@ -16,23 +16,27 @@ var veBusAlarmMap = map[VeBusAlarm]string{
 	VeBusAlarmUndefined: "Undefined",
 }
 
-// VeBusAlarmStringMap returns a map of VeBusAlarm values to their string representation.
-func VeBusAlarmStringMap() map[VeBusAlarm]string {
-	ret := make(map[VeBusAlarm]string, len(veBusAlarmMap))
+func NewVeBusAlarmEnum(v int) (Enum, error) {
+	s := VeBusAlarm(v)
+	if _, ok := veBusAlarmMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func VeBusAlarmMap() map[int]string {
+	ret := make(map[int]string, len(veBusAlarmMap))
 	for k, v := range veBusAlarmMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the VeBusAlarm exists.
-func (s VeBusAlarm) Exists() bool {
-	_, ok := veBusAlarmMap[s]
-	return ok
+func (s VeBusAlarm) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a VeBusAlarm.
-func (s VeBusAlarm) String() string {
+func (s VeBusAlarm) Value() string {
 	if v, ok := veBusAlarmMap[s]; ok {
 		return v
 	}

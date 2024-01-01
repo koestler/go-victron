@@ -26,23 +26,27 @@ var solarChargerBatteryTypeMap = map[SolarChargerBatteryType]string{
 	SolarChargerBatteryTypeUserDefined:           "User defined",
 }
 
-// SolarChargerBatteryTypeStringMap returns a map of SolarChargerBatteryType values to their string representation.
-func SolarChargerBatteryTypeStringMap() map[SolarChargerBatteryType]string {
-	ret := make(map[SolarChargerBatteryType]string, len(solarChargerBatteryTypeMap))
+func NewSolarChargerBatteryTypeEnum(v int) (Enum, error) {
+	s := SolarChargerBatteryType(v)
+	if _, ok := solarChargerBatteryTypeMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func SolarChargerBatteryTypeMap() map[int]string {
+	ret := make(map[int]string, len(solarChargerBatteryTypeMap))
 	for k, v := range solarChargerBatteryTypeMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the SolarChargerBatteryType exists.
-func (s SolarChargerBatteryType) Exists() bool {
-	_, ok := solarChargerBatteryTypeMap[s]
-	return ok
+func (s SolarChargerBatteryType) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a SolarChargerBatteryType.
-func (s SolarChargerBatteryType) String() string {
+func (s SolarChargerBatteryType) Value() string {
 	if v, ok := solarChargerBatteryTypeMap[s]; ok {
 		return v
 	}

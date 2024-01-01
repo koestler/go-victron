@@ -28,23 +28,27 @@ var dcDcConverterStateMap = map[DcDcConverterState]string{
 	DcDcConverterStateUnavailable:        "Unavailable",
 }
 
-// DcDcConverterStateStringMap returns a map of DcDcConverterState values to their string representation.
-func DcDcConverterStateStringMap() map[DcDcConverterState]string {
-	ret := make(map[DcDcConverterState]string, len(dcDcConverterStateMap))
+func NewDcDcConverterStateEnum(v int) (Enum, error) {
+	s := DcDcConverterState(v)
+	if _, ok := dcDcConverterStateMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func DcDcConverterStateMap() map[int]string {
+	ret := make(map[int]string, len(dcDcConverterStateMap))
 	for k, v := range dcDcConverterStateMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the DcDcConverterState exists.
-func (s DcDcConverterState) Exists() bool {
-	_, ok := dcDcConverterStateMap[s]
-	return ok
+func (s DcDcConverterState) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a DcDcConverterState.
-func (s DcDcConverterState) String() string {
+func (s DcDcConverterState) Value() string {
 	if v, ok := dcDcConverterStateMap[s]; ok {
 		return v
 	}

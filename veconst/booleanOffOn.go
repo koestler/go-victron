@@ -12,23 +12,27 @@ var booleanOffOnMap = map[BooleanOffOn]string{
 	BooleanOn:  "On",
 }
 
-// BooleanOffOnStringMap returns a map of BooleanOffOn values to their string representation.
-func BooleanOffOnStringMap() map[BooleanOffOn]string {
-	ret := make(map[BooleanOffOn]string, len(booleanOffOnMap))
+func NewBooleanOffOnEnum(v int) (Enum, error) {
+	s := BooleanOffOn(v)
+	if _, ok := booleanOffOnMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func BooleanOffOnMap() map[int]string {
+	ret := make(map[int]string, len(booleanOffOnMap))
 	for k, v := range booleanOffOnMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the BooleanOffOn exists.
-func (s BooleanOffOn) Exists() bool {
-	_, ok := booleanOffOnMap[s]
-	return ok
+func (s BooleanOffOn) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a BooleanOffOn.
-func (s BooleanOffOn) String() string {
+func (s BooleanOffOn) Value() string {
 	if v, ok := booleanOffOnMap[s]; ok {
 		return v
 	}

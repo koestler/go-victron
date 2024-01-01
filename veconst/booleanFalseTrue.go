@@ -12,23 +12,27 @@ var booleanFalseTrueMap = map[BooleanFalseTrue]string{
 	BooleanTrue:  "True",
 }
 
-// BooleanFalseTrueStringMap returns a map of BooleanFalseTrue values to their string representation.
-func BooleanFalseTrueStringMap() map[BooleanFalseTrue]string {
-	ret := make(map[BooleanFalseTrue]string, len(booleanFalseTrueMap))
+func NewBooleanFalseTrueEnum(v int) (Enum, error) {
+	s := BooleanFalseTrue(v)
+	if _, ok := booleanFalseTrueMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func BooleanFalseTrueMap() map[int]string {
+	ret := make(map[int]string, len(booleanFalseTrueMap))
 	for k, v := range booleanFalseTrueMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the BooleanFalseTrue exists.
-func (s BooleanFalseTrue) Exists() bool {
-	_, ok := booleanFalseTrueMap[s]
-	return ok
+func (s BooleanFalseTrue) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a BooleanFalseTrue.
-func (s BooleanFalseTrue) String() string {
+func (s BooleanFalseTrue) Value() string {
 	if v, ok := booleanFalseTrueMap[s]; ok {
 		return v
 	}

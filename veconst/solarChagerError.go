@@ -48,23 +48,27 @@ var solarChargerErrorMap = map[SolarChargerError]string{
 	SolarChargerErrorUnknown:                           "Unknown error",
 }
 
-// SolarChargerErrorStringMap returns a map of SolarChargerError values to their string representation.
-func SolarChargerErrorStringMap() map[SolarChargerError]string {
-	ret := make(map[SolarChargerError]string, len(solarChargerErrorMap))
+func NewSolarChargerErrorEnum(v int) (Enum, error) {
+	s := SolarChargerError(v)
+	if _, ok := solarChargerErrorMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func SolarChargerErrorMap() map[int]string {
+	ret := make(map[int]string, len(solarChargerErrorMap))
 	for k, v := range solarChargerErrorMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the SolarChargerError exists.
-func (s SolarChargerError) Exists() bool {
-	_, ok := solarChargerErrorMap[s]
-	return ok
+func (s SolarChargerError) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a SolarChargerError.
-func (s SolarChargerError) String() string {
+func (s SolarChargerError) Value() string {
 	if v, ok := solarChargerErrorMap[s]; ok {
 		return v
 	}

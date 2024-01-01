@@ -14,23 +14,27 @@ var solarChargerDeviceModeMap = map[SolarChargerDeviceMode]string{
 	SolarChargerDeviceModeOn:   "Charger On",
 }
 
-// SolarChargerDeviceModeStringMap returns a map of SolarChargerDeviceMode to their string representation.
-func SolarChargerDeviceModeStringMap() map[SolarChargerDeviceMode]string {
-	ret := make(map[SolarChargerDeviceMode]string, len(solarChargerDeviceModeMap))
+func NewSolarChargerDeviceModeEnum(v int) (Enum, error) {
+	s := SolarChargerDeviceMode(v)
+	if _, ok := solarChargerDeviceModeMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func SolarChargerDeviceModeMap() map[int]string {
+	ret := make(map[int]string, len(solarChargerDeviceModeMap))
 	for k, v := range solarChargerDeviceModeMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the SolarChargerDeviceMode exists.
-func (s SolarChargerDeviceMode) Exists() bool {
-	_, ok := solarChargerDeviceModeMap[s]
-	return ok
+func (s SolarChargerDeviceMode) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a SolarChargerDeviceMode.
-func (s SolarChargerDeviceMode) String() string {
+func (s SolarChargerDeviceMode) Value() string {
 	if v, ok := solarChargerDeviceModeMap[s]; ok {
 		return v
 	}

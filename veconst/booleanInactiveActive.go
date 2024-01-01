@@ -12,23 +12,27 @@ var booleanInactiveActiveMap = map[BooleanInactiveActive]string{
 	BooleanActive:   "Active",
 }
 
-// BooleanInactiveActiveStringMap returns a map of BooleanInactiveActive values to their string representation.
-func BooleanInactiveActiveStringMap() map[BooleanInactiveActive]string {
-	ret := make(map[BooleanInactiveActive]string, len(booleanInactiveActiveMap))
+func NewBooleanInactiveActiveEnum(v int) (Enum, error) {
+	s := BooleanInactiveActive(v)
+	if _, ok := booleanInactiveActiveMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func BooleanInactiveActiveMap() map[int]string {
+	ret := make(map[int]string, len(booleanInactiveActiveMap))
 	for k, v := range booleanInactiveActiveMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the BooleanInactiveActive exists.
-func (s BooleanInactiveActive) Exists() bool {
-	_, ok := booleanInactiveActiveMap[s]
-	return ok
+func (s BooleanInactiveActive) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a BooleanInactiveActive.
-func (s BooleanInactiveActive) String() string {
+func (s BooleanInactiveActive) Value() string {
 	if v, ok := booleanInactiveActiveMap[s]; ok {
 		return v
 	}

@@ -48,23 +48,27 @@ var dcDcConverterErrorMap = map[DcDcConverterError]string{
 	DcDcConverterErrorUnknown:                           "Unknown error",
 }
 
-// DcDcConverterErrorStringMap returns a map of DcDcConverterError values to their string representation.
-func DcDcConverterErrorStringMap() map[DcDcConverterError]string {
-	ret := make(map[DcDcConverterError]string, len(dcDcConverterErrorMap))
+func NewDcDcConverterErrorEnum(v int) (Enum, error) {
+	s := DcDcConverterError(v)
+	if _, ok := dcDcConverterErrorMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func DcDcConverterErrorMap() map[int]string {
+	ret := make(map[int]string, len(dcDcConverterErrorMap))
 	for k, v := range dcDcConverterErrorMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the DcDcConverterError exists.
-func (s DcDcConverterError) Exists() bool {
-	_, ok := dcDcConverterErrorMap[s]
-	return ok
+func (s DcDcConverterError) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a DcDcConverterError.
-func (s DcDcConverterError) String() string {
+func (s DcDcConverterError) Value() string {
 	if v, ok := dcDcConverterErrorMap[s]; ok {
 		return v
 	}

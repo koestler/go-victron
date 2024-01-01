@@ -28,23 +28,27 @@ var solarChargerStateMap = map[SolarChargerState]string{
 	SolarChargerStateUnavailable:        "Unavailable",
 }
 
-// SolarChargerStateStringMap returns a map of SolarChargerState values to their string representation.
-func SolarChargerStateStringMap() map[SolarChargerState]string {
-	ret := make(map[SolarChargerState]string, len(solarChargerStateMap))
+func NewSolarChargerStateEnum(v int) (Enum, error) {
+	s := SolarChargerState(v)
+	if _, ok := solarChargerStateMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func SolarChargerStateMap() map[int]string {
+	ret := make(map[int]string, len(solarChargerStateMap))
 	for k, v := range solarChargerStateMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the SolarChargerState exists.
-func (s SolarChargerState) Exists() bool {
-	_, ok := solarChargerStateMap[s]
-	return ok
+func (s SolarChargerState) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a SolarChargerState.
-func (s SolarChargerState) String() string {
+func (s SolarChargerState) Value() string {
 	if v, ok := solarChargerStateMap[s]; ok {
 		return v
 	}

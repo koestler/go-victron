@@ -14,23 +14,27 @@ var solarChargerTrackerModeMap = map[SolarChargerTrackerMode]string{
 	SolarChargerTrackerModeMPPTracker:            "MPP tracker",
 }
 
-// SolarChargerTrackerModeStringMap returns a map of SolarChargerTrackerMode values to their string representation.
-func SolarChargerTrackerModeStringMap() map[SolarChargerTrackerMode]string {
-	ret := make(map[SolarChargerTrackerMode]string, len(solarChargerTrackerModeMap))
+func NewSolarChargerTrackerModeEnum(v int) (Enum, error) {
+	s := SolarChargerTrackerMode(v)
+	if _, ok := solarChargerTrackerModeMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func SolarChargerTrackerModeMap() map[int]string {
+	ret := make(map[int]string, len(solarChargerTrackerModeMap))
 	for k, v := range solarChargerTrackerModeMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the SolarChargerTrackerMode exists.
-func (s SolarChargerTrackerMode) Exists() bool {
-	_, ok := solarChargerTrackerModeMap[s]
-	return ok
+func (s SolarChargerTrackerMode) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a SolarChargerTrackerMode.
-func (s SolarChargerTrackerMode) String() string {
+func (s SolarChargerTrackerMode) Value() string {
 	if v, ok := solarChargerTrackerModeMap[s]; ok {
 		return v
 	}

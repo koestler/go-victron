@@ -12,23 +12,27 @@ var inverterFrequencyMap = map[InverterFrequency]string{
 	InverterFrequency50Hz: "50 Hz",
 }
 
-// InverterFrequencyStringMap returns a map of InverterFrequency values to their string representation.
-func InverterFrequencyStringMap() map[InverterFrequency]string {
-	ret := make(map[InverterFrequency]string, len(inverterFrequencyMap))
+func NewInverterFrequencyEnum(v int) (Enum, error) {
+	s := InverterFrequency(v)
+	if _, ok := inverterFrequencyMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func InverterFrequencyMap() map[int]string {
+	ret := make(map[int]string, len(inverterFrequencyMap))
 	for k, v := range inverterFrequencyMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the InverterFrequency exists.
-func (s InverterFrequency) Exists() bool {
-	_, ok := inverterFrequencyMap[s]
-	return ok
+func (s InverterFrequency) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a InverterFrequency.
-func (s InverterFrequency) String() string {
+func (s InverterFrequency) Value() string {
 	if v, ok := inverterFrequencyMap[s]; ok {
 		return v
 	}

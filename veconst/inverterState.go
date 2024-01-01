@@ -16,23 +16,27 @@ var inverterStateMap = map[InverterState]string{
 	InverterStateInverting: "Inverting",
 }
 
-// InverterStateStringMap returns a map of InverterState values to their string representation.
-func InverterStateStringMap() map[InverterState]string {
-	ret := make(map[InverterState]string, len(inverterStateMap))
+func NewInverterStateEnum(v int) (Enum, error) {
+	s := InverterState(v)
+	if _, ok := inverterStateMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func InverterStateMap() map[int]string {
+	ret := make(map[int]string, len(inverterStateMap))
 	for k, v := range inverterStateMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the InverterState exists.
-func (s InverterState) Exists() bool {
-	_, ok := inverterStateMap[s]
-	return ok
+func (s InverterState) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a InverterState.
-func (s InverterState) String() string {
+func (s InverterState) Value() string {
 	if v, ok := inverterStateMap[s]; ok {
 		return v
 	}

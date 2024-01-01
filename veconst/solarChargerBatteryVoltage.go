@@ -18,23 +18,27 @@ var solarChargerBatteryVoltageMap = map[SolarChargerBatteryVoltage]string{
 	SolarChargerBatteryVoltage48V:        "48V battery",
 }
 
-// SolarChargerBatteryVoltageStringMap returns a map of SolarChargerBatteryVoltage values to their string representation.
-func SolarChargerBatteryVoltageStringMap() map[SolarChargerBatteryVoltage]string {
-	ret := make(map[SolarChargerBatteryVoltage]string, len(solarChargerBatteryVoltageMap))
+func NewSolarChargerBatteryVoltageEnum(v int) (Enum, error) {
+	s := SolarChargerBatteryVoltage(v)
+	if _, ok := solarChargerBatteryVoltageMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func SolarChargerBatteryVoltageMap() map[int]string {
+	ret := make(map[int]string, len(solarChargerBatteryVoltageMap))
 	for k, v := range solarChargerBatteryVoltageMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the SolarChargerBatteryVoltage exists.
-func (s SolarChargerBatteryVoltage) Exists() bool {
-	_, ok := solarChargerBatteryVoltageMap[s]
-	return ok
+func (s SolarChargerBatteryVoltage) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a SolarChargerBatteryVoltage.
-func (s SolarChargerBatteryVoltage) String() string {
+func (s SolarChargerBatteryVoltage) Value() string {
 	if v, ok := solarChargerBatteryVoltageMap[s]; ok {
 		return v
 	}

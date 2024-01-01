@@ -12,23 +12,27 @@ var booleanDisabledEnabledMap = map[BooleanDisabledEnabled]string{
 	BooleanEnabled:  "Enabled",
 }
 
-// BooleanDisabledEnabledStringMap returns a map of BooleanDisabledEnabled values to their string representation.
-func BooleanDisabledEnabledStringMap() map[BooleanDisabledEnabled]string {
-	ret := make(map[BooleanDisabledEnabled]string, len(booleanDisabledEnabledMap))
+func NewBooleanDisabledEnabledEnum(v int) (Enum, error) {
+	s := BooleanDisabledEnabled(v)
+	if _, ok := booleanDisabledEnabledMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func BooleanDisabledEnabledMap() map[int]string {
+	ret := make(map[int]string, len(booleanDisabledEnabledMap))
 	for k, v := range booleanDisabledEnabledMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the BooleanDisabledEnabled exists.
-func (s BooleanDisabledEnabled) Exists() bool {
-	_, ok := booleanDisabledEnabledMap[s]
-	return ok
+func (s BooleanDisabledEnabled) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a BooleanDisabledEnabled.
-func (s BooleanDisabledEnabled) String() string {
+func (s BooleanDisabledEnabled) Value() string {
 	if v, ok := booleanDisabledEnabledMap[s]; ok {
 		return v
 	}

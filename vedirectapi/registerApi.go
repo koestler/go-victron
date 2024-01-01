@@ -95,7 +95,7 @@ func (sa *RegisterApi) ReadNumberRegister(r veregister.NumberRegisterStruct) (va
 	}
 
 	if err != nil {
-		return 0.0, fmt.Errorf("fetching number register failed: %w", err)
+		return 0.0, fmt.Errorf("fetching number register '%s' failed: %w", r.Name(), err)
 	}
 
 	value = value/float64(r.Factor()) + r.Offset()
@@ -107,7 +107,7 @@ func (sa *RegisterApi) ReadTextRegister(r veregister.TextRegisterStruct) (value 
 	value, err = sa.Vd.GetString(r.Address())
 
 	if err != nil {
-		return "", fmt.Errorf("fetching text register failed: %w", err)
+		return "", fmt.Errorf("fetching text register '%s' failed: %w", r.Name(), err)
 	}
 
 	value = strings.TrimSpace(value) // various devices have trailing spaces in their text registers
@@ -120,7 +120,7 @@ func (sa *RegisterApi) ReadEnumRegister(r veregister.EnumRegisterStruct) (enumId
 	intValue, err = sa.Vd.GetUint(r.Address())
 
 	if err != nil {
-		return 0, "", fmt.Errorf("fetching enum register failed: %w", err)
+		return 0, "", fmt.Errorf("fetching enum register '%s' failed: %w", r.Name(), err)
 	}
 
 	if bit := r.Bit(); bit >= 0 {
@@ -128,15 +128,11 @@ func (sa *RegisterApi) ReadEnumRegister(r veregister.EnumRegisterStruct) (enumId
 	}
 	enumIdx = int(intValue)
 
-	// decode enum
-	var ok bool
-	enumValue, ok = r.Enum()[enumIdx]
-
-	if !ok {
-		return 0, "", fmt.Errorf("unknown enum value: %d", intValue)
+	if e, err := r.Factory()(enumIdx); err != nil {
+		return e.Idx(), e.Value(), nil
+	} else {
+		return 0, "", fmt.Errorf("decoding enum register '%s' failed: %w", r.Name(), err)
 	}
-
-	return
 }
 
 // ReadAllRegisters fetches all available registers and returns them as a RegisterValues struct.

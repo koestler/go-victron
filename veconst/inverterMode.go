@@ -18,23 +18,27 @@ var inverterModeMap = map[InverterMode]string{
 	InverterModeHibernate:  "Hibernate",
 }
 
-// InverterModeStringMap returns a map of InverterMode values to their string representation.
-func InverterModeStringMap() map[InverterMode]string {
-	ret := make(map[InverterMode]string, len(inverterModeMap))
+func NewInverterModeEnum(v int) (Enum, error) {
+	s := InverterMode(v)
+	if _, ok := inverterModeMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func InverterModeMap() map[int]string {
+	ret := make(map[int]string, len(inverterModeMap))
 	for k, v := range inverterModeMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the InverterMode exists.
-func (s InverterMode) Exists() bool {
-	_, ok := inverterModeMap[s]
-	return ok
+func (s InverterMode) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a InverterMode.
-func (s InverterMode) String() string {
+func (s InverterMode) Value() string {
 	if v, ok := inverterModeMap[s]; ok {
 		return v
 	}

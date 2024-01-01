@@ -12,23 +12,27 @@ var booleanNoYesMap = map[BooleanNoYes]string{
 	BooleanYes: "Yes",
 }
 
-// BooleanNoYesStringMap returns a map of BooleanNoYes values to their string representation.
-func BooleanNoYesStringMap() map[BooleanNoYes]string {
-	ret := make(map[BooleanNoYes]string, len(booleanNoYesMap))
+func NewBooleanNoYesEnum(v int) (Enum, error) {
+	s := BooleanNoYes(v)
+	if _, ok := booleanNoYesMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func BooleanNoYesMap() map[int]string {
+	ret := make(map[int]string, len(booleanNoYesMap))
 	for k, v := range booleanNoYesMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the BooleanNoYes exists.
-func (s BooleanNoYes) Exists() bool {
-	_, ok := booleanNoYesMap[s]
-	return ok
+func (s BooleanNoYes) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a BooleanNoYes.
-func (s BooleanNoYes) String() string {
+func (s BooleanNoYes) Value() string {
 	if v, ok := booleanNoYesMap[s]; ok {
 		return v
 	}

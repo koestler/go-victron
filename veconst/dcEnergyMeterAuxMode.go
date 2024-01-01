@@ -14,23 +14,27 @@ var dcEnergyMeterAuxModeMap = map[DcEnergyMeterAuxMode]string{
 	DcEnergyMeterAuxModeDisabled:    "Disabled",
 }
 
-// DcEnergyMeterAuxModeStringMap returns a map of DcEnergyMeterAuxMode values to their string representation.
-func DcEnergyMeterAuxModeStringMap() map[DcEnergyMeterAuxMode]string {
-	ret := make(map[DcEnergyMeterAuxMode]string, len(dcEnergyMeterAuxModeMap))
+func NewDcEnergyMeterAuxModeEnum(v int) (Enum, error) {
+	s := DcEnergyMeterAuxMode(v)
+	if _, ok := dcEnergyMeterAuxModeMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func DcEnergyMeterAuxModeMap() map[int]string {
+	ret := make(map[int]string, len(dcEnergyMeterAuxModeMap))
 	for k, v := range dcEnergyMeterAuxModeMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the DcEnergyMeterAuxMode exists.
-func (s DcEnergyMeterAuxMode) Exists() bool {
-	_, ok := dcEnergyMeterAuxModeMap[s]
-	return ok
+func (s DcEnergyMeterAuxMode) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a DcEnergyMeterAuxMode.
-func (s DcEnergyMeterAuxMode) String() string {
+func (s DcEnergyMeterAuxMode) Value() string {
 	if v, ok := dcEnergyMeterAuxModeMap[s]; ok {
 		return v
 	}

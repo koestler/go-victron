@@ -16,23 +16,27 @@ var bmvAuxModeMap = map[BmvAuxMode]string{
 	BmvAuxModeDisabled:        "Disabled",
 }
 
-// BmvAuxModeStringMap returns a map of BmvAuxMode values to their string representation.
-func BmvAuxModeStringMap() map[BmvAuxMode]string {
-	ret := make(map[BmvAuxMode]string, len(bmvAuxModeMap))
+func NewBmvAuxModeEnum(v int) (Enum, error) {
+	s := BmvAuxMode(v)
+	if _, ok := bmvAuxModeMap[s]; !ok {
+		return nil, ErrInvalidEnumIdx
+	}
+	return s, nil
+}
+
+func BmvAuxModeMap() map[int]string {
+	ret := make(map[int]string, len(bmvAuxModeMap))
 	for k, v := range bmvAuxModeMap {
-		ret[k] = v
+		ret[int(k)] = v
 	}
 	return ret
 }
 
-// Exists returns true if the BmvAuxMode exists.
-func (s BmvAuxMode) Exists() bool {
-	_, ok := bmvAuxModeMap[s]
-	return ok
+func (s BmvAuxMode) Idx() int {
+	return int(s)
 }
 
-// String returns the string representation of a BmvAuxMode.
-func (s BmvAuxMode) String() string {
+func (s BmvAuxMode) Value() string {
 	if v, ok := bmvAuxModeMap[s]; ok {
 		return v
 	}
