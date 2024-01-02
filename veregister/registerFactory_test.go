@@ -17,8 +17,8 @@ func TestGetRegisterListByProductType(t *testing.T) {
 		countPerType := map[veproduct.Type]int{
 			veproduct.TypeBMV:                  27,
 			veproduct.TypeBMVSmart:             31,
-			veproduct.TypeBlueSolarMPPT:        42,
-			veproduct.TypeSmartSolarMPPT:       42,
+			veproduct.TypeBlueSolarMPPT:        43,
+			veproduct.TypeSmartSolarMPPT:       43,
 			veproduct.TypePhoenixInverter:      36,
 			veproduct.TypePhoenixInverterSmart: 36,
 			veproduct.TypeSmartShunt:           31,

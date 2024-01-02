@@ -90,7 +90,18 @@ func AppendSolarGeneric(rl *RegisterList) {
 			veconst.SolarChargerStateFactory,
 		),
 		// skipped Remote control used
-		// skipped Device off Reason Bitmask
+	)
+	rl.AppendFieldListRegisterStruct(
+		newFieldListRegisterStruct(
+			"Generic",
+			"OffReason",
+			"Device off reasons",
+			401,
+			0x0207,
+			false,
+			false,
+			veconst.InverterOffReasonsFactory,
+		),
 	)
 }
 

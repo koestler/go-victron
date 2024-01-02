@@ -35,18 +35,18 @@ func (f InverterWarningReasonsFactoryType) NewFieldList(v uint) (FieldList, erro
 	return f.New(uint32(v))
 }
 
-func (l InverterWarningReasons) Decode() map[InverterWarningReason]bool {
-	ret := make(map[InverterWarningReason]bool, len(inverterWarningReasonMap))
-	for i := range inverterWarningReasonMap {
-		ret[i] = l&(1<<i) != 0
-	}
-	return ret
-}
-
 func (f InverterWarningReasonsFactoryType) IntToStringMap() map[int]string {
 	ret := make(map[int]string, len(inverterWarningReasonMap))
 	for k, v := range inverterWarningReasonMap {
 		ret[int(k)] = v
+	}
+	return ret
+}
+
+func (l InverterWarningReasons) Decode() map[InverterWarningReason]bool {
+	ret := make(map[InverterWarningReason]bool, len(inverterWarningReasonMap))
+	for i := range inverterWarningReasonMap {
+		ret[i] = l&(1<<i) != 0
 	}
 	return ret
 }
