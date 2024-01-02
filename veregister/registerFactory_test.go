@@ -19,8 +19,8 @@ func TestGetRegisterListByProductType(t *testing.T) {
 			veproduct.TypeBMVSmart:             31,
 			veproduct.TypeBlueSolarMPPT:        42,
 			veproduct.TypeSmartSolarMPPT:       42,
-			veproduct.TypePhoenixInverter:      47,
-			veproduct.TypePhoenixInverterSmart: 47,
+			veproduct.TypePhoenixInverter:      36,
+			veproduct.TypePhoenixInverterSmart: 36,
 			veproduct.TypeSmartShunt:           31,
 		}
 
@@ -33,6 +33,7 @@ func TestGetRegisterListByProductType(t *testing.T) {
 			count := len(rl.NumberRegisters)
 			count += len(rl.TextRegisters)
 			count += len(rl.EnumRegisters)
+			count += len(rl.FieldListRegisters)
 
 			if count != expectedCount {
 				t.Errorf("unexpected count for %s: expected %d but got %d", productType, expectedCount, count)

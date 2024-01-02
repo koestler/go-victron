@@ -2,8 +2,10 @@ package vedirectapi
 
 import (
 	"fmt"
+	"github.com/koestler/go-victron/veconst"
 	"github.com/koestler/go-victron/veregister"
 	"sort"
+	"strings"
 )
 
 // RegisterValue is a common interface for Number, Text and Enum Registers and their values.
@@ -28,8 +30,13 @@ type TextRegisterValue struct {
 // EnumRegisterValue is a container for Enum Registers and their values.
 type EnumRegisterValue struct {
 	veregister.EnumRegisterStruct
-	enumIdx   int
-	enumValue string
+	value veconst.Enum
+}
+
+// FieldListValue is a container for FieldList Registers and their values.
+type FieldListValue struct {
+	veregister.FieldListRegisterStruct
+	value veconst.FieldList
 }
 
 func (v NumberRegisterValue) Value() float64 {
@@ -40,49 +47,65 @@ func (v NumberRegisterValue) GenericValue() interface{} {
 	return v.value
 }
 
+func (v NumberRegisterValue) String() string {
+	return fmt.Sprintf("%s=%f%s", v.Name(), v.Value(), v.Unit())
+}
+
 func (v TextRegisterValue) Value() string {
 	return v.value
 }
 
 func (v TextRegisterValue) GenericValue() interface{} {
 	return v.value
-
-}
-
-func (v EnumRegisterValue) Idx() int {
-	return v.enumIdx
-}
-
-func (v EnumRegisterValue) Value() string {
-	return v.enumValue
-}
-
-func (v EnumRegisterValue) GenericValue() interface{} {
-	return v.enumValue
-}
-
-func (v NumberRegisterValue) String() string {
-	return fmt.Sprintf("%s=%f%s", v.Name(), v.Value(), v.Unit())
 }
 
 func (v TextRegisterValue) String() string {
 	return fmt.Sprintf("%s=%s", v.Name(), v.Value())
 }
 
+func (v EnumRegisterValue) Value() veconst.Enum {
+	return v.value
+}
+
+func (v EnumRegisterValue) GenericValue() interface{} {
+	return v.value
+}
+
 func (v EnumRegisterValue) String() string {
-	return fmt.Sprintf("%s=%d:%s", v.Name(), v.Idx(), v.Value())
+	return fmt.Sprintf("%s=%d:%s", v.Name(), v.value.Idx(), v.value.String())
+}
+
+func (v FieldListValue) Value() veconst.FieldList {
+	return v.value
+}
+
+func (v FieldListValue) GenericValue() interface{} {
+	return v.value
+}
+
+func (v FieldListValue) String() string {
+	fields := v.value.Fields()
+	strs := make([]string, 0, len(fields))
+	for f, set := range fields {
+		if !set {
+			continue
+		}
+		strs = append(strs, f.String())
+	}
+	return fmt.Sprintf("%s=%s", v.Name(), strings.Join(strs, ", "))
 }
 
 // RegisterValues is a container for Number, Text and Enum Registers and their values.
 type RegisterValues struct {
-	NumberValues map[string]NumberRegisterValue
-	TextValues   map[string]TextRegisterValue
-	EnumValues   map[string]EnumRegisterValue
+	NumberValues    map[string]NumberRegisterValue
+	TextValues      map[string]TextRegisterValue
+	EnumValues      map[string]EnumRegisterValue
+	FieldListValues map[string]FieldListValue
 }
 
 // GetList returns a sorted list of all RegisterValues.
 func (rv RegisterValues) GetList() []RegisterValue {
-	list := make([]RegisterValue, 0, len(rv.NumberValues)+len(rv.TextValues)+len(rv.EnumValues))
+	list := make([]RegisterValue, 0, len(rv.NumberValues)+len(rv.TextValues)+len(rv.EnumValues)+len(rv.FieldListValues))
 
 	for _, v := range rv.NumberValues {
 		list = append(list, v)
@@ -91,6 +114,9 @@ func (rv RegisterValues) GetList() []RegisterValue {
 		list = append(list, v)
 	}
 	for _, v := range rv.EnumValues {
+		list = append(list, v)
+	}
+	for _, v := range rv.FieldListValues {
 		list = append(list, v)
 	}
 

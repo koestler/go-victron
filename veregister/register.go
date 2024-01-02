@@ -33,9 +33,13 @@ type TextRegisterStruct struct {
 // EnumRegisterStruct is for registers that store enum values.
 type EnumRegisterStruct struct {
 	RegisterStruct
-	bit int // when positive, the specified bit is used as a boolean 0/1
-	// todo: remove this bit stuff; add a new multi enum register type instead
 	factory veconst.EnumFactory
+}
+
+// FieldListRegisterStruct is for registers that store a list of fields.
+type FieldListRegisterStruct struct {
+	RegisterStruct
+	factory veconst.FieldListFactory
 }
 
 // newNumberRegisterStruct is a shortcut to create a RegisterStruct and embed it into a NumberRegisterStruct.
@@ -89,12 +93,10 @@ func newTextRegisterStruct(
 }
 
 // newEnumRegisterStruct is a shortcut to create a RegisterStruct and embed it into a EnumRegisterStruct.
-// Also, different key types for the enum map are supported as long as they are integers.
 func newEnumRegisterStruct(
 	category, name, description string,
 	sort int,
 	address uint16,
-	bit int,
 	static bool,
 	writable bool,
 	factory veconst.EnumFactory,
@@ -109,7 +111,29 @@ func newEnumRegisterStruct(
 			static,
 			writable,
 		},
-		bit,
+		factory,
+	}
+}
+
+// newFieldListRegisterStruct is a shortcut to create a RegisterStruct and embed it into a FieldListRegisterStruct.
+func newFieldListRegisterStruct(
+	category, name, description string,
+	sort int,
+	address uint16,
+	static bool,
+	writable bool,
+	factory veconst.FieldListFactory,
+) FieldListRegisterStruct {
+	return FieldListRegisterStruct{
+		RegisterStruct{
+			category,
+			name,
+			description,
+			sort,
+			address,
+			static,
+			writable,
+		},
 		factory,
 	}
 }
@@ -121,6 +145,7 @@ const (
 	Number
 	Text
 	Enum
+	FieldList
 )
 
 type Register interface {
@@ -144,7 +169,6 @@ type NumberRegister interface {
 
 type EnumRegister interface {
 	Register
-	Bit() int
 	Enum() map[int]string
 }
 
@@ -223,12 +247,17 @@ func (r EnumRegisterStruct) Type() Type {
 	return Enum
 }
 
-// Bit returns the bit to use as a boolean 0/1.
-func (r EnumRegisterStruct) Bit() int {
-	return r.bit
-}
-
 // Factory returns the enum factory.
 func (r EnumRegisterStruct) Factory() veconst.EnumFactory {
+	return r.factory
+}
+
+// Type returns the type of the register.
+func (r FieldListRegisterStruct) Type() Type {
+	return FieldList
+}
+
+// Factory returns the field list factory.
+func (r FieldListRegisterStruct) Factory() veconst.FieldListFactory {
 	return r.factory
 }

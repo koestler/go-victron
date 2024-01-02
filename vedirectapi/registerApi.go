@@ -5,6 +5,7 @@ package vedirectapi
 import (
 	"context"
 	"fmt"
+	"github.com/koestler/go-victron/veconst"
 	"github.com/koestler/go-victron/vedirect"
 	"github.com/koestler/go-victron/veproduct"
 	"github.com/koestler/go-victron/veregister"
@@ -115,22 +116,32 @@ func (sa *RegisterApi) ReadTextRegister(r veregister.TextRegisterStruct) (value 
 }
 
 // ReadEnumRegister fetches a single enum register and decodes the enum to enum index and enum value.
-func (sa *RegisterApi) ReadEnumRegister(r veregister.EnumRegisterStruct) (enumIdx int, enumValue string, err error) {
-	var intValue uint64
-	intValue, err = sa.Vd.GetUint(r.Address())
+func (sa *RegisterApi) ReadEnumRegister(r veregister.EnumRegisterStruct) (veconst.Enum, error) {
+	intValue, err := sa.Vd.GetUint(r.Address())
 
 	if err != nil {
-		return 0, "", fmt.Errorf("fetching enum register '%s' failed: %w", r.Name(), err)
-	}
-
-	if bit := r.Bit(); bit >= 0 {
-		intValue = (intValue >> bit) & 1
+		return nil, fmt.Errorf("fetching enum register '%s' failed: %w", r.Name(), err)
 	}
 
 	if e, err := r.Factory().NewEnum(int(intValue)); err != nil {
-		return e.Idx(), e.String(), nil
+		return e, nil
 	} else {
-		return 0, "", fmt.Errorf("decoding enum register '%s' failed: %w", r.Name(), err)
+		return nil, fmt.Errorf("decoding enum register '%s' failed: %w", r.Name(), err)
+	}
+}
+
+// ReadFieldListRegister fetches a single field list register and decodes the field list to a map of field name to field value.
+func (sa *RegisterApi) ReadFieldListRegister(r veregister.FieldListRegisterStruct) (veconst.FieldList, error) {
+	intValue, err := sa.Vd.GetUint(r.Address())
+
+	if err != nil {
+		return nil, fmt.Errorf("fetching field list register '%s' failed: %w", r.Name(), err)
+	}
+
+	if fl, err := r.Factory().NewFieldList(uint(intValue)); err != nil {
+		return fl, nil
+	} else {
+		return nil, fmt.Errorf("decoding field list register '%s' failed: %w", r.Name(), err)
 	}
 }
 
@@ -146,9 +157,10 @@ func (sa *RegisterApi) ReadRegisterList(
 	rl veregister.RegisterList,
 ) (rv RegisterValues, err error) {
 	rv = RegisterValues{
-		NumberValues: make(map[string]NumberRegisterValue, len(rl.NumberRegisters)),
-		TextValues:   make(map[string]TextRegisterValue, len(rl.TextRegisters)),
-		EnumValues:   make(map[string]EnumRegisterValue, len(rl.EnumRegisters)),
+		NumberValues:    make(map[string]NumberRegisterValue, len(rl.NumberRegisters)),
+		TextValues:      make(map[string]TextRegisterValue, len(rl.TextRegisters)),
+		EnumValues:      make(map[string]EnumRegisterValue, len(rl.EnumRegisters)),
+		FieldListValues: make(map[string]FieldListValue, len(rl.FieldListRegisters)),
 	}
 
 	err = sa.StreamRegisterList(
@@ -162,6 +174,9 @@ func (sa *RegisterApi) ReadRegisterList(
 			Enum: func(v EnumRegisterValue) {
 				rv.EnumValues[v.Name()] = v
 			},
+			FieldList: func(v FieldListValue) {
+				rv.FieldListValues[v.Name()] = v
+			},
 		})
 
 	return
@@ -170,9 +185,10 @@ func (sa *RegisterApi) ReadRegisterList(
 // ValueHandler is a container for handlers for number, text and enum registers values.
 // This is made such that new register types can be added without breaking the api.
 type ValueHandler struct {
-	Number func(v NumberRegisterValue)
-	Text   func(v TextRegisterValue)
-	Enum   func(v EnumRegisterValue)
+	Number    func(v NumberRegisterValue)
+	Text      func(v TextRegisterValue)
+	Enum      func(v EnumRegisterValue)
+	FieldList func(v FieldListValue)
 }
 
 // StreamRegisterList fetches all registers from the given list and calls the given handlers for each register.
@@ -227,14 +243,31 @@ func (sa *RegisterApi) StreamRegisterList(
 				return ErrCtxDone
 			default:
 			}
-			idx, v, err := sa.ReadEnumRegister(r)
+			v, err := sa.ReadEnumRegister(r)
 			if err != nil {
 				return err
 			}
 			handlers.Enum(EnumRegisterValue{
 				EnumRegisterStruct: r,
-				enumIdx:            idx,
-				enumValue:          v,
+				value:              v,
+			})
+		}
+	}
+
+	if handlers.FieldList != nil {
+		for _, r := range rl.FieldListRegisters {
+			select {
+			case <-ctx.Done():
+				return ErrCtxDone
+			default:
+			}
+			v, err := sa.ReadFieldListRegister(r)
+			if err != nil {
+				return err
+			}
+			handlers.FieldList(FieldListValue{
+				FieldListRegisterStruct: r,
+				value:                   v,
 			})
 		}
 	}

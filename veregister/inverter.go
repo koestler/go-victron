@@ -8,8 +8,6 @@ import "github.com/koestler/go-victron/veconst"
 func AppendInverter(rl *RegisterList) {
 	AppendInverterProduct(rl)
 	AppendInverterGeneric(rl)
-	AppendInverterOffReasons(rl)
-	AppendInverterWarningReasons(rl)
 	AppendInverterHistory(rl)
 	AppendInverterOperation(rl)
 	AppendInverterAcOutControl(rl)
@@ -113,7 +111,7 @@ func AppendInverterProduct(rl *RegisterList) {
 			"Product",
 			"BatVoltage",
 			"Battery Voltage",
-			106,
+			107,
 			0xEDEF,
 			true,
 			false,
@@ -133,163 +131,42 @@ func AppendInverterGeneric(rl *RegisterList) {
 			"DeviceState",
 			"Device state",
 			10,
-			0x0201, -1,
+			0x0201,
 			false,
 			false,
 			veconst.InverterStateFactory,
 		),
-		// todo: add device off reason, device warning reason and alarm reason (all bit masks)
 		newEnumRegisterStruct(
 			"Operation",
 			"DeviceMode",
 			"Device mode",
 			300,
-			0x0200, -1,
+			0x0200,
 			false,
 			false,
 			veconst.InverterModeFactory,
 		),
 	)
-}
-
-// AppendInverterOffReasons appends all registers of the Off Reasons category to the given RegisterList.
-func AppendInverterOffReasons(rl *RegisterList) {
-	rl.AppendEnumRegisterStruct(
-		newEnumRegisterStruct(
-			"Off Reasons",
-			"DeviceOffReasonNoInputPower",
-			"No input power",
+	rl.AppendFieldListRegisterStruct(
+		newFieldListRegisterStruct(
+			"Operation",
+			"OffReason",
+			"Device off reasons",
 			200,
-			0x0207, 0,
+			0x0207,
 			false,
 			false,
-			veconst.BooleanInactiveActiveFactory,
+			veconst.InverterOffReasonsFactory,
 		),
-		newEnumRegisterStruct(
-			"Off Reasons",
-			"DeviceOffReasonPowerButton",
-			"Soft power button or SW controller",
-			201,
-			0x0207, 2,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Off Reasons",
-			"DeviceOffReasonRemoteInput",
-			"HW remote input connector",
-			202,
-			0x0207, 3,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Off Reasons",
-			"DeviceOffReasonInternal",
-			"Internal reason (see alarm reason)",
-			203,
-			0x0207, 4,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Off Reasons",
-			"DeviceOffReasonPayGo",
-			"PayGo, out of credit, need token",
-			204,
-			0x0207, 5,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-	)
-}
-
-// AppendInverterWarningReasons appends all registers of the Warning Reasons category to the given RegisterList.
-func AppendInverterWarningReasons(rl *RegisterList) {
-	rl.AppendEnumRegisterStruct(
-		newEnumRegisterStruct(
-			"Warning Reasons",
-			"DeviceWarningReasonLowBatVoltage",
-			"Low battery voltage",
+		newFieldListRegisterStruct(
+			"Operation",
+			"WarningReason",
+			"Warning reasons",
 			210,
-			0x031C, 0,
+			0x031C,
 			false,
 			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Warning Reasons",
-			"DeviceWarningReasonHighBatVoltage",
-			"High battery voltage",
-			211,
-			0x031C, 1,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Warning Reasons",
-			"DeviceWarningReasonLowTemp",
-			"Low temperature",
-			212,
-			0x031C, 5,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Warning Reasons",
-			"DeviceWarningReasonHighTemp",
-			"High temperature",
-			213,
-			0x031C, 6,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Warning Reasons",
-			"DeviceWarningReasonOverload",
-			"Overload",
-			214,
-			0x031C, 8,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Warning Reasons",
-			"DeviceWarningReasonPoorDC",
-			"Poor DC connection",
-			215,
-			0x031C, 9,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Warning Reasons",
-			"DeviceWarningReasonLowAcVoltage",
-			"Low AC-output voltage",
-			216,
-			0x031C, 10,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
-		),
-		newEnumRegisterStruct(
-			"Warning Reasons",
-			"DeviceWarningReasonHighAcVoltage",
-			"High AC-output voltage",
-			217,
-			0x031C, 11,
-			false,
-			false,
-			veconst.BooleanInactiveActiveFactory,
+			veconst.InverterWarningReasonFactory,
 		),
 	)
 }
@@ -475,7 +352,7 @@ func AppendInverterAcOutControl(rl *RegisterList) {
 			"InvWaveSet50HzNot60Hz",
 			"Frequency",
 			405,
-			0xEB03, -1,
+			0xEB03,
 			true,
 			false,
 			veconst.InverterFrequencyFactory,
@@ -603,7 +480,7 @@ func AppendInverterDynamicCutoff(rl *RegisterList) {
 			"InvProtUbatDynCutoffEnable",
 			"Dynamic Cutoff Enable",
 			600,
-			0xEBBA, -1,
+			0xEBBA,
 			true,
 			false,
 			veconst.BooleanDisabledEnabledFactory,

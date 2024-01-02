@@ -21,7 +21,7 @@ func TestAppendBmv(t *testing.T) {
 		"Number: category=Monitor, name=TTG, description=Time to go, sort=102, address=0xFFE, static=false, writable=false, signed=false, factor=1, offset=0.000000, unit=min",
 		"Number: category=Monitor, name=MidPointVoltage, description=Mid-point voltage, sort=104, address=0x382, static=false, writable=false, signed=false, factor=100, offset=0.000000, unit=V",
 		"Number: category=Monitor, name=MidPointVoltageDeviation, description=Mid-point voltage deviation, sort=105, address=0x383, static=false, writable=false, signed=true, factor=10, offset=0.000000, unit=%",
-		"Enum: category=Monitor, name=SynchronizationState, description=Synchronization state, sort=106, address=0xEEB6, static=false, writable=false, bit=-1, enum=map[0:False 1:True]",
+		"Enum: category=Monitor, name=SynchronizationState, description=Synchronization state, sort=106, address=0xEEB6, static=false, writable=false, enum=map[0:False 1:True]",
 		"Number: category=Product, name=ProductId, description=Product id, sort=200, address=0x100, static=true, writable=false, signed=false, factor=1, offset=0.000000, unit=",
 		"Number: category=Product, name=ProductRevision, description=Product revision, sort=201, address=0x101, static=true, writable=false, signed=false, factor=1, offset=0.000000, unit=",
 		"Text: category=Product, name=SerialNumber, description=Serial number, sort=202, address=0x10A, static=true, writable=false",

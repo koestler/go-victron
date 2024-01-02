@@ -14,3 +14,17 @@ type EnumFactory interface {
 }
 
 var ErrInvalidEnumIdx = errors.New("enum value does not exist")
+
+type Field interface {
+	Idx() int
+	String() string
+}
+
+type FieldList interface {
+	Fields() map[Field]bool
+}
+
+type FieldListFactory interface {
+	NewFieldList(v uint) (FieldList, error)
+	IntToStringMap() map[int]string
+}

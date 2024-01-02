@@ -228,7 +228,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			"SynchronizationState",
 			"Synchronization state",
 			106,
-			0xEEB6, -1,
+			0xEEB6,
 			false,
 			false,
 			veconst.BooleanFalseTrueFactory,
