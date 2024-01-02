@@ -2,6 +2,7 @@ package bleparser
 
 import (
 	"encoding/binary"
+	"github.com/koestler/go-victron/veconst"
 	"math"
 )
 
@@ -19,16 +20,16 @@ import (
 // 95         | 11         | 7          | 9          | AC Current            | 0.1A    | 0 .. 51.0 A         | 0x1FF
 
 type AcChargerRecord struct {
-	DeviceState     uint8   `Description:"Device state"`
-	ChargerError    uint8   `Description:"Charger error"`
-	BatteryVoltage1 float64 `Description:"Battery voltage 1" Unit:"V"`
-	BatteryCurrent1 float64 `Description:"Battery current 1" Unit:"A"`
-	BatteryVoltage2 float64 `Description:"Battery voltage 2" Unit:"V"`
-	BatteryCurrent2 float64 `Description:"Battery current 2" Unit:"A"`
-	BatteryVoltage3 float64 `Description:"Battery voltage 3" Unit:"V"`
-	BatteryCurrent3 float64 `Description:"Battery current 3" Unit:"A"`
-	Temperature     float64 `Description:"Temperature" Unit:"°C"`
-	AcCurrent       float64 `Description:"AC Current" Unit:"A"`
+	DeviceState     veconst.SolarChargerState `Description:"Device state"`
+	ChargerError    veconst.SolarChargerError `Description:"Charger error"`
+	BatteryVoltage1 float64                   `Description:"Battery voltage 1" Unit:"V"`
+	BatteryCurrent1 float64                   `Description:"Battery current 1" Unit:"A"`
+	BatteryVoltage2 float64                   `Description:"Battery voltage 2" Unit:"V"`
+	BatteryCurrent2 float64                   `Description:"Battery current 2" Unit:"A"`
+	BatteryVoltage3 float64                   `Description:"Battery voltage 3" Unit:"V"`
+	BatteryCurrent3 float64                   `Description:"Battery current 3" Unit:"A"`
+	Temperature     float64                   `Description:"Temperature" Unit:"°C"`
+	AcCurrent       float64                   `Description:"AC Current" Unit:"A"`
 }
 
 func DecodeAcChargerRecord(inp []byte) (ret AcChargerRecord, err error) {
@@ -37,8 +38,18 @@ func DecodeAcChargerRecord(inp []byte) (ret AcChargerRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = inp[0]
-	ret.ChargerError = inp[1]
+	if v, e := veconst.SolarChargerStateFactory.New(inp[0]); e != nil {
+		err = e
+		return
+	} else {
+		ret.DeviceState = v
+	}
+	if v, e := veconst.SolarChargerErrorFactory.New(inp[1]); e != nil {
+		err = e
+		return
+	} else {
+		ret.ChargerError = v
+	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]) & 0x1FFF; v != 0x1FFF {
 		ret.BatteryVoltage1 = float64(v) / 100

@@ -1,7 +1,7 @@
 package veconst
 
-type InverterWarningReason uint16
-type InverterWarningReasons uint32
+type InverterWarningReason uint8
+type InverterWarningReasons uint16
 type InverterWarningReasonsFactoryType struct{}
 
 const (
@@ -27,12 +27,12 @@ var inverterWarningReasonMap = map[InverterWarningReason]string{
 }
 var InverterWarningReasonFactory InverterWarningReasonsFactoryType
 
-func (f InverterWarningReasonsFactoryType) New(v uint32) (InverterWarningReasons, error) {
+func (f InverterWarningReasonsFactoryType) New(v uint16) (InverterWarningReasons, error) {
 	return InverterWarningReasons(v), nil
 }
 
 func (f InverterWarningReasonsFactoryType) NewFieldList(v uint) (FieldList, error) {
-	return f.New(uint32(v))
+	return f.New(uint16(v))
 }
 
 func (f InverterWarningReasonsFactoryType) IntToStringMap() map[int]string {

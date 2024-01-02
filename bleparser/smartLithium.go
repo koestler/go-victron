@@ -22,8 +22,8 @@ import (
 // 120        | 15         | 0          | 7          | Battery temperature   | 1 °C    | -40 .. 86 °C        | 0x7F
 
 type SmartLithiumRecord struct {
-	BmvFlags           uint32  `Description:"BMV flags"`
-	SmartLithiumError  uint16  `Description:"SmartLithium error"`
+	BmvFlags           uint32  `Description:"BMV flags"`          // TODO: decode flags (no doc found)
+	SmartLithiumError  uint16  `Description:"SmartLithium error"` // TODO: decode error (no doc found)
 	Cell1              float64 `Description:"Cell 1 voltage" Unit:"V"`
 	Cell2              float64 `Description:"Cell 2 voltage" Unit:"V"`
 	Cell3              float64 `Description:"Cell 3 voltage" Unit:"V"`

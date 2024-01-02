@@ -28,8 +28,19 @@ func DecodeDcDcConverterRecord(inp []byte) (ret DcDcConverterRecord, err error) 
 		return
 	}
 
-	ret.DeviceState, _ = veconst.DcDcConverterStateFactory.New(inp[0])
-	ret.ChargerError, _ = veconst.DcDcConverterErrorFactory.New(inp[1])
+	if v, e := veconst.DcDcConverterStateFactory.New(inp[0]); e != nil {
+		err = e
+		return
+	} else {
+		ret.DeviceState = v
+	}
+
+	if v, e := veconst.DcDcConverterErrorFactory.New(inp[1]); e != nil {
+		err = e
+		return
+	} else {
+		ret.ChargerError = v
+	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0xFFFF {
 		ret.InputVoltage = float64(v) / 100

@@ -32,8 +32,18 @@ func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
 		return
 	}
 
-	ret.DeviceState, _ = veconst.SolarChargerStateFactory.New(inp[0])
-	ret.ChargerError, _ = veconst.SolarChargerErrorFactory.New(inp[1])
+	if v, e := veconst.SolarChargerStateFactory.New(inp[0]); e != nil {
+		err = e
+		return
+	} else {
+		ret.DeviceState = v
+	}
+	if v, e := veconst.SolarChargerErrorFactory.New(inp[1]); e != nil {
+		err = e
+		return
+	} else {
+		ret.ChargerError = v
+	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
 		ret.BatteryVoltage = float64(int16(v)) / 100

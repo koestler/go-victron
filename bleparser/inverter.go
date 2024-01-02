@@ -16,12 +16,12 @@ import (
 // 71         | 11         | AC current            | 0.1A    | 0 .. 204.6 A        | 0x7FF
 
 type InverterRecord struct {
-	DeviceState     veconst.InverterState `Description:"Device state"`
-	AlarmReason     uint16                `Description:"Alarm reason"`
-	BatteryVoltage  float64               `Description:"Battery voltage" Unit:"V"`
-	AcApparentPower float64               `Description:"AC Apparent power" Unit:"VA"`
-	AcVoltage       float64               `Description:"AC voltage" Unit:"V"`
-	AcCurrent       float64               `Description:"AC current" Unit:"A"`
+	DeviceState     veconst.InverterState          `Description:"Device state"`
+	AlarmReason     veconst.InverterWarningReasons `Description:"Alarm reason"`
+	BatteryVoltage  float64                        `Description:"Battery voltage" Unit:"V"`
+	AcApparentPower float64                        `Description:"AC Apparent power" Unit:"VA"`
+	AcVoltage       float64                        `Description:"AC voltage" Unit:"V"`
+	AcCurrent       float64                        `Description:"AC current" Unit:"A"`
 }
 
 func DecodeInverterRecord(inp []byte) (ret InverterRecord, err error) {
@@ -30,8 +30,20 @@ func DecodeInverterRecord(inp []byte) (ret InverterRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = veconst.InverterState(inp[0])
-	ret.AlarmReason = binary.LittleEndian.Uint16(inp[1:3])
+	if v, e := veconst.InverterStateFactory.New(inp[0]); e != nil {
+		err = e
+		return
+	} else {
+		ret.DeviceState = v
+	}
+
+	if v, e := veconst.InverterWarningReasonFactory.New(binary.LittleEndian.Uint16(inp[1:3])); e != nil {
+		err = e
+		return
+	} else {
+		ret.AlarmReason = v
+	}
+
 	if v := binary.LittleEndian.Uint16(inp[3:5]); v != 0x7FFF {
 		ret.BatteryVoltage = float64(int16(v)) / 100
 	} else {

@@ -36,8 +36,19 @@ func DecodeMultiRsRecord(inp []byte) (ret MultiRsRecord, err error) {
 		return
 	}
 
-	ret.DeviceState = veconst.InverterState(inp[0])
-	ret.ChargerError = veconst.SolarChargerError(inp[1])
+	if v, e := veconst.InverterStateFactory.New(inp[0]); e != nil {
+		err = e
+		return
+	} else {
+		ret.DeviceState = v
+	}
+
+	if v, e := veconst.SolarChargerErrorFactory.New(inp[1]); e != nil {
+		err = e
+		return
+	} else {
+		ret.ChargerError = v
+	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
 		ret.BatteryCurrent = float64(int16(v)) / 10
