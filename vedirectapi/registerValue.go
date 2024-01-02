@@ -79,11 +79,7 @@ func (v FieldListValue) Value() veconst.FieldList {
 	return v.value
 }
 
-func (v FieldListValue) GenericValue() interface{} {
-	return v.value
-}
-
-func (v FieldListValue) String() string {
+func (v FieldListValue) CommaString() string {
 	fields := v.value.Fields()
 	strs := make([]string, 0, len(fields))
 	for f, set := range fields {
@@ -92,7 +88,15 @@ func (v FieldListValue) String() string {
 		}
 		strs = append(strs, f.String())
 	}
-	return fmt.Sprintf("%s=%s", v.Name(), strings.Join(strs, ", "))
+	return strings.Join(strs, ", ")
+}
+
+func (v FieldListValue) GenericValue() interface{} {
+	return v.value
+}
+
+func (v FieldListValue) String() string {
+	return fmt.Sprintf("%s=%s", v.Name(), v.CommaString())
 }
 
 // RegisterValues is a container for Number, Text and Enum Registers and their values.
