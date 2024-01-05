@@ -124,9 +124,9 @@ func (sa *RegisterApi) ReadEnumRegister(r veregister.EnumRegisterStruct) (vecons
 	}
 
 	if e, err := r.Factory().NewEnum(int(intValue)); err != nil {
-		return e, nil
-	} else {
 		return nil, fmt.Errorf("decoding enum register '%s' failed: %w", r.Name(), err)
+	} else {
+		return e, nil
 	}
 }
 
@@ -139,9 +139,9 @@ func (sa *RegisterApi) ReadFieldListRegister(r veregister.FieldListRegisterStruc
 	}
 
 	if fl, err := r.Factory().NewFieldList(uint(intValue)); err != nil {
-		return fl, nil
-	} else {
 		return nil, fmt.Errorf("decoding field list register '%s' failed: %w", r.Name(), err)
+	} else {
+		return fl, nil
 	}
 }
 
