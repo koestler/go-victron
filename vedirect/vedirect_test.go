@@ -3,13 +3,12 @@ package vedirect_test
 import (
 	"errors"
 	"github.com/koestler/go-victron/vedirect"
-	"github.com/koestler/go-victron/vetest"
 	"log"
 	"testing"
 )
 
 func TestVedirect(t *testing.T) {
-	io := vetest.NewLookupIOPort(t, map[string]string{
+	io := NewLookupIOPort(t, map[string]string{
 		":154\n":       ":51641F9\n",       // Ping() out of docs example
 		":7F0ED0071\n": ":7F0ED009600DB\n", // GetUInt out of docs
 

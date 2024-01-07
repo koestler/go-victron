@@ -1,13 +1,10 @@
-// Package vetest consists of mock implementations for testing.
-// It is used internally for testing and exposed so that tools using this package can use the mocks as well.
-package vetest
+package vedirect_test
 
 import (
 	"bytes"
 	"testing"
 )
 
-// LookupIOPort is a mock implementation of vedirect.IOPort that looks up the response for each request in a map.
 type LookupIOPort struct {
 	t           *testing.T
 	lookupTable map[string]string
