@@ -1,4 +1,4 @@
-package vedirect_test
+package vetest
 
 import (
 	"bytes"

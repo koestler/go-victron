@@ -17,7 +17,7 @@ import (
 // RegisterApi is the main struct for the VE.Direct serial protocol api. It allows to communicate with the device
 // by reading the device id, using it to get the list of available registers and than allow to read those registers.
 type RegisterApi struct {
-	IoHandle  *serial.Port
+	ioPort    vedirect.IOPort
 	Vd        *vedirect.Vedirect
 	Product   veproduct.Product
 	Registers veregister.RegisterList
@@ -25,15 +25,9 @@ type RegisterApi struct {
 
 var ErrCtxDone = fmt.Errorf("context done")
 
-// NewRegistertApi creates a new RegisterApi instance and tries to connect to the device:
-// - opens the serial port
-// - sends a ping
-// - gets the device id and uses it to get the product type
-// - gets the register list for the product type
-// Make sure to defer RegisterApi.Close() after creating a new RegisterApi instance.
-func NewRegistertApi(serialDevice string, vdConfig vedirect.Config) (*RegisterApi, error) {
-	sa := RegisterApi{}
-
+// NewSerialRegisterApi open the given serial device, creates a new RegisterApi instance,
+// and tries to connect to the device over a serial connection.
+func NewSerialRegisterApi(serialDevice string, vdConfig vedirect.Config) (*RegisterApi, error) {
 	serialConfig := serial.Config{
 		Name:        serialDevice,
 		Baud:        19200,
@@ -43,10 +37,21 @@ func NewRegistertApi(serialDevice string, vdConfig vedirect.Config) (*RegisterAp
 	if ioHandle, err := serial.OpenPort(&serialConfig); err != nil {
 		return nil, fmt.Errorf("cannot open port %s: %w", serialDevice, err)
 	} else {
-		sa.IoHandle = ioHandle
+		return NewRegisterApi(ioHandle, vdConfig)
+	}
+}
+
+// NewRegisterApi creates a new RegisterApi instance and tries to connect to the device:
+// - sends a ping
+// - gets the device id and uses it to get the product type
+// - gets the register list for the product type
+// Make sure to defer RegisterApi.Close() after creating a new RegisterApi instance.
+func NewRegisterApi(ioPort vedirect.IOPort, vdConfig vedirect.Config) (*RegisterApi, error) {
+	sa := RegisterApi{
+		ioPort: ioPort,
 	}
 
-	if vd, err := vedirect.NewVedirect(sa.IoHandle, vdConfig); err != nil {
+	if vd, err := vedirect.NewVedirect(sa.ioPort, vdConfig); err != nil {
 		return nil, fmt.Errorf("cannot create vedirect: %w", err)
 	} else {
 		sa.Vd = vd
@@ -80,7 +85,7 @@ func NewRegistertApi(serialDevice string, vdConfig vedirect.Config) (*RegisterAp
 
 // Close closes the underlying serial port.
 func (sa *RegisterApi) Close() error {
-	return sa.IoHandle.Close()
+	return sa.ioPort.Close()
 }
 
 // ReadNumberRegister fetches a single number register and converts it to a float64.

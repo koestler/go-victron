@@ -48,7 +48,7 @@ func runVedirect(cmd *cobra.Command, args []string) {
 	}
 
 	time0 := time.Now()
-	api, err := vedirectapi.NewRegistertApi(cmd.Flag("device").Value.String(), vdConfig)
+	api, err := vedirectapi.NewSerialRegisterApi(cmd.Flag("device").Value.String(), vdConfig)
 	if err != nil {
 		fmt.Printf("error creating api: %s\n", err)
 		return
