@@ -7,10 +7,10 @@ import (
 
 var ErrUnsupportedType = fmt.Errorf("unsuported product type")
 
-func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error) {
+func GetRegisterListByProduct(p veproduct.Product) (rl RegisterList, err error) {
 	rl = NewRegisterList()
 
-	switch t {
+	switch p.Type() {
 	case veproduct.TypeBMV:
 		AppendBmv(&rl)
 		rl.FilterByName(
@@ -29,6 +29,11 @@ func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error)
 		)
 	case veproduct.TypeBlueSolarMPPT, veproduct.TypeSmartSolarMPPT:
 		AppendSolar(&rl)
+
+		// The panel current is not available in the 10A/15A/20A chargers
+		if c := p.MaxPanelCurrent(); c == 10 || c == 15 || c == 20 {
+			rl.FilterByName("PanelCurrent")
+		}
 	case veproduct.TypePhoenixInverter, veproduct.TypePhoenixInverterSmart:
 		AppendInverter(&rl)
 	default:

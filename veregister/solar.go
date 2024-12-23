@@ -567,6 +567,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			10,
 			0,
 			"A",
+			// The panel current is not available in the 10A/15A/20A chargers
 		),
 		newNumberRegisterStruct(
 			"Panel",

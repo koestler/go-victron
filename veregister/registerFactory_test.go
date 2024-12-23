@@ -1,33 +1,35 @@
 package veregister
 
 import (
+	"errors"
 	"github.com/koestler/go-victron/veproduct"
 	"testing"
 )
 
-func TestGetRegisterListByProductType(t *testing.T) {
+func TestGetRegisterListByProduct(t *testing.T) {
 	t.Run("unsupported type", func(t *testing.T) {
-		_, err := GetRegisterListByProductType(veproduct.TypeUnknown)
-		if err == nil {
+		_, err := GetRegisterListByProduct(veproduct.Product((0x1234)))
+		if !errors.Is(err, ErrUnsupportedType) {
 			t.Errorf("expected an error for unknown product type")
 		}
 	})
 
 	t.Run("supported types", func(t *testing.T) {
-		countPerType := map[veproduct.Type]int{
-			veproduct.TypeBMV:                  27,
-			veproduct.TypeBMVSmart:             31,
-			veproduct.TypeBlueSolarMPPT:        43,
-			veproduct.TypeSmartSolarMPPT:       43,
-			veproduct.TypePhoenixInverter:      36,
-			veproduct.TypePhoenixInverterSmart: 36,
-			veproduct.TypeSmartShunt:           31,
+		countPerType := map[veproduct.Product]int{
+			veproduct.BMV700:                                 27,
+			veproduct.BMV712Smart:                            31,
+			veproduct.BlueSolarMPPT70_15:                     42, // Panel current not available
+			veproduct.BlueSolarMPPT75_50:                     43,
+			veproduct.SmartSolarMPPT250_100:                  43,
+			veproduct.PhoenixInverter12V250VA230V:            36,
+			veproduct.PhoenixInverterSmart12V5000VA230Vac64k: 36,
+			veproduct.SmartShunt500A_50mV:                    31,
 		}
 
-		for productType, expectedCount := range countPerType {
-			rl, err := GetRegisterListByProductType(productType)
+		for product, expectedCount := range countPerType {
+			rl, err := GetRegisterListByProduct(product)
 			if err != nil {
-				t.Errorf("unexpected error for %s: %s", productType, err)
+				t.Errorf("unexpected error for %s: %s", product, err)
 			}
 
 			count := len(rl.NumberRegisters)
@@ -36,7 +38,7 @@ func TestGetRegisterListByProductType(t *testing.T) {
 			count += len(rl.FieldListRegisters)
 
 			if count != expectedCount {
-				t.Errorf("unexpected count for %s: expected %d but got %d", productType, expectedCount, count)
+				t.Errorf("unexpected count for %s: expected %d but got %d", product, expectedCount, count)
 			}
 		}
 	})

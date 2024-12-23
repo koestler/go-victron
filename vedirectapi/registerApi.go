@@ -74,7 +74,7 @@ func NewRegisterApi(ioPort vedirect.IOPort, vdConfig vedirect.Config) (*Register
 	}
 
 	// get register list
-	if rl, err := veregister.GetRegisterListByProductType(sa.Product.Type()); err != nil {
+	if rl, err := veregister.GetRegisterListByProduct(sa.Product); err != nil {
 		return nil, fmt.Errorf("cannot get register list: %w", err)
 	} else {
 		sa.Registers = rl
