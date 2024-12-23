@@ -159,19 +159,6 @@ type Register interface {
 	Writable() bool
 }
 
-type NumberRegister interface {
-	Register
-	Unit() string
-	Signed() bool
-	Factor() int
-	Offset() float64
-}
-
-type EnumRegister interface {
-	Register
-	Enum() map[int]string
-}
-
 // Type returns the type of the register.
 func (r RegisterStruct) Type() Type {
 	return Undefined
