@@ -44,3 +44,33 @@ func (t Type) String() string {
 		return ""
 	}
 }
+
+// IsBMV returns true if the product is a BMV (Battery Monitor).
+func (t Type) IsBMV() bool {
+	switch t {
+	case TypeBMV, TypeBMVSmart, TypeSmartShunt:
+		return true
+	default:
+		return false
+	}
+}
+
+// IsSolar returns true if the product is a solar charger.
+func (t Type) IsSolar() bool {
+	switch t {
+	case TypeBlueSolarMPPT, TypeSmartSolarMPPT, TypeBlueSolarMPPTVECan, TypeSmartSolarMPPTVECan:
+		return true
+	default:
+		return false
+	}
+}
+
+// IsInverter returns true if the product is an inverter.
+func (t Type) IsInverter() bool {
+	switch t {
+	case TypePhoenixInverter, TypePhoenixInverterSmart, TypePhoenixSmartIP43Charger:
+		return true
+	default:
+		return false
+	}
+}
