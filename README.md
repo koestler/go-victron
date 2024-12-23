@@ -21,6 +21,11 @@ go install go.uber.org/mock/mockgen@latest
 go install honnef.co/go/tools/cmd/staticcheck@latest
 ```
 
+Run the cli:
+```bash
+go run vecli/main.go
+```
+
 Build test and audit the code:
 ```bash
 go generate ./...

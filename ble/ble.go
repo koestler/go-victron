@@ -50,7 +50,7 @@ func New(cfg Config) (*BleStruct, error) {
 	adapterID := "hci0"
 
 	go func() {
-		//clean up connection on exit
+		// clean up connection on exit
 		defer api.Exit()
 
 		a, err := adapter.GetAdapter(adapterID)
