@@ -1,4 +1,4 @@
-package bleapi
+package vebleapi
 
 import (
 	"fmt"
