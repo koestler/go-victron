@@ -1,7 +1,10 @@
+// Package tinygoble provides a simple API to listen for BLE advertisements from Victron devices.
+// It currently only works on Linux since macOS does not expose the MAC address of bluetooth devices.
 package tinygoble
 
 import (
 	"github.com/koestler/go-victron/log"
+	"github.com/koestler/go-victron/veble"
 	"github.com/koestler/go-victron/veconst"
 	"tinygo.org/x/bluetooth"
 )
@@ -9,10 +12,10 @@ import (
 type MacListener func(rssi int, localName string, victronData []byte)
 
 type setMacListenerRequest struct {
-	mac      string
+	mac      veble.MAC
 	listener MacListener
 }
-type DefaultListener func(mac string, rssi int, localName string)
+type DefaultListener func(mac veble.MAC, rssi int, localName string)
 
 // Adapter is a wrapper around the bluetooth.Adapter type.
 // It listens for BLE advertisements, filters out only advertisements from Victron devices by looking at the
@@ -23,7 +26,7 @@ type Adapter struct {
 
 	scanResult chan bluetooth.ScanResult
 
-	macListener        map[string]MacListener // map of mac address to handler function
+	macListener        map[veble.MAC]MacListener // map of mac address to handler function
 	setMacListener     chan setMacListenerRequest
 	unsetMacListener   chan setMacListenerRequest
 	defaultListener    DefaultListener
@@ -37,7 +40,7 @@ func NewDefaultAdapter(logger log.Logger) (*Adapter, error) {
 		logger:             logger,
 		adapter:            bluetooth.DefaultAdapter,
 		scanResult:         make(chan bluetooth.ScanResult),
-		macListener:        make(map[string]MacListener),
+		macListener:        make(map[veble.MAC]MacListener),
 		setMacListener:     make(chan setMacListenerRequest),
 		setDefaultListener: make(chan DefaultListener),
 	}
@@ -60,12 +63,12 @@ func (a *Adapter) RegisterDefaultListener(l DefaultListener) {
 
 // RegisterMacListener registers a listener that is called only for announcements sent to a specific MAC address.
 // Only one listener can be registered per MAC address. If it is already registered, it is replaced.
-func (a *Adapter) RegisterMacListener(mac string, l MacListener) {
+func (a *Adapter) RegisterMacListener(mac veble.MAC, l MacListener) {
 	a.setMacListener <- setMacListenerRequest{mac, l}
 }
 
 // UnregisterMacListener removes the listener for the given MAC address.
-func (a *Adapter) UnregisterMacListener(mac string, l MacListener) {
+func (a *Adapter) UnregisterMacListener(mac veble.MAC, l MacListener) {
 	a.setMacListener <- setMacListenerRequest{mac, l}
 }
 
@@ -106,14 +109,14 @@ func (a *Adapter) run() {
 			victronData := extractVictronData(sr)
 			if victronData == nil {
 				// ignore all non-victron devices
-				continue
+				//continue
 			}
 
-			macStr := sr.Address.String()
-			if ml, ok := a.macListener[macStr]; ok {
+			mac := veble.MAC(sr.Address.MAC) // does not work on darwin
+			if ml, ok := a.macListener[mac]; ok {
 				ml(int(sr.RSSI), sr.LocalName(), victronData)
 			} else if a.defaultListener != nil {
-				a.defaultListener(macStr, int(sr.RSSI), sr.LocalName())
+				a.defaultListener(mac, int(sr.RSSI), sr.LocalName())
 			}
 		}
 	}
