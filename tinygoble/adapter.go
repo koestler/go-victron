@@ -1,107 +1,88 @@
 package tinygoble
 
 import (
-	"errors"
 	"github.com/koestler/go-victron/log"
-	"sync"
+	"github.com/koestler/go-victron/veconst"
 
 	"tinygo.org/x/bluetooth"
 )
 
-var ErrMacAlreadyListening = errors.New("mac address already listening")
+type MacListener func(rssi int, localName string, victronData []byte)
+type DefaultListener func(mac string, rssi int, localName string)
 
+// Adapter is a wrapper around the bluetooth.Adapter type.
+// It listens for BLE advertisements, filters out only advertisements from Victron devices by looking at the
+// manufacturer data, and then calls a mac specific listener or a default listener.
 type Adapter struct {
 	logger  log.Logger
 	adapter *bluetooth.Adapter
 
-	listener     map[string]*Listener // map of mac address to handler function
-	listenerLock sync.Mutex
-
-	close chan struct{}
+	macListener     map[string]MacListener // map of mac address to handler function
+	defaultListener DefaultListener
 }
 
+// NewDefaultAdapter creates a new Adapter with the default bluetooth adapter.
+// It can only be called once.
 func NewDefaultAdapter(logger log.Logger) (*Adapter, error) {
 	a := &Adapter{
-		logger:   logger,
-		adapter:  bluetooth.DefaultAdapter,
-		listener: make(map[string]*Listener),
-		close:    make(chan struct{}),
+		logger:      logger,
+		adapter:     bluetooth.DefaultAdapter,
+		macListener: make(map[string]MacListener),
 	}
-
-	srChan := make(chan bluetooth.ScanResult)
-	if err := a.adapter.Scan(func(adapter *bluetooth.Adapter, result bluetooth.ScanResult) {
-		srChan <- result
-	}); err != nil {
-		a.logger.Printf("error while scanning %s", err)
+	err := a.adapter.Enable()
+	if err != nil {
 		return nil, err
 	}
-	go a.run(srChan)
-
 	return a, nil
 }
 
+// RegisterDefaultListener registers a listener that is called when no MAC specific listener is found.
+// Only one default listener can be registered. If a default listener is already registered, it is replaced.
+// Execute this function before calling Run.
+func (a *Adapter) RegisterDefaultListener(l DefaultListener) {
+	a.defaultListener = l
+}
+
+// RegisterMacListener registers a listener that is called only for announcements sent to a specific MAC address.
+// Only one listener can be registered per MAC address. If it is already registered, it is replaced.
+// Execute this function before calling Run.
+func (a *Adapter) RegisterMacListener(mac string, l MacListener) {
+	a.macListener[mac] = l
+}
+
 func (a *Adapter) Close() {
-	close(a.close)
+	err := a.adapter.StopScan()
+	if err != nil {
+		a.logger.Printf("error while stopping scan: %s", err)
+	}
 }
 
-func (a *Adapter) run(srChan chan bluetooth.ScanResult) {
-	defer func() {
-		err := a.adapter.StopScan()
-		if err != nil {
-			a.logger.Printf("error while stopping scan: %s", err)
-		}
-	}()
+func (a *Adapter) Run() {
+	go func() {
+		a.logger.Printf("(*Adapter).Run: starting scan")
+		if err := a.adapter.Scan(func(adapter *bluetooth.Adapter, sr bluetooth.ScanResult) {
 
-	for {
-		select {
-		case <-a.close:
-			a.logger.Printf("adapter terminating")
-			return
-		case sr := <-srChan:
-			a.logger.Printf("received result from address: %s", sr.Address)
-			a.listenerLock.Lock()
-			l, ok := a.listener[sr.Address.String()]
-			a.listenerLock.Unlock()
-			if ok {
-				l.handle(sr)
-			} else {
-				a.logger.Printf("no listener for address: %s", sr.Address)
+			macStr := sr.Address.String()
+			if ml, ok := a.macListener[macStr]; ok {
+				ml(int(sr.RSSI), sr.LocalName(), extractVictronMD(sr))
+			} else if a.defaultListener != nil {
+				a.defaultListener(macStr, int(sr.RSSI), sr.LocalName())
 			}
+		}); err != nil {
+			a.logger.Printf("error while scanning %s", err)
+			a.Close()
+		}
+
+		a.logger.Printf("scan stopped")
+	}()
+}
+
+func extractVictronMD(sr bluetooth.ScanResult) []byte {
+	mdList := sr.AdvertisementPayload.ManufacturerData()
+	for _, md := range mdList {
+		if md.CompanyID == veconst.BleManufacturerId {
+			return md.Data
 		}
 	}
-}
-
-func (a *Adapter) addListener(macAddress string, l *Listener) error {
-	a.listenerLock.Lock()
-	defer a.listenerLock.Unlock()
-	if _, ok := a.listener[macAddress]; ok {
-		return ErrMacAlreadyListening
-	}
-
-	a.listener[macAddress] = l
 	return nil
-}
-
-func (a *Adapter) removeListener(macAddress string) {
-	a.listenerLock.Lock()
-	defer a.listenerLock.Unlock()
-	delete(a.listener, macAddress)
-}
-
-// Listen listens for scan results for a given mac. The handler function is called with the scan result.
-// The method blocks until the context is canceled.
-func (a *Adapter) Listen(macAddress string) (close func(), md <-chan []byte, err error) {
-	l := &Listener{
-		a:                a,
-		macAddress:       macAddress,
-		manufacturerData: make(chan []byte),
-	}
-
-	if err := a.addListener(macAddress, l); err != nil {
-		return nil, nil, err
-	}
-
-	a.logger.Printf("listening for %s", macAddress)
-
-	return l.Close, l.manufacturerData, nil
 }

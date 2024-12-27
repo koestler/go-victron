@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// vedirectCmd represents the vedirect command
+// vedirectCmd defines the command to access VE.Direct devices
 var vedirectCmd = &cobra.Command{
 	Use:   "vedirect",
 	Short: "Connect to VE.Direct device.",
