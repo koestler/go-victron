@@ -3,11 +3,15 @@ package tinygoble
 import (
 	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/veconst"
-
 	"tinygo.org/x/bluetooth"
 )
 
 type MacListener func(rssi int, localName string, victronData []byte)
+
+type setMacListenerRequest struct {
+	mac      string
+	listener MacListener
+}
 type DefaultListener func(mac string, rssi int, localName string)
 
 // Adapter is a wrapper around the bluetooth.Adapter type.
@@ -17,37 +21,52 @@ type Adapter struct {
 	logger  log.Logger
 	adapter *bluetooth.Adapter
 
-	macListener     map[string]MacListener // map of mac address to handler function
-	defaultListener DefaultListener
+	scanResult chan bluetooth.ScanResult
+
+	macListener        map[string]MacListener // map of mac address to handler function
+	setMacListener     chan setMacListenerRequest
+	unsetMacListener   chan setMacListenerRequest
+	defaultListener    DefaultListener
+	setDefaultListener chan DefaultListener
 }
 
 // NewDefaultAdapter creates a new Adapter with the default bluetooth adapter.
 // It can only be called once.
 func NewDefaultAdapter(logger log.Logger) (*Adapter, error) {
 	a := &Adapter{
-		logger:      logger,
-		adapter:     bluetooth.DefaultAdapter,
-		macListener: make(map[string]MacListener),
+		logger:             logger,
+		adapter:            bluetooth.DefaultAdapter,
+		scanResult:         make(chan bluetooth.ScanResult),
+		macListener:        make(map[string]MacListener),
+		setMacListener:     make(chan setMacListenerRequest),
+		setDefaultListener: make(chan DefaultListener),
 	}
 	err := a.adapter.Enable()
 	if err != nil {
 		return nil, err
 	}
+
+	go a.scan()
+	go a.run()
+
 	return a, nil
 }
 
 // RegisterDefaultListener registers a listener that is called when no MAC specific listener is found.
 // Only one default listener can be registered. If a default listener is already registered, it is replaced.
-// Execute this function before calling Run.
 func (a *Adapter) RegisterDefaultListener(l DefaultListener) {
-	a.defaultListener = l
+	a.setDefaultListener <- l
 }
 
 // RegisterMacListener registers a listener that is called only for announcements sent to a specific MAC address.
 // Only one listener can be registered per MAC address. If it is already registered, it is replaced.
-// Execute this function before calling Run.
 func (a *Adapter) RegisterMacListener(mac string, l MacListener) {
-	a.macListener[mac] = l
+	a.setMacListener <- setMacListenerRequest{mac, l}
+}
+
+// UnregisterMacListener removes the listener for the given MAC address.
+func (a *Adapter) UnregisterMacListener(mac string, l MacListener) {
+	a.setMacListener <- setMacListenerRequest{mac, l}
 }
 
 func (a *Adapter) Close() {
@@ -57,27 +76,50 @@ func (a *Adapter) Close() {
 	}
 }
 
-func (a *Adapter) Run() {
-	go func() {
-		a.logger.Printf("(*Adapter).Run: starting scan")
-		if err := a.adapter.Scan(func(adapter *bluetooth.Adapter, sr bluetooth.ScanResult) {
+func (a *Adapter) scan() {
+	// when this function returns, the run routine is closed by this channel
+	defer close(a.scanResult)
+
+	a.logger.Printf("(*Adapter).scan: starting")
+	if err := a.adapter.Scan(func(adapter *bluetooth.Adapter, sr bluetooth.ScanResult) {
+		a.scanResult <- sr
+	}); err != nil {
+		a.logger.Printf("error while scanning %s", err)
+	}
+
+	a.logger.Printf("(*Adapter).scan: stopped")
+}
+
+func (a *Adapter) run() {
+	for {
+		select {
+		case ml := <-a.setMacListener:
+			a.macListener[ml.mac] = ml.listener
+		case dl := <-a.setDefaultListener:
+			a.defaultListener = dl
+		case sr, ok := <-a.scanResult:
+			if !ok {
+				// terminate
+				a.logger.Printf("(*Adapter).run: scanResult channel closed")
+				return
+			}
+			victronData := extractVictronData(sr)
+			if victronData == nil {
+				// ignore all non-victron devices
+				continue
+			}
 
 			macStr := sr.Address.String()
 			if ml, ok := a.macListener[macStr]; ok {
-				ml(int(sr.RSSI), sr.LocalName(), extractVictronMD(sr))
+				ml(int(sr.RSSI), sr.LocalName(), victronData)
 			} else if a.defaultListener != nil {
 				a.defaultListener(macStr, int(sr.RSSI), sr.LocalName())
 			}
-		}); err != nil {
-			a.logger.Printf("error while scanning %s", err)
-			a.Close()
 		}
-
-		a.logger.Printf("scan stopped")
-	}()
+	}
 }
 
-func extractVictronMD(sr bluetooth.ScanResult) []byte {
+func extractVictronData(sr bluetooth.ScanResult) []byte {
 	mdList := sr.AdvertisementPayload.ManufacturerData()
 	for _, md := range mdList {
 		if md.CompanyID == veconst.BleManufacturerId {

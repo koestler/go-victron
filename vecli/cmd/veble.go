@@ -28,7 +28,7 @@ var scanCmd = &cobra.Command{
 	Run:   runScan,
 }
 
-func runScan(cmd *cobra.Command, args []string) {
+func runScan(_ *cobra.Command, _ []string) {
 	l := log.DefaultLogger{}
 
 	a, err := tinygoble.NewDefaultAdapter(l)
@@ -37,9 +37,8 @@ func runScan(cmd *cobra.Command, args []string) {
 		os.Exit(2)
 	}
 	a.RegisterDefaultListener(func(mac string, rssi int, localName string) {
-		l.Printf("discovered : %s %d %s", mac, rssi, localName)
+		l.Printf("discovered : mac=%s, RSSI=%d, name=%s", mac, rssi, localName)
 	})
-	a.Run()
 	defer a.Close()
 
 	l.Printf("Scanning for Victron devices. press ctrl+c to abort...")
