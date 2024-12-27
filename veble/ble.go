@@ -7,17 +7,9 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/veproduct"
 )
-
-// Logger is the interface for a logger. It is implemented by e.g. log.Logger.
-type Logger interface {
-	Printf(format string, a ...any)
-}
-
-type NoOppLogger struct{}
-
-func (NoOppLogger) Printf(string, ...any) {}
 
 var (
 	ErrInputTooShort        = errors.New("input too short")
@@ -30,13 +22,7 @@ type DecryptedFrame struct {
 	DecryptedBytes []byte
 }
 
-func DecryptFrame(rawBytes []byte, encryptionKey []byte, log Logger) (DecryptedFrame, error) {
-	if log == nil {
-		log = NoOppLogger{}
-	}
-
-	df := DecryptedFrame{}
-
+func DecryptFrame(rawBytes []byte, encryptionKey []byte, log log.Logger) (df DecryptedFrame, error error) {
 	log.Printf("handle len=%d, rawBytes=%x", len(rawBytes), rawBytes)
 
 	if len(rawBytes) < 9 {
@@ -84,7 +70,7 @@ func DecryptFrame(rawBytes []byte, encryptionKey []byte, log Logger) (DecryptedF
 	ivBytes := make([]byte, 16)
 	binary.LittleEndian.PutUint16(ivBytes, iv)
 
-	log.Printf("ivBytes=%x, len=%d", iv, ivBytes, len(ivBytes))
+	log.Printf("iv=%d, ivBytes=%x, len=%d", iv, ivBytes, len(ivBytes))
 
 	ctrStream := cipher.NewCTR(block, ivBytes)
 	ctrStream.XORKeyStream(df.DecryptedBytes, paddedEncryptedBytes)
