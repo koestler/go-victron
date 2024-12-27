@@ -28,7 +28,6 @@ type Adapter struct {
 
 	macListener        map[veble.MAC]MacListener // map of mac address to handler function
 	setMacListener     chan setMacListenerRequest
-	unsetMacListener   chan setMacListenerRequest
 	defaultListener    DefaultListener
 	setDefaultListener chan DefaultListener
 }
@@ -109,7 +108,7 @@ func (a *Adapter) run() {
 			victronData := extractVictronData(sr)
 			if victronData == nil {
 				// ignore all non-victron devices
-				//continue
+				continue
 			}
 
 			mac := veble.MAC(sr.Address.MAC) // does not work on darwin
