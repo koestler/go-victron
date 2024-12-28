@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/koestler/go-victron/log"
+	"github.com/koestler/go-victron/veconst"
 	"github.com/koestler/go-victron/veproduct"
 )
 
@@ -18,12 +19,13 @@ var (
 
 type EncryptedFrame struct {
 	Product        veproduct.Product
-	RecordType     RecordType
+	RecordType     veconst.BleRecordType
 	IV             uint16
 	EncryptedBytes []byte
 }
 
 type DecryptedFrame struct {
+	RecordType     veconst.BleRecordType
 	DecryptedBytes []byte
 }
 
@@ -46,7 +48,7 @@ func DecodeFrame(rawBytes []byte, log log.Logger) (ef EncryptedFrame, error erro
 	productId := binary.LittleEndian.Uint16(rawBytes[2:4])
 	ef.Product = veproduct.Product(productId)
 	recordTypeId := rawBytes[4]
-	ef.RecordType = RecordType(recordTypeId)
+	ef.RecordType = veconst.BleRecordType(recordTypeId)
 	nonce := rawBytes[5:7] // used ad iv for encryption; is only 16 bits
 	ef.IV = binary.LittleEndian.Uint16(nonce)
 
@@ -89,6 +91,7 @@ func DecryptFrame(ef EncryptedFrame, encryptionKey []byte, log log.Logger) (df D
 
 	log.Printf("decryptedBytes=%x, len=%d", df.DecryptedBytes, len(df.DecryptedBytes))
 
+	df.RecordType = ef.RecordType
 	return df, nil
 }
 
