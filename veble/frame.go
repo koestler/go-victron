@@ -29,8 +29,8 @@ type DecryptedFrame struct {
 	DecryptedBytes []byte
 }
 
-func DecodeFrame(rawBytes []byte, log log.Logger) (ef EncryptedFrame, error error) {
-	log.Printf("handle len=%d, rawBytes=%x", len(rawBytes), rawBytes)
+func DecodeFrame(rawBytes []byte, l log.Logger) (ef EncryptedFrame, error error) {
+	l.Printf("decode frame len=%d, rawBytes=%x", len(rawBytes), rawBytes)
 
 	if len(rawBytes) < 9 {
 		return ef, ErrInputTooShort
@@ -55,17 +55,17 @@ func DecodeFrame(rawBytes []byte, log log.Logger) (ef EncryptedFrame, error erro
 	firstByteOfEncryptionKey := rawBytes[7]
 	ef.EncryptedBytes = rawBytes[8:]
 
-	log.Printf(
+	l.Printf(
 		"prefix=%x productId=%x productString=%s recordType=%x, recordTypeString=%s, nonce=%d, firstByteOfEncryptionKey=%x",
 		prefix, productId, ef.Product, recordTypeId, ef.RecordType, nonce, firstByteOfEncryptionKey,
 	)
-	log.Printf("encryptedBytes=%x, len=%d", ef.EncryptedBytes, len(ef.EncryptedBytes))
+	l.Printf("encryptedBytes=%x, len=%d", ef.EncryptedBytes, len(ef.EncryptedBytes))
 
 	return ef, nil
 }
 
-func DecryptFrame(ef EncryptedFrame, encryptionKey []byte, log log.Logger) (df DecryptedFrame, error error) {
-	log.Printf("handle len=%d, encryptedBytes=%x", len(ef.EncryptedBytes), ef.EncryptedBytes)
+func DecryptFrame(ef EncryptedFrame, encryptionKey []byte, l log.Logger) (df DecryptedFrame, error error) {
+	l.Printf("decrypt frame len=%d, encryptedBytes=%x", len(ef.EncryptedBytes), ef.EncryptedBytes)
 
 	// decrypt rawBytes using aes-ctr algorithm
 	// encryption key of config is fixed to 32 hex chars, so 16 bytes, so 128-bit AES is used here
@@ -76,7 +76,7 @@ func DecryptFrame(ef EncryptedFrame, encryptionKey []byte, log log.Logger) (df D
 
 	paddedEncryptedBytes := PKCS7Padding(ef.EncryptedBytes, block.BlockSize())
 
-	log.Printf("paddedEncryptedBytes=%x, len=%d", paddedEncryptedBytes, len(paddedEncryptedBytes))
+	l.Printf("paddedEncryptedBytes=%x, len=%d", paddedEncryptedBytes, len(paddedEncryptedBytes))
 
 	df.DecryptedBytes = make([]byte, len(paddedEncryptedBytes))
 
@@ -84,12 +84,12 @@ func DecryptFrame(ef EncryptedFrame, encryptionKey []byte, log log.Logger) (df D
 	ivBytes := make([]byte, 16)
 	binary.LittleEndian.PutUint16(ivBytes, ef.IV)
 
-	log.Printf("iv=%d, ivBytes=%x, len=%d", ef.IV, ivBytes, len(ivBytes))
+	l.Printf("iv=%d, ivBytes=%x, len=%d", ef.IV, ivBytes, len(ivBytes))
 
 	ctrStream := cipher.NewCTR(block, ivBytes)
 	ctrStream.XORKeyStream(df.DecryptedBytes, paddedEncryptedBytes)
 
-	log.Printf("decryptedBytes=%x, len=%d", df.DecryptedBytes, len(df.DecryptedBytes))
+	l.Printf("decryptedBytes=%x, len=%d", df.DecryptedBytes, len(df.DecryptedBytes))
 
 	df.RecordType = ef.RecordType
 	return df, nil

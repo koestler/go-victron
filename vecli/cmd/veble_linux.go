@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"bytes"
+	"fmt"
 	"github.com/koestler/go-victron/bleparser"
 	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/tinygoble"
@@ -11,31 +13,41 @@ import (
 	"syscall"
 )
 
-func runScan(_ *cobra.Command, _ []string) {
-	l := log.DefaultLogger{}
+func getLogger(cmd *cobra.Command) log.Logger {
+	if verbose, err := cmd.Flags().GetBool("verbose"); err == nil && verbose {
+		return log.DefaultLogger{
+			Prefix: "ble: ",
+		}
+	}
 
-	a, err := tinygoble.NewDefaultAdapter(l)
+	return log.NoOppLogger{}
+}
+
+func runScan(cmd *cobra.Command, _ []string) {
+	debugLogger := getLogger(cmd)
+
+	a, err := tinygoble.NewDefaultAdapter(debugLogger)
 	if err != nil {
-		l.Printf("error creating adapter: %s", err)
+		fmt.Println("error creating adapter:", err)
 		os.Exit(2)
 	}
 	a.RegisterDefaultListener(func(mac veble.MAC, rssi int, localName string) {
-		l.Printf("discovered : mac=%s, RSSI=%d, name=%s", mac, rssi, localName)
+		fmt.Printf("discovered : mac=%s, RSSI=%d, name=%s\n", mac, rssi, localName)
 	})
 	defer a.Close()
 
-	l.Printf("Scanning for Victron devices. Press ctrl+c to abort...")
+	fmt.Println("Scanning for Victron devices. Press ctrl+c to abort...")
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 	<-done
 }
 
-func runDecode(_ *cobra.Command, args []string) {
-	l := log.DefaultLogger{}
+func runDecode(cmd *cobra.Command, args []string) {
+	debugLogger := getLogger(cmd)
 
-	a, err := tinygoble.NewDefaultAdapter(l)
+	a, err := tinygoble.NewDefaultAdapter(debugLogger)
 	if err != nil {
-		l.Printf("error creating adapter: %s", err)
+		fmt.Println("error creating adapter:", err)
 		os.Exit(2)
 	}
 	seen := make(map[veble.MAC]struct{})
@@ -44,54 +56,63 @@ func runDecode(_ *cobra.Command, args []string) {
 			return
 		}
 		seen[mac] = struct{}{}
-		l.Printf("discovered : mac=%s, RSSI=%d, name=%s", mac, rssi, localName)
+		fmt.Printf("discovered : mac=%s, RSSI=%d, name=%s\n", mac, rssi, localName)
 	})
 	defer a.Close()
 
 	for _, arg := range args {
 		p, err := parseMacKeyPair(arg)
 		if err != nil {
-			l.Printf("error parsing mac key pair: %s", err)
+			fmt.Println("error parsing mac key pair:", err)
 			os.Exit(2)
 		}
 
-		a.RegisterMacListener(p.mac, func(rssi int, localName string, victronData []byte) {
-			l.Printf("received packet RSSI=%d, name=%s, data=%x", rssi, localName, victronData)
-
-			ef, err := veble.DecodeFrame(victronData, l)
-			if err != nil {
-				l.Printf("error decoding frame: %s", err)
-				return
-			}
-			l.Printf("decoded frame: product=%s, recordType=%s", ef.Product, ef.RecordType)
-
-			df, err := veble.DecryptFrame(ef, p.key, l)
-			if err != nil {
-				l.Printf("error decrypting frame: %s", err)
-				return
-			}
-			l.Printf("decrypted frame: %x", df.DecryptedBytes)
-
-			regs, err := bleparser.Decode(df.RecordType, df.DecryptedBytes)
-			if err != nil {
-				l.Printf("error decoding registers: %s", err)
-				return
-			}
-
-			for _, nr := range regs.NumberRegisters() {
-				l.Printf("- number register: %s", nr)
-			}
-			for _, er := range regs.EnumRegisters() {
-				l.Printf("- enum register: %s", er)
-			}
-			for _, flr := range regs.FieldListRegisters() {
-				l.Printf("- field list register: %s", flr)
-			}
-		})
+		a.RegisterMacListener(p.mac, macListener(p, debugLogger))
 	}
 
-	l.Printf("Showing recived packets. Press ctrl+c to abort...")
+	fmt.Println("Showing received packets. Press ctrl+c to abort...")
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 	<-done
+}
+
+func macListener(pair macKeyPair, l log.Logger) tinygoble.MacListener {
+	var lastData []byte
+	return func(rssi int, localName string, victronData []byte) {
+		// ignore duplicate packets
+		if bytes.Equal(lastData, victronData) {
+			return
+		}
+		lastData = victronData
+
+		ef, err := veble.DecodeFrame(victronData, l)
+		if err != nil {
+			fmt.Println("error decoding frame:", err)
+			return
+		}
+
+		fmt.Printf("received packet MAC=%s, RSSI=%d, name=%s, IV=%d\n", pair.mac, rssi, localName, ef.IV)
+
+		df, err := veble.DecryptFrame(ef, pair.key, l)
+		if err != nil {
+			fmt.Println("error decrypting frame:", err)
+			return
+		}
+
+		regs, err := bleparser.Decode(df.RecordType, df.DecryptedBytes)
+		if err != nil {
+			fmt.Println("error decoding registers:", err)
+			return
+		}
+
+		for _, nr := range regs.NumberRegisters() {
+			fmt.Println("- ", nr)
+		}
+		for _, er := range regs.EnumRegisters() {
+			fmt.Println("- ", er)
+		}
+		for _, flr := range regs.FieldListRegisters() {
+			fmt.Println("- ", flr)
+		}
+	}
 }

@@ -12,9 +12,9 @@ type NoOppLogger struct{}
 func (NoOppLogger) Printf(string, ...any) {}
 
 type DefaultLogger struct {
-	prefix string
+	Prefix string
 }
 
 func (l DefaultLogger) Printf(format string, a ...any) {
-	log.Printf(l.prefix+format, a...)
+	log.Printf(l.Prefix+format, a...)
 }
