@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/koestler/go-victron/bleparser"
 	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/tinygoble"
 	"github.com/koestler/go-victron/veble"
@@ -70,6 +71,22 @@ func runDecode(_ *cobra.Command, args []string) {
 				return
 			}
 			l.Printf("decrypted frame: %x", df.DecryptedBytes)
+
+			regs, err := bleparser.Decode(df.RecordType, df.DecryptedBytes)
+			if err != nil {
+				l.Printf("error decoding registers: %s", err)
+				return
+			}
+
+			for _, nr := range regs.NumberRegisters() {
+				l.Printf("- number register: %s", nr)
+			}
+			for _, er := range regs.EnumRegisters() {
+				l.Printf("- enum register: %s", er)
+			}
+			for _, flr := range regs.FieldListRegisters() {
+				l.Printf("- field list register: %s", flr)
+			}
 		})
 	}
 
