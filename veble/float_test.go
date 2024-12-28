@@ -1,4 +1,4 @@
-package bleparser
+package veble
 
 import "math"
 

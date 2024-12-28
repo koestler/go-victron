@@ -12,10 +12,7 @@ import (
 	"github.com/koestler/go-victron/veproduct"
 )
 
-var (
-	ErrInputTooShort        = errors.New("input too short")
-	ErrInvalidEncryptionKey = errors.New("invalid encryption key")
-)
+var ErrInvalidEncryptionKey = errors.New("invalid encryption key")
 
 type EncryptedFrame struct {
 	Product        veproduct.Product

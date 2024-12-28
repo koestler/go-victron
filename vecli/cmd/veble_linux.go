@@ -3,7 +3,6 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"github.com/koestler/go-victron/bleparser"
 	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/tinygoble"
 	"github.com/koestler/go-victron/veble"
@@ -99,7 +98,7 @@ func macListener(pair macKeyPair, l log.Logger) tinygoble.MacListener {
 			return
 		}
 
-		regs, err := bleparser.Decode(df.RecordType, df.DecryptedBytes)
+		regs, err := veble.Decode(df.RecordType, df.DecryptedBytes)
 		if err != nil {
 			fmt.Println("error decoding registers:", err)
 			return
