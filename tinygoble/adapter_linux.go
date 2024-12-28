@@ -111,6 +111,8 @@ func (a *Adapter) run() {
 				continue
 			}
 
+			a.logger.Printf("recieved scan result: %s, RSSI=%d, name=%s", sr.Address.MAC.String(), sr.RSSI, sr.LocalName())
+
 			mac := veble.MAC(sr.Address.MAC) // does not work on darwin
 			if ml, ok := a.macListener[mac]; ok {
 				ml(int(sr.RSSI), sr.LocalName(), victronData)

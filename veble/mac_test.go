@@ -15,7 +15,7 @@ func TestParseCompactMAC(t *testing.T) {
 		{
 			name:    "valid",
 			s:       "e675a31ea872",
-			want:    MAC{0xe6, 0x75, 0xa3, 0x1e, 0xa8, 0x72},
+			want:    MAC{0x72, 0xa8, 0x1e, 0xa3, 0x75, 0xe6},
 			wantErr: nil,
 		},
 		{
@@ -72,7 +72,7 @@ func TestParseColonMAC(t *testing.T) {
 		{
 			name:    "valid",
 			s:       "E6:75:A3:1E:A8:72",
-			want:    MAC{0xe6, 0x75, 0xa3, 0x1e, 0xa8, 0x72},
+			want:    MAC{0x72, 0xa8, 0x1e, 0xa3, 0x75, 0xe6},
 			wantErr: nil,
 		},
 		{
@@ -127,7 +127,7 @@ func TestMac_String(t *testing.T) {
 	}{
 		{
 			name: "valid",
-			m:    MAC{0xe6, 0x75, 0xa3, 0x1e, 0xa8, 0x72},
+			m:    MAC{0x72, 0xa8, 0x1e, 0xa3, 0x75, 0xe6},
 			want: "E6:75:A3:1E:A8:72",
 		},
 	}

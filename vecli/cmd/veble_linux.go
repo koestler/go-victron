@@ -23,13 +23,13 @@ func runScan(_ *cobra.Command, _ []string) {
 	})
 	defer a.Close()
 
-	l.Printf("Scanning for Victron devices. press ctrl+c to abort...")
+	l.Printf("Scanning for Victron devices. Press ctrl+c to abort...")
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 	<-done
 }
 
-func runDecode(cmd *cobra.Command, args []string) {
+func runDecode(_ *cobra.Command, args []string) {
 	l := log.DefaultLogger{}
 
 	a, err := tinygoble.NewDefaultAdapter(l)
@@ -56,6 +56,25 @@ func runDecode(cmd *cobra.Command, args []string) {
 
 		a.RegisterMacListener(p.mac, func(rssi int, localName string, victronData []byte) {
 			l.Printf("received packet RSSI=%d, name=%s, data=%x", rssi, localName, victronData)
+
+			ef, err := veble.DecodeFrame(victronData, l)
+			if err != nil {
+				l.Printf("error decoding frame: %s", err)
+				return
+			}
+			l.Printf("decoded frame: product=%s, recordType=%s", ef.Product, ef.RecordType)
+
+			df, err := veble.DecryptFrame(ef, p.key, l)
+			if err != nil {
+				l.Printf("error decrypting frame: %s", err)
+				return
+			}
+			l.Printf("decrypted frame: %x", df.DecryptedBytes)
 		})
 	}
+
+	l.Printf("Showing recived packets. Press ctrl+c to abort...")
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
+	<-done
 }

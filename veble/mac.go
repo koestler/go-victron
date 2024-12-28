@@ -15,7 +15,7 @@ func ParseColonMAC(s string) (MAC, error) {
 		return MAC{}, fmt.Errorf("%w: expect format E6:75:A3:1E:A8:72 but got '%s'", ErrInvalidFormat, s)
 	}
 	var mac MAC
-	_, err := fmt.Sscanf(s, "%02x:%02x:%02x:%02x:%02x:%02x", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5])
+	_, err := fmt.Sscanf(s, "%02x:%02x:%02x:%02x:%02x:%02x", &mac[5], &mac[4], &mac[3], &mac[2], &mac[1], &mac[0])
 	if err != nil {
 		return MAC{}, fmt.Errorf("%w: expect format E6:75:A3:1E:A8:72 but got '%s'", ErrInvalidFormat, s)
 	}
@@ -28,7 +28,7 @@ func ParseCompactMAC(s string) (MAC, error) {
 		return MAC{}, fmt.Errorf("%w: expect format e675a31ea872 but got '%s'", ErrInvalidFormat, s)
 	}
 	var mac MAC
-	_, err := fmt.Sscanf(s, "%02x%02x%02x%02x%02x%02x", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5])
+	_, err := fmt.Sscanf(s, "%02x%02x%02x%02x%02x%02x", &mac[5], &mac[4], &mac[3], &mac[2], &mac[1], &mac[0])
 	if err != nil {
 		return MAC{}, fmt.Errorf("%w: expect format e675a31ea872 but got '%s'", ErrInvalidFormat, s)
 	}
@@ -37,5 +37,5 @@ func ParseCompactMAC(s string) (MAC, error) {
 
 // As capitalized string with : separators. E.g. E6:75:A3:1E:A8:72.
 func (m MAC) String() string {
-	return fmt.Sprintf("%02X:%02X:%02X:%02X:%02X:%02X", m[0], m[1], m[2], m[3], m[4], m[5])
+	return fmt.Sprintf("%02X:%02X:%02X:%02X:%02X:%02X", m[5], m[4], m[3], m[2], m[1], m[0])
 }
