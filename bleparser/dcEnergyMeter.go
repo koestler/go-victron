@@ -17,9 +17,9 @@ import (
 // 66         | 8          | 2          | 22         | Battery current       | 0.001A  | -4194 .. 4194 A     | 0x3FFFFF
 
 type DcEnergyMeterRecord struct {
-	BmvMonitorMode int16                        `Description:"BMV monitor mode"`
+	BmvMonitorMode int16                        `Description:"BMV monitor mode"` // TODO: decode
 	BatteryVoltage float64                      `Description:"Battery voltage" Unit:"V"`
-	AlarmReason    uint16                       `Description:"Alarm reason"`
+	AlarmReason    uint16                       `Description:"Alarm reason"` // TODO: decode
 	AuxVoltage     float64                      `Description:"Aux voltage" Unit:"V"`
 	Temperature    float64                      `Description:"Temperature" Unit:"K"`
 	AuxMode        veconst.DcEnergyMeterAuxMode `Description:"Aux mode"`
@@ -65,4 +65,71 @@ func DecodeDcEnergyMeter(inp []byte) (ret DcEnergyMeterRecord, err error) {
 	}
 
 	return
+}
+
+func (r DcEnergyMeterRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "BmvMonitorMode",
+				description: "BMV monitor mode",
+			},
+			value: float64(r.BmvMonitorMode),
+		},
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "AlarmReason",
+				description: "Alarm reason",
+			},
+			value: float64(r.AlarmReason),
+		},
+		{
+			Register: Register{
+				name:        "AuxVoltage",
+				description: "Aux voltage",
+			},
+			value: r.AuxVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Temperature",
+				description: "Temperature",
+			},
+			value: r.Temperature,
+			unit:  "K",
+		},
+		{
+			Register: Register{
+				name:        "BatteryCurrent",
+				description: "Battery current",
+			},
+			value: r.BatteryCurrent,
+			unit:  "A",
+		},
+	}
+}
+
+func (r DcEnergyMeterRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{
+		{
+			Register: Register{
+				name:        "AuxMode",
+				description: "Aux mode",
+			},
+			value: r.AuxMode,
+		},
+	}
+}
+
+func (r DcEnergyMeterRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
 }

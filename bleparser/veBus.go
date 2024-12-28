@@ -17,7 +17,7 @@ import (
 // 67         | 8          | 3          | 19         | AC out power          | 1W      | -262144 .. 262142 W | 0x7FFFF
 // 86         | 10         | 6          | 2          | Alarm                 |         | 0 .. 3              | 0x3
 // 88         | 11         | 0          | 7		     | Temperature           | 1°C     | -40 .. 86 °C        | 0x7F
-// 95         | 11         | 7          | 7          | Soc                   | 1%      | 0 .. 126 %          | 0x7F
+// 95         | 11         | 7          | 7          | SOC                   | 1%      | 0 .. 126 %          | 0x7F
 
 type VeBusRecord struct {
 	DeviceState     veconst.InverterState      `Description:"Device state"`
@@ -29,7 +29,7 @@ type VeBusRecord struct {
 	AcOutPower      float64                    `Description:"AC out power" Unit:"W"`
 	Alarm           veconst.VeBusAlarm         `Description:"Alarm"`
 	Temperature     float64                    `Description:"Temperature" Unit:"°C"`
-	Soc             float64                    `Description:"State of charge" Unit:"%"`
+	SOC             float64                    `Description:"State of charge" Unit:"%"`
 }
 
 func DecodeVeBus(inp []byte) (ret VeBusRecord, err error) {
@@ -76,10 +76,100 @@ func DecodeVeBus(inp []byte) (ret VeBusRecord, err error) {
 	}
 
 	if v := (binary.LittleEndian.Uint16(inp[11:12]) >> 7) & 0x7F; v != 0x7F {
-		ret.Soc = float64(v)
+		ret.SOC = float64(v)
 	} else {
-		ret.Soc = math.NaN()
+		ret.SOC = math.NaN()
 	}
 
 	return
+}
+
+func (r VeBusRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "BatteryCurrent",
+				description: "Battery current",
+			},
+			value: r.BatteryCurrent,
+			unit:  "A",
+		},
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "ActiveAcInPower",
+				description: "Active AC in power",
+			},
+			value: r.ActiveAcInPower,
+			unit:  "W",
+		},
+		{
+			Register: Register{
+				name:        "AcOutPower",
+				description: "AC out power",
+			},
+			value: r.AcOutPower,
+			unit:  "W",
+		},
+		{
+			Register: Register{
+				name:        "Temperature",
+				description: "Temperature",
+			},
+			value: r.Temperature,
+			unit:  "°C",
+		},
+		{
+			Register: Register{
+				name:        "SOC",
+				description: "State of charge",
+			},
+			value: r.SOC,
+			unit:  "%",
+		},
+	}
+}
+
+func (r VeBusRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{
+		{
+			Register: Register{
+				name:        "DeviceState",
+				description: "Device state",
+			},
+			value: r.DeviceState,
+		},
+		{
+			Register: Register{
+				name:        "VeBusError",
+				description: "VE.Bus error",
+			},
+			value: r.VeBusError,
+		},
+		{
+			Register: Register{
+				name:        "ActiveAcIn",
+				description: "Active AC in",
+			},
+			value: r.ActiveAcIn,
+		},
+		{
+			Register: Register{
+				name:        "Alarm",
+				description: "Alarm",
+			},
+			value: r.Alarm,
+		},
+	}
+}
+
+func (r VeBusRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
 }

@@ -90,3 +90,86 @@ func DecodeMultiRs(inp []byte) (ret MultiRsRecord, err error) {
 
 	return
 }
+
+func (r MultiRsRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "BatteryCurrent",
+				description: "Battery current",
+			},
+			value: r.BatteryCurrent,
+			unit:  "A",
+		},
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "ActiveAcInPower",
+				description: "Active AC in power",
+			},
+			value: r.ActiveAcInPower,
+			unit:  "W",
+		},
+		{
+			Register: Register{
+				name:        "AcOutPower",
+				description: "AC out power",
+			},
+			value: r.AcOutPower,
+			unit:  "W",
+		},
+		{
+			Register: Register{
+				name:        "PvPower",
+				description: "PV power",
+			},
+			value: r.PvPower,
+			unit:  "W",
+		},
+		{
+			Register: Register{
+				name:        "YieldToday",
+				description: "Yield today",
+			},
+			value: r.YieldToday,
+			unit:  "Wh",
+		},
+	}
+}
+
+func (r MultiRsRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{
+		{
+			Register: Register{
+				name:        "DeviceState",
+				description: "Device state",
+			},
+			value: r.DeviceState,
+		},
+		{
+			Register: Register{
+				name:        "ChargerError",
+				description: "Charger error",
+			},
+			value: r.ChargerError,
+		},
+		{
+			Register: Register{
+				name:        "ActiveAcIn",
+				description: "Active AC in",
+			},
+			value: r.ActiveAcIn,
+		},
+	}
+}
+
+func (r MultiRsRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
+}

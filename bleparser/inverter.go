@@ -71,3 +71,64 @@ func DecodeInverter(inp []byte) (ret InverterRecord, err error) {
 
 	return
 }
+
+func (r InverterRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "AcApparentPower",
+				description: "AC Apparent power",
+			},
+			value: r.AcApparentPower,
+			unit:  "VA",
+		},
+		{
+			Register: Register{
+				name:        "AcVoltage",
+				description: "AC voltage",
+			},
+			value: r.AcVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "AcCurrent",
+				description: "AC current",
+			},
+			value: r.AcCurrent,
+			unit:  "A",
+		},
+	}
+}
+
+func (r InverterRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{
+		{
+			Register: Register{
+				name:        "DeviceState",
+				description: "Device state",
+			},
+			value: r.DeviceState,
+		},
+	}
+}
+
+func (r InverterRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{
+		{
+			Register: Register{
+				name:        "AlarmReason",
+				description: "Alarm reason",
+			},
+			value: r.AlarmReason,
+		},
+	}
+}

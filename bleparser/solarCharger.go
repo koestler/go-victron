@@ -73,3 +73,71 @@ func DecodeSolarCharge(inp []byte) (ret SolarChargerRecord, err error) {
 
 	return
 }
+
+func (r SolarChargerRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "BatteryCurrent",
+				description: "Battery current",
+			},
+			value: r.BatteryCurrent,
+			unit:  "A",
+		},
+		{
+			Register: Register{
+				name:        "YieldToday",
+				description: "Yield today",
+			},
+			value: r.YieldToday,
+			unit:  "Wh",
+		},
+		{
+			Register: Register{
+				name:        "PvPower",
+				description: "PV power",
+			},
+			value: r.PvPower,
+			unit:  "W",
+		},
+		{
+			Register: Register{
+				name:        "LoadCurrent",
+				description: "Load current",
+			},
+			value: r.LoadCurrent,
+			unit:  "A",
+		},
+	}
+}
+
+func (r SolarChargerRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{
+		{
+			Register: Register{
+				name:        "DeviceState",
+				description: "Device state",
+			},
+			value: r.DeviceState,
+		},
+		{
+			Register: Register{
+				name:        "ChargerError",
+				description: "Charger error",
+			},
+			value: r.ChargerError,
+		},
+	}
+}
+
+func (r SolarChargerRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
+}

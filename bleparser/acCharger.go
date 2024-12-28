@@ -93,3 +93,95 @@ func DecodeAcCharger(inp []byte) (ret AcChargerRecord, err error) {
 	}
 	return
 }
+
+func (r AcChargerRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "BatteryVoltage1",
+				description: "Battery voltage 1",
+			},
+			value: r.BatteryVoltage1,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "BatteryCurrent1",
+				description: "Battery current 1",
+			},
+			value: r.BatteryCurrent1,
+			unit:  "A",
+		},
+		{
+			Register: Register{
+				name:        "BatteryVoltage2",
+				description: "Battery voltage 2",
+			},
+			value: r.BatteryVoltage2,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "BatteryCurrent2",
+				description: "Battery current 2",
+			},
+			value: r.BatteryCurrent2,
+			unit:  "A",
+		},
+		{
+			Register: Register{
+				name:        "BatteryVoltage3",
+				description: "Battery voltage 3",
+			},
+			value: r.BatteryVoltage3,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "BatteryCurrent3",
+				description: "Battery current 3",
+			},
+			value: r.BatteryCurrent3,
+			unit:  "A",
+		},
+		{
+			Register: Register{
+				name:        "Temperature",
+				description: "Temperature",
+			},
+			value: r.Temperature,
+			unit:  "°C",
+		},
+		{
+			Register: Register{
+				name:        "AcCurrent",
+				description: "AC Current",
+			},
+			value: r.AcCurrent,
+			unit:  "A",
+		},
+	}
+}
+
+func (r AcChargerRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{
+		{
+			Register: Register{
+				name:        "DeviceState",
+				description: "Device state",
+			},
+			value: r.DeviceState,
+		},
+		{
+			Register: Register{
+				name:        "ChargerError",
+				description: "Charger error",
+			},
+			value: r.ChargerError,
+		},
+	}
+}
+
+func (r AcChargerRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
+}

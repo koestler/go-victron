@@ -12,7 +12,7 @@ import (
 func TestDecodeBatteryMonitor(t *testing.T) {
 	cases := map[string]BatteryMonitorRecord{
 		"ffffe50400000000030000f40140df03": {
-			Ttg:            math.NaN(),
+			TTG:            math.NaN(),
 			BatteryVoltage: 12.53,
 			AlarmReason:    0,
 			AuxVoltage:     math.NaN(),
@@ -24,7 +24,7 @@ func TestDecodeBatteryMonitor(t *testing.T) {
 			StateOfCharge:  50.0,
 		},
 		"ffffe6040000feff000000000080feac": {
-			Ttg:            math.NaN(),
+			TTG:            math.NaN(),
 			BatteryVoltage: 12.54,
 			AlarmReason:    0,
 			AuxVoltage:     -0.02,
@@ -36,7 +36,7 @@ func TestDecodeBatteryMonitor(t *testing.T) {
 			StateOfCharge:  100.0,
 		},
 		"ffffe6040000feff010000000080fe0c": {
-			Ttg:            math.NaN(),
+			TTG:            math.NaN(),
 			BatteryVoltage: 12.54,
 			AlarmReason:    0,
 			AuxVoltage:     math.NaN(),
@@ -48,7 +48,7 @@ func TestDecodeBatteryMonitor(t *testing.T) {
 			StateOfCharge:  100.0,
 		},
 		"ffffc60400007d73feff7fffffffff12": {
-			Ttg:            math.NaN(),
+			TTG:            math.NaN(),
 			BatteryVoltage: 12.22,
 			AlarmReason:    0,
 			AuxVoltage:     math.NaN(),
@@ -60,7 +60,7 @@ func TestDecodeBatteryMonitor(t *testing.T) {
 			StateOfCharge:  math.NaN(),
 		},
 		"fffff80400008971feff7fffffffff5c": {
-			Ttg:            math.NaN(),
+			TTG:            math.NaN(),
 			BatteryVoltage: 12.72,
 			AlarmReason:    0,
 			AuxVoltage:     math.NaN(),
@@ -84,8 +84,8 @@ func TestDecodeBatteryMonitor(t *testing.T) {
 			t.Fatalf("DecodeBatteryMonitor failed: %s", err)
 		}
 
-		if expect, got := expResp.Ttg, ret.Ttg; !compF(expect, got) {
-			t.Errorf("ret.Ttg: expect=%f but got=%f", expect, got)
+		if expect, got := expResp.TTG, ret.TTG; !compF(expect, got) {
+			t.Errorf("ret.TTG: expect=%f but got=%f", expect, got)
 		}
 		if expect, got := expResp.BatteryVoltage, ret.BatteryVoltage; !compF(expect, got) {
 			t.Errorf("ret.BatteryVoltage: expect=%f but got=%f", expect, got)

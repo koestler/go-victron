@@ -57,3 +57,54 @@ func DecodeDcDcConverter(inp []byte) (ret DcDcConverterRecord, err error) {
 
 	return
 }
+
+func (r DcDcConverterRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "InputVoltage",
+				description: "Input voltage",
+			},
+			value: r.InputVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "OutputVoltage",
+				description: "Output voltage",
+			},
+			value: r.OutputVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "OffReason",
+				description: "Off reason",
+			},
+			value: float64(r.OffReason),
+		},
+	}
+}
+
+func (r DcDcConverterRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{
+		{
+			Register: Register{
+				name:        "DeviceState",
+				description: "Device state",
+			},
+			value: r.DeviceState,
+		},
+		{
+			Register: Register{
+				name:        "ChargerError",
+				description: "Charger error",
+			},
+			value: r.ChargerError,
+		},
+	}
+}
+
+func (r DcDcConverterRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
+}

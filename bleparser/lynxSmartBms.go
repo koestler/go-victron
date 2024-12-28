@@ -18,13 +18,13 @@ import (
 // 120        | 15         | 0          | 7          | Temperature           | 1°C     | -40 .. 86 °C        | 0x7F
 
 type LynxSmartBms struct {
-	Error          uint8   `Description:"Error"`
-	Ttg            float64 `Description:"Time to go" Unit:"s"`
+	Error          uint8   `Description:"Error"` // TODO: decode
+	TTG            float64 `Description:"Time to go" Unit:"s"`
 	BatteryVoltage float64 `Description:"Battery voltage" Unit:"V"`
 	BatteryCurrent float64 `Description:"Battery current" Unit:"A"`
-	IoStatus       uint16  `Description:"IO status"`
-	WarningsAlarms uint32  `Description:"Warnings/Alarms"`
-	Soc            float64 `Description:"State of charge" Unit:"%"`
+	IoStatus       uint16  `Description:"IO status"`       // TODO: decode
+	WarningsAlarms uint32  `Description:"Warnings/Alarms"` // TODO: decode
+	SOC            float64 `Description:"State of charge" Unit:"%"`
 	ConsumedAh     float64 `Description:"Consumed Ah" Unit:"Ah"`
 	Temperature    float64 `Description:"Temperature" Unit:"°C"`
 }
@@ -38,9 +38,9 @@ func DecodeLynxSmartBms(inp []byte) (ret LynxSmartBms, err error) {
 	ret.Error = inp[0]
 
 	if v := binary.LittleEndian.Uint16(inp[1:3]); v != 0xFFFF {
-		ret.Ttg = float64(v) * 60
+		ret.TTG = float64(v) * 60
 	} else {
-		ret.Ttg = math.NaN()
+		ret.TTG = math.NaN()
 	}
 
 	if v := binary.LittleEndian.Uint16(inp[3:5]); v != 0x7FFF {
@@ -60,9 +60,9 @@ func DecodeLynxSmartBms(inp []byte) (ret LynxSmartBms, err error) {
 	ret.WarningsAlarms = binary.LittleEndian.Uint32(inp[9:13]) & 0x3FFFF
 
 	if v := (binary.LittleEndian.Uint16(inp[11:13]) >> 2) & 0x3FF; v != 0x3FF {
-		ret.Soc = float64(v) / 10
+		ret.SOC = float64(v) / 10
 	} else {
-		ret.Soc = math.NaN()
+		ret.SOC = math.NaN()
 	}
 
 	if v := (binary.LittleEndian.Uint32(inp[12:16]) >> 4) & 0xFFFFF; v != 0xFFFFF {
@@ -78,4 +78,85 @@ func DecodeLynxSmartBms(inp []byte) (ret LynxSmartBms, err error) {
 	}
 
 	return
+}
+
+func (r LynxSmartBms) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "Error",
+				description: "Error",
+			},
+			value: float64(r.Error),
+		},
+		{
+			Register: Register{
+				name:        "TTG",
+				description: "Time to go",
+			},
+			value: r.TTG,
+		},
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "BatteryCurrent",
+				description: "Battery current",
+			},
+			value: r.BatteryCurrent,
+			unit:  "A",
+		},
+		{
+			Register: Register{
+				name:        "IoStatus",
+				description: "IO status",
+			},
+			value: float64(r.IoStatus),
+		},
+		{
+			Register: Register{
+				name:        "WarningsAlarms",
+				description: "Warnings/Alarms",
+			},
+			value: float64(r.WarningsAlarms),
+		},
+		{
+			Register: Register{
+				name:        "SOC",
+				description: "State of charge",
+			},
+			value: r.SOC,
+			unit:  "%",
+		},
+		{
+			Register: Register{
+				name:        "ConsumedAh",
+				description: "Consumed Ah",
+			},
+			value: r.ConsumedAh,
+			unit:  "Ah",
+		},
+		{
+			Register: Register{
+				name:        "Temperature",
+				description: "Temperature",
+			},
+			value: r.Temperature,
+			unit:  "°C",
+		},
+	}
+}
+
+func (r LynxSmartBms) EnumRegisters() []EnumRegister {
+	return []EnumRegister{}
+}
+
+func (r LynxSmartBms) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
 }

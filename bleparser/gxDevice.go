@@ -16,7 +16,7 @@ import (
 type GxDeviceRecord struct {
 	BatteryVoltage float64 `Description:"Battery voltage" Unit:"V"`
 	PvPower        float64 `Description:"Solar power" Unit:"W"`
-	Soc            float64 `Description:"State of charge" Unit:"%"`
+	SOC            float64 `Description:"State of charge" Unit:"%"`
 	BatteryPower   float64 `Description:"Battery power" Unit:"W"`
 	DcPower        float64 `Description:"DC power" Unit:"W"`
 }
@@ -38,9 +38,9 @@ func DecodeGxDevice(inp []byte) (ret GxDeviceRecord, err error) {
 		ret.PvPower = math.NaN()
 	}
 	if v := (binary.LittleEndian.Uint16(inp[4:6]) >> 4) & 0x7F; v != 0x7F {
-		ret.Soc = float64(v)
+		ret.SOC = float64(v)
 	} else {
-		ret.Soc = math.NaN()
+		ret.SOC = math.NaN()
 	}
 	if v := (binary.LittleEndian.Uint32(inp[5:9]) >> 3) & 0x0FFFFF; v != 0x0FFFFF {
 		ret.BatteryPower = float64(int32(v))
@@ -53,4 +53,57 @@ func DecodeGxDevice(inp []byte) (ret GxDeviceRecord, err error) {
 		ret.DcPower = math.NaN()
 	}
 	return
+}
+
+func (r GxDeviceRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "PvPower",
+				description: "Solar power",
+			},
+			value: r.PvPower,
+			unit:  "W",
+		},
+		{
+			Register: Register{
+				name:        "SOC",
+				description: "State of charge",
+			},
+			value: r.SOC,
+			unit:  "%",
+		},
+		{
+			Register: Register{
+				name:        "BatteryPower",
+				description: "Battery power",
+			},
+			value: r.BatteryPower,
+			unit:  "W",
+		},
+		{
+			Register: Register{
+				name:        "DcPower",
+				description: "DC power",
+			},
+			value: r.DcPower,
+			unit:  "W",
+		},
+	}
+}
+
+func (r GxDeviceRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{}
+}
+
+func (r GxDeviceRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
 }

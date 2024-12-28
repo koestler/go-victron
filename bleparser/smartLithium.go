@@ -78,3 +78,117 @@ func decodeCellVoltage(inp []byte, startByte, bitOffset int) float64 {
 	}
 	return math.NaN()
 }
+
+func (r SmartLithiumRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "BmvFlags",
+				description: "BMV flags",
+			},
+			value: float64(r.BmvFlags),
+		},
+		{
+			Register: Register{
+				name:        "SmartLithiumError",
+				description: "SmartLithium error",
+			},
+			value: float64(r.SmartLithiumError),
+		},
+		{
+			Register: Register{
+				name:        "Cell1",
+				description: "Cell 1 voltage",
+			},
+			value: r.Cell1,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Cell2",
+				description: "Cell 2 voltage",
+			},
+			value: r.Cell2,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Cell3",
+				description: "Cell 3 voltage",
+			},
+			value: r.Cell3,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Cell4",
+				description: "Cell 4 voltage",
+			},
+			value: r.Cell4,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Cell5",
+				description: "Cell 5 voltage",
+			},
+			value: r.Cell5,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Cell6",
+				description: "Cell 6 voltage",
+			},
+			value: r.Cell6,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Cell7",
+				description: "Cell 7 voltage",
+			},
+			value: r.Cell7,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Cell8",
+				description: "Cell 8 voltage",
+			},
+			value: r.Cell8,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "BalancerStatus",
+				description: "Balancer status",
+			},
+			value: float64(r.BalancerStatus),
+		},
+		{
+			Register: Register{
+				name:        "BatteryTemperature",
+				description: "Battery temperature",
+			},
+			value: r.BatteryTemperature,
+			unit:  "°C",
+		},
+	}
+}
+
+func (r SmartLithiumRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{}
+}
+
+func (r SmartLithiumRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
+}

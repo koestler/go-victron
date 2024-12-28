@@ -17,14 +17,14 @@ import (
 // 88         | 11         | 0          | 32         | Off reason            |         | 0 .. 0xFFFFFFFF     |
 
 type SmartBatteryProtectRecord struct {
-	DeviceState   uint8   `Description:"Device state"`
-	OutputState   uint8   `Description:"Output state"`
-	ErrorCode     uint8   `Description:"Error code"`
-	AlarmReason   uint16  `Description:"Alarm reason"`
-	WarningReason uint16  `Description:"Warning reason"`
+	DeviceState   uint8   `Description:"Device state"`   // TODO: decode state
+	OutputState   uint8   `Description:"Output state"`   // TODO: decode state
+	ErrorCode     uint8   `Description:"Error code"`     // TODO: decode
+	AlarmReason   uint16  `Description:"Alarm reason"`   // TODO: decode
+	WarningReason uint16  `Description:"Warning reason"` // TODO: decode
 	InputVoltage  float64 `Description:"Input voltage" Unit:"V"`
 	OutputVoltage float64 `Description:"Output voltage" Unit:"V"`
-	OffReason     uint32  `Description:"Off reason"`
+	OffReason     uint32  `Description:"Off reason"` // TODO: decode
 }
 
 func DecodeSmartBatteryProtect(inp []byte) (ret SmartBatteryProtectRecord, err error) {
@@ -52,4 +52,75 @@ func DecodeSmartBatteryProtect(inp []byte) (ret SmartBatteryProtectRecord, err e
 
 	ret.OffReason = binary.LittleEndian.Uint32(inp[11:15])
 	return
+}
+
+func (r SmartBatteryProtectRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "DeviceState",
+				description: "Device state",
+			},
+			value: float64(r.DeviceState),
+		},
+		{
+			Register: Register{
+				name:        "OutputState",
+				description: "Output state",
+			},
+			value: float64(r.OutputState),
+		},
+		{
+			Register: Register{
+				name:        "ErrorCode",
+				description: "Error code",
+			},
+			value: float64(r.ErrorCode),
+		},
+		{
+			Register: Register{
+				name:        "AlarmReason",
+				description: "Alarm reason",
+			},
+			value: float64(r.AlarmReason),
+		},
+		{
+			Register: Register{
+				name:        "WarningReason",
+				description: "Warning reason",
+			},
+			value: float64(r.WarningReason),
+		},
+		{
+			Register: Register{
+				name:        "InputVoltage",
+				description: "Input voltage",
+			},
+			value: r.InputVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "OutputVoltage",
+				description: "Output voltage",
+			},
+			value: r.OutputVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "OffReason",
+				description: "Off reason",
+			},
+			value: float64(r.OffReason),
+		},
+	}
+}
+
+func (r SmartBatteryProtectRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{}
+}
+
+func (r SmartBatteryProtectRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
 }

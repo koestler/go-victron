@@ -20,7 +20,7 @@ import (
 // 108        | 13         | 4          | 10         | State of charge       | 0.1%    | 0 .. 100%           | 0x3FF
 
 type BatteryMonitorRecord struct {
-	Ttg            float64            `Description:"Time to go" Unit:"s"`
+	TTG            float64            `Description:"Time to go" Unit:"s"`
 	BatteryVoltage float64            `Description:"Battery voltage" Unit:"V"`
 	AlarmReason    uint16             `Description:"Alarm reason"`
 	AuxVoltage     float64            `Description:"Aux voltage" Unit:"V"`
@@ -39,9 +39,9 @@ func DecodeBatteryMonitor(inp []byte) (ret BatteryMonitorRecord, err error) {
 	}
 
 	if v := binary.LittleEndian.Uint16(inp[0:2]); v != 0xFFFF {
-		ret.Ttg = float64(v) * 60
+		ret.TTG = float64(v) * 60
 	} else {
-		ret.Ttg = math.NaN()
+		ret.TTG = math.NaN()
 	}
 
 	if v := binary.LittleEndian.Uint16(inp[2:4]); v != 0x7FFF {
@@ -91,4 +91,96 @@ func DecodeBatteryMonitor(inp []byte) (ret BatteryMonitorRecord, err error) {
 	}
 
 	return
+}
+
+func (r BatteryMonitorRecord) NumberRegisters() []NumberRegister {
+	return []NumberRegister{
+		{
+			Register: Register{
+				name:        "TTG",
+				description: "Time to go",
+			},
+			value: r.TTG,
+			unit:  "s",
+		},
+		{
+			Register: Register{
+				name:        "BatteryVoltage",
+				description: "Battery voltage",
+			},
+			value: r.BatteryVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "AlarmReason",
+				description: "Alarm reason",
+			},
+			value: float64(r.AlarmReason),
+		},
+		{
+			Register: Register{
+				name:        "AuxVoltage",
+				description: "Aux voltage",
+			},
+			value: r.AuxVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "MidVoltage",
+				description: "Mid voltage",
+			},
+			value: r.MidVoltage,
+			unit:  "V",
+		},
+		{
+			Register: Register{
+				name:        "Temperature",
+				description: "Temperature",
+			},
+			value: r.Temperature,
+			unit:  "°C",
+		},
+		{
+			Register: Register{
+				name:        "BatteryCurrent",
+				description: "Battery current",
+			},
+			value: r.BatteryCurrent,
+			unit:  "A",
+		},
+		{
+			Register: Register{
+				name:        "ConsumedAh",
+				description: "Consumed Ah",
+			},
+			value: r.ConsumedAh,
+			unit:  "Ah",
+		},
+		{
+			Register: Register{
+				name:        "StateOfCharge",
+				description: "State of charge",
+			},
+			value: r.StateOfCharge,
+			unit:  "%",
+		},
+	}
+}
+
+func (r BatteryMonitorRecord) EnumRegisters() []EnumRegister {
+	return []EnumRegister{
+		{
+			Register: Register{
+				name:        "AuxMode",
+				description: "Aux mode",
+			},
+			value: r.AuxMode,
+		},
+	}
+}
+
+func (r BatteryMonitorRecord) FieldListRegisters() []FieldListRegister {
+	return []FieldListRegister{}
 }
