@@ -21,7 +21,7 @@ type GxDeviceRecord struct {
 	DcPower        float64 `Description:"DC power" Unit:"W"`
 }
 
-func DecodeGxDeviceRecord(inp []byte) (ret GxDeviceRecord, err error) {
+func DecodeGxDevice(inp []byte) (ret GxDeviceRecord, err error) {
 	if len(inp) < 11 {
 		err = ErrInputTooShort
 		return

@@ -9,7 +9,7 @@ import (
 
 // this test is based on https://github.com/keshavdv/victron-ble/blob/e28c5f8cc5f9f3062a2f36c2115d38214c07e741/tests/test_battery_monitor.py
 
-func TestDecodeBatteryMonitorRecord(t *testing.T) {
+func TestDecodeBatteryMonitor(t *testing.T) {
 	cases := map[string]BatteryMonitorRecord{
 		"ffffe50400000000030000f40140df03": {
 			Ttg:            math.NaN(),
@@ -79,9 +79,9 @@ func TestDecodeBatteryMonitorRecord(t *testing.T) {
 			t.Fatalf("hex.DecodeString failed: %s", err)
 		}
 
-		ret, err := DecodeBatteryMonitorRecord(inp)
+		ret, err := DecodeBatteryMonitor(inp)
 		if err != nil {
-			t.Fatalf("DecodeBatteryMonitorRecord failed: %s", err)
+			t.Fatalf("DecodeBatteryMonitor failed: %s", err)
 		}
 
 		if expect, got := expResp.Ttg, ret.Ttg; !compF(expect, got) {

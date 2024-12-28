@@ -37,7 +37,7 @@ type SmartLithiumRecord struct {
 	BatteryTemperature float64 `Description:"Battery temperature" Unit:"°C"`
 }
 
-func DecodeSmartLithiumRecord(inp []byte) (ret SmartLithiumRecord, err error) {
+func DecodeSmartLithium(inp []byte) (ret SmartLithiumRecord, err error) {
 	if len(inp) < 16 {
 		err = ErrInputTooShort
 		return

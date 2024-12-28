@@ -22,7 +22,7 @@ type DcDcConverterRecord struct {
 	OffReason     uint32                     `Description:"Off reason"`
 }
 
-func DecodeDcDcConverterRecord(inp []byte) (ret DcDcConverterRecord, err error) {
+func DecodeDcDcConverter(inp []byte) (ret DcDcConverterRecord, err error) {
 	if len(inp) < 10 {
 		err = ErrInputTooShort
 		return

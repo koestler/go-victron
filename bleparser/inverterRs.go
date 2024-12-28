@@ -26,7 +26,7 @@ type InverterRsRecord struct {
 	AcOutPower     float64                   `Description:"AC out power" Unit:"W"`
 }
 
-func DecodeInverterRsRecord(inp []byte) (ret InverterRsRecord, err error) {
+func DecodeInverterRs(inp []byte) (ret InverterRsRecord, err error) {
 	if len(inp) < 12 {
 		err = ErrInputTooShort
 		return

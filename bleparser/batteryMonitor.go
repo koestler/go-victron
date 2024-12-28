@@ -32,7 +32,7 @@ type BatteryMonitorRecord struct {
 	StateOfCharge  float64            `Description:"State of charge" Unit:"%"`
 }
 
-func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error) {
+func DecodeBatteryMonitor(inp []byte) (ret BatteryMonitorRecord, err error) {
 	if len(inp) < 15 {
 		err = ErrInputTooShort
 		return

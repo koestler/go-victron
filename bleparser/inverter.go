@@ -24,7 +24,7 @@ type InverterRecord struct {
 	AcCurrent       float64                        `Description:"AC current" Unit:"A"`
 }
 
-func DecodeInverterRecord(inp []byte) (ret InverterRecord, err error) {
+func DecodeInverter(inp []byte) (ret InverterRecord, err error) {
 	if len(inp) < 11 {
 		err = ErrInputTooShort
 		return

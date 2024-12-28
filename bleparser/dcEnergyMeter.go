@@ -26,7 +26,7 @@ type DcEnergyMeterRecord struct {
 	BatteryCurrent float64                      `Description:"Battery current" Unit:"A"`
 }
 
-func DecodeDcEnergyMeterRecord(inp []byte) (ret DcEnergyMeterRecord, err error) {
+func DecodeDcEnergyMeter(inp []byte) (ret DcEnergyMeterRecord, err error) {
 	if len(inp) < 12 {
 		err = ErrInputTooShort
 		return

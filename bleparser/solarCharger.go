@@ -26,7 +26,7 @@ type SolarChargerRecord struct {
 	LoadCurrent    float64                   `Description:"Load current" Unit:"A"`
 }
 
-func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
+func DecodeSolarCharge(inp []byte) (ret SolarChargerRecord, err error) {
 	if len(inp) < 12 {
 		err = ErrInputTooShort
 		return

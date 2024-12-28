@@ -10,31 +10,31 @@ var ErrUnsupportedRecordType = errors.New("unsupported record type")
 func Decode(recordType veconst.BleRecordType, decryptedBytes []byte) (any, error) {
 	switch recordType {
 	case veconst.BleSolarCharger:
-		return DecodeSolarChargeRecord(decryptedBytes)
+		return DecodeSolarCharge(decryptedBytes)
 	case veconst.BleBatteryMonitor:
-		return DecodeBatteryMonitorRecord(decryptedBytes)
+		return DecodeBatteryMonitor(decryptedBytes)
 	case veconst.BleInverter:
-		return DecodeInverterRecord(decryptedBytes)
+		return DecodeInverter(decryptedBytes)
 	case veconst.BleDCDCConverter:
-		return DecodeDcDcConverterRecord(decryptedBytes)
+		return DecodeDcDcConverter(decryptedBytes)
 	case veconst.BleSmartLithium:
-		return DecodeSmartLithiumRecord(decryptedBytes)
+		return DecodeSmartLithium(decryptedBytes)
 	case veconst.BleInverterRS:
-		return DecodeInverterRsRecord(decryptedBytes)
+		return DecodeInverterRs(decryptedBytes)
 	case veconst.BleGXDevice:
-		return DecodeGxDeviceRecord(decryptedBytes)
+		return DecodeGxDevice(decryptedBytes)
 	case veconst.BleACCharger:
-		return DecodeAcChargerRecord(decryptedBytes)
+		return DecodeAcCharger(decryptedBytes)
 	case veconst.BleSmartBatteryProtect:
-		return DecodeSmartBatteryProtectRecord(decryptedBytes)
+		return DecodeSmartBatteryProtect(decryptedBytes)
 	case veconst.BleLynxSmartBMS:
 		return DecodeLynxSmartBms(decryptedBytes)
 	case veconst.BleMultiRS:
-		return DecodeMultiRsRecord(decryptedBytes)
+		return DecodeMultiRs(decryptedBytes)
 	case veconst.BleVEBus:
-		return DecodeVeBusRecord(decryptedBytes)
+		return DecodeVeBus(decryptedBytes)
 	case veconst.BleDCEnergyMeter:
-		return DecodeDcEnergyMeterRecord(decryptedBytes)
+		return DecodeDcEnergyMeter(decryptedBytes)
 	default:
 		return nil, ErrUnsupportedRecordType
 	}

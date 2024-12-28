@@ -32,7 +32,7 @@ type VeBusRecord struct {
 	Soc             float64                    `Description:"State of charge" Unit:"%"`
 }
 
-func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
+func DecodeVeBus(inp []byte) (ret VeBusRecord, err error) {
 	if len(inp) < 12 {
 		err = ErrInputTooShort
 		return

@@ -9,7 +9,7 @@ import (
 
 // this test is based on https://github.com/keshavdv/victron-ble/blob/e28c5f8cc5f9f3062a2f36c2115d38214c07e741/tests/test_solar_charger.py
 
-func TestDecodeSolarChargeRecord(t *testing.T) {
+func TestDecodeSolarCharge(t *testing.T) {
 	cases := map[string]SolarChargerRecord{
 		"04006c050e000300130000fe409ac069": {
 			DeviceState:    veconst.SolarChargerStateAbsorptionCharging,
@@ -46,9 +46,9 @@ func TestDecodeSolarChargeRecord(t *testing.T) {
 			t.Fatalf("hex.DecodeString failed: %s", err)
 		}
 
-		ret, err := DecodeSolarChargeRecord(inp)
+		ret, err := DecodeSolarCharge(inp)
 		if err != nil {
-			t.Fatalf("DecodeSolarChargeRecord failed: %s", err)
+			t.Fatalf("DecodeSolarCharge failed: %s", err)
 		}
 
 		if expect, got := expResp.DeviceState, ret.DeviceState; expect != got {

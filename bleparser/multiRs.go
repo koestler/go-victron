@@ -30,7 +30,7 @@ type MultiRsRecord struct {
 	YieldToday      float64                    `Description:"Yield today" Unit:"Wh"`
 }
 
-func DecodeMultiRsRecord(inp []byte) (ret MultiRsRecord, err error) {
+func DecodeMultiRs(inp []byte) (ret MultiRsRecord, err error) {
 	if len(inp) < 13 {
 		err = ErrInputTooShort
 		return

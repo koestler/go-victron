@@ -32,7 +32,7 @@ type AcChargerRecord struct {
 	AcCurrent       float64                   `Description:"AC Current" Unit:"A"`
 }
 
-func DecodeAcChargerRecord(inp []byte) (ret AcChargerRecord, err error) {
+func DecodeAcCharger(inp []byte) (ret AcChargerRecord, err error) {
 	if len(inp) < 12 {
 		err = ErrInputTooShort
 		return

@@ -9,7 +9,7 @@ import (
 
 // this test is based on https://github.com/keshavdv/victron-ble/blob/e28c5f8cc5f9f3062a2f36c2115d38214c07e741/tests/test_dcdc_converter.py
 
-func TestDecodeDcDcConverterRecord(t *testing.T) {
+func TestDecodeDcDcConverter(t *testing.T) {
 	cases := map[string]DcDcConverterRecord{
 		"00002305ff7f80000000cbdd494cc5d1": {
 			DeviceState:   veconst.DcDcConverterStateNotCharging,
@@ -26,9 +26,9 @@ func TestDecodeDcDcConverterRecord(t *testing.T) {
 			t.Fatalf("hex.DecodeString failed: %s", err)
 		}
 
-		ret, err := DecodeDcDcConverterRecord(inp)
+		ret, err := DecodeDcDcConverter(inp)
 		if err != nil {
-			t.Fatalf("DecodeDcDcConverterRecord failed: %s", err)
+			t.Fatalf("DecodeDcDcConverter failed: %s", err)
 		}
 
 		if expect, got := expResp.DeviceState, ret.DeviceState; expect != got {

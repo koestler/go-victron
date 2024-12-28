@@ -27,7 +27,7 @@ type SmartBatteryProtectRecord struct {
 	OffReason     uint32  `Description:"Off reason"`
 }
 
-func DecodeSmartBatteryProtectRecord(inp []byte) (ret SmartBatteryProtectRecord, err error) {
+func DecodeSmartBatteryProtect(inp []byte) (ret SmartBatteryProtectRecord, err error) {
 	if len(inp) < 15 {
 		err = ErrInputTooShort
 		return
