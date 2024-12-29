@@ -6,6 +6,7 @@ import (
 	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/tinygoble"
 	"github.com/koestler/go-victron/veble"
+	"github.com/koestler/go-victron/veblerecord"
 	"github.com/spf13/cobra"
 	"os"
 	"os/signal"
@@ -98,7 +99,7 @@ func macListener(pair macKeyPair, l log.Logger) tinygoble.MacListener {
 			return
 		}
 
-		regs, err := veble.Decode(df.RecordType, df.DecryptedBytes)
+		regs, err := veblerecord.Decode(df.RecordType, df.DecryptedBytes)
 		if err != nil {
 			fmt.Println("error decoding registers:", err)
 			return

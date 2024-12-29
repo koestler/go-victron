@@ -1,4 +1,4 @@
-package veble
+package veblerecord
 
 import "math"
 
