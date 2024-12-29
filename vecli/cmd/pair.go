@@ -3,12 +3,12 @@ package cmd
 import (
 	"encoding/hex"
 	"errors"
-	"github.com/koestler/go-victron/veble"
+	"github.com/koestler/go-victron/mac"
 	"regexp"
 )
 
 type macKeyPair struct {
-	mac veble.MAC
+	mac mac.MAC
 	key []byte
 }
 
@@ -24,7 +24,7 @@ func parseMacKeyPair(arg string) (p macKeyPair, err error) {
 	macStr := m[1]
 	keyStr := m[2]
 
-	p.mac, err = veble.ParseCompactMAC(macStr)
+	p.mac, err = mac.ParseCompactMAC(macStr)
 	if err != nil {
 		return p, err
 	}

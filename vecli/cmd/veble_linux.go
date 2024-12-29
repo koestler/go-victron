@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"bytes"
+	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/koestler/go-victron/log"
+	"github.com/koestler/go-victron/mac"
 	"github.com/koestler/go-victron/tinygoble"
-	"github.com/koestler/go-victron/veble"
-	"github.com/koestler/go-victron/veblerecord"
+	"github.com/koestler/go-victron/vebleapi"
 	"github.com/spf13/cobra"
 	"os"
 	"os/signal"
@@ -31,7 +32,7 @@ func runScan(cmd *cobra.Command, _ []string) {
 		fmt.Println("error creating adapter:", err)
 		os.Exit(2)
 	}
-	a.RegisterDefaultListener(func(mac veble.MAC, rssi int, localName string) {
+	a.RegisterDefaultListener(func(mac mac.MAC, rssi int, localName string) {
 		fmt.Printf("discovered : mac=%s, RSSI=%d, name=%s\n", mac, rssi, localName)
 	})
 	defer a.Close()
@@ -50,8 +51,8 @@ func runDecode(cmd *cobra.Command, args []string) {
 		fmt.Println("error creating adapter:", err)
 		os.Exit(2)
 	}
-	seen := make(map[veble.MAC]struct{})
-	a.RegisterDefaultListener(func(mac veble.MAC, rssi int, localName string) {
+	seen := make(map[mac.MAC]struct{})
+	a.RegisterDefaultListener(func(mac mac.MAC, rssi int, localName string) {
 		if _, ok := seen[mac]; ok {
 			return
 		}
@@ -60,6 +61,8 @@ func runDecode(cmd *cobra.Command, args []string) {
 	})
 	defer a.Close()
 
+	ctx, cancel := context.WithCancel(cmd.Context())
+
 	for _, arg := range args {
 		p, err := parseMacKeyPair(arg)
 		if err != nil {
@@ -67,52 +70,21 @@ func runDecode(cmd *cobra.Command, args []string) {
 			os.Exit(2)
 		}
 
-		a.RegisterMacListener(p.mac, macListener(p, debugLogger))
+		api := vebleapi.NewRecordApi(a, p.mac, p.key, debugLogger)
+		go api.Stream(ctx, func(rssi int, localName string, record any) {
+			fmt.Printf("%s: %s sent with RSSI=%d:\n", p.mac, localName, rssi)
+			j, err := json.MarshalIndent(record, "", "  ")
+			if err != nil {
+				fmt.Println("error encoding record:", err)
+				return
+			}
+			fmt.Println(string(j))
+		})
 	}
 
 	fmt.Println("Showing received packets. Press ctrl+c to abort...")
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 	<-done
-}
-
-func macListener(pair macKeyPair, l log.Logger) tinygoble.MacListener {
-	var lastData []byte
-	return func(rssi int, localName string, victronData []byte) {
-		// ignore duplicate packets
-		if bytes.Equal(lastData, victronData) {
-			return
-		}
-		lastData = victronData
-
-		ef, err := veble.DecodeFrame(victronData, l)
-		if err != nil {
-			fmt.Println("error decoding frame:", err)
-			return
-		}
-
-		fmt.Printf("received packet MAC=%s, RSSI=%d, name=%s, IV=%d\n", pair.mac, rssi, localName, ef.IV)
-
-		df, err := veble.DecryptFrame(ef, pair.key, l)
-		if err != nil {
-			fmt.Println("error decrypting frame:", err)
-			return
-		}
-
-		regs, err := veblerecord.Decode(df.RecordType, df.DecryptedBytes)
-		if err != nil {
-			fmt.Println("error decoding registers:", err)
-			return
-		}
-
-		for _, nr := range regs.NumberRegisters() {
-			fmt.Println("- ", nr)
-		}
-		for _, er := range regs.EnumRegisters() {
-			fmt.Println("- ", er)
-		}
-		for _, flr := range regs.FieldListRegisters() {
-			fmt.Println("- ", flr)
-		}
-	}
+	cancel()
 }
