@@ -12,6 +12,8 @@ var vebleCmd = &cobra.Command{
 }
 
 func init() {
+	decodeCmd.Flags().BoolP("print-registers", "r", false, "Print registers instead of json.")
+
 	vebleCmd.AddCommand(scanCmd)
 	vebleCmd.AddCommand(decodeCmd)
 	rootCmd.AddCommand(vebleCmd)

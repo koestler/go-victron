@@ -10,17 +10,20 @@ import (
 	"github.com/koestler/go-victron/veblerecord"
 )
 
-type Handler func(rssi int, localName string, record any)
+type Adapter interface {
+	RegisterMacListener(mac mac.MAC, l func(rssi int, localName string, data []byte))
+	UnregisterMacListener(mac mac.MAC)
+}
 
-type RecordApi struct {
+type Api struct {
 	adapter Adapter
 	mac     mac.MAC
 	key     []byte
 	logger  log.Logger
 }
 
-func NewRecordApi(adapter Adapter, mac mac.MAC, key []byte, logger log.Logger) *RecordApi {
-	return &RecordApi{
+func NewApi(adapter Adapter, mac mac.MAC, key []byte, logger log.Logger) *Api {
+	return &Api{
 		adapter: adapter,
 		mac:     mac,
 		key:     key,
@@ -28,7 +31,7 @@ func NewRecordApi(adapter Adapter, mac mac.MAC, key []byte, logger log.Logger) *
 	}
 }
 
-func (a *RecordApi) Stream(ctx context.Context, h Handler) {
+func (a *Api) StreamRegisters(ctx context.Context, h func(rssi int, localName string, registers veblerecord.Registers)) {
 	var lastData []byte
 	listener := func(rssi int, localName string, victronData []byte) {
 		// ignore duplicate packets
@@ -51,13 +54,13 @@ func (a *RecordApi) Stream(ctx context.Context, h Handler) {
 			return
 		}
 
-		record, err := veblerecord.Decode(df.RecordType, df.DecryptedBytes)
+		registers, err := veblerecord.Decode(df.RecordType, df.DecryptedBytes)
 		if err != nil {
 			fmt.Println("error decoding registers:", err)
 			return
 		}
 
-		h(rssi, localName, record)
+		h(rssi, localName, registers)
 	}
 
 	a.adapter.RegisterMacListener(a.mac, listener)

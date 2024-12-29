@@ -8,6 +8,7 @@ import (
 	"github.com/koestler/go-victron/mac"
 	"github.com/koestler/go-victron/tinygoble"
 	"github.com/koestler/go-victron/vebleapi"
+	"github.com/koestler/go-victron/veblerecord"
 	"github.com/spf13/cobra"
 	"os"
 	"os/signal"
@@ -45,6 +46,10 @@ func runScan(cmd *cobra.Command, _ []string) {
 
 func runDecode(cmd *cobra.Command, args []string) {
 	debugLogger := getLogger(cmd)
+	printRegister := false
+	if v, err := cmd.Flags().GetBool("print-registers"); err == nil && v {
+		printRegister = true
+	}
 
 	a, err := tinygoble.NewDefaultAdapter(debugLogger)
 	if err != nil {
@@ -70,15 +75,29 @@ func runDecode(cmd *cobra.Command, args []string) {
 			os.Exit(2)
 		}
 
-		api := vebleapi.NewRecordApi(a, p.mac, p.key, debugLogger)
-		go api.Stream(ctx, func(rssi int, localName string, record any) {
+		api := vebleapi.NewApi(a, p.mac, p.key, debugLogger)
+
+		go api.StreamRegisters(ctx, func(rssi int, localName string, registers veblerecord.Registers) {
 			fmt.Printf("%s: %s sent with RSSI=%d:\n", p.mac, localName, rssi)
-			j, err := json.MarshalIndent(record, "", "  ")
-			if err != nil {
-				fmt.Println("error encoding record:", err)
-				return
+
+			if printRegister {
+				for _, r := range registers.NumberRegisters() {
+					fmt.Printf("- %s\n", r)
+				}
+				for _, r := range registers.EnumRegisters() {
+					fmt.Printf("- %s\n", r)
+				}
+				for _, r := range registers.FieldListRegisters() {
+					fmt.Printf("- %s\n", r)
+				}
+			} else {
+				j, err := json.MarshalIndent(registers, "", "  ")
+				if err != nil {
+					fmt.Println("error encoding record:", err)
+					return
+				}
+				fmt.Println(string(j))
 			}
-			fmt.Println(string(j))
 		})
 	}
 
