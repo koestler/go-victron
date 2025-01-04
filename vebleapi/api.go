@@ -32,7 +32,7 @@ func (a *Api) StreamRegisters(ctx context.Context, h func(rssi int, registers ve
 	// run until ctx is done
 	go func() {
 		<-ctx.Done()
-		listener.Close()
+		listener.End()
 	}()
 
 	for p := range listener.Drain() {
@@ -40,7 +40,7 @@ func (a *Api) StreamRegisters(ctx context.Context, h func(rssi int, registers ve
 		md := p.ManufacturerData()
 
 		if bytes.Equal(lastMD, md) {
-			return
+			continue
 		}
 		lastMD = md
 

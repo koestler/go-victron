@@ -66,7 +66,7 @@ func runScan(cmd *cobra.Command, _ []string) {
 	defer a.Close()
 
 	defaultListener := a.RegisterDefaultListener()
-	defer defaultListener.Close()
+	defer defaultListener.End()
 	go func() {
 		for p := range defaultListener.Drain() {
 			fmt.Printf("discovered : address=%s, RSSI=%d, name=%s\n", p.Address(), p.RSSI(), p.Name())
@@ -95,7 +95,7 @@ func runDecode(cmd *cobra.Command, args []string) {
 
 	seen := make(map[string]struct{})
 	defaultListener := a.RegisterDefaultListener()
-	defer defaultListener.Close()
+	defer defaultListener.End()
 	go func() {
 		for p := range defaultListener.Drain() {
 			if _, ok := seen[p.Address()]; ok {

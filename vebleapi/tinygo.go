@@ -7,29 +7,6 @@ import (
 	"tinygo.org/x/bluetooth"
 )
 
-type Listener struct {
-	packets chan Packet
-	close   func()
-}
-
-func NewListener() *Listener {
-	return &Listener{
-		packets: make(chan Packet),
-	}
-}
-
-func (l *Listener) Drain() <-chan Packet {
-	return l.packets
-}
-
-func (l *Listener) Close() {
-	if l.close != nil {
-		l.close()
-	}
-	close(l.packets)
-	l.packets = nil
-}
-
 type Packet struct {
 	rssi             int
 	address          string
@@ -100,7 +77,7 @@ func (a *Adapter) RegisterNameListener(name string) *Listener {
 
 	listener := NewListener()
 	e := l.PushBack(listener)
-	e.Value.close = func() {
+	e.Value.unsubscribe = func() {
 		a.listenerLock.Lock()
 		defer a.listenerLock.Unlock()
 		l.Remove(e)
@@ -119,12 +96,12 @@ func (a *Adapter) Close() {
 		a.logger.Printf("error while stopping scan: %s", err)
 	}
 
-	// close all listeners
+	// close all listener channels
 	a.listenerLock.Lock()
 	defer a.listenerLock.Unlock()
 	for _, l := range a.listener {
 		for e := l.Front(); e != nil; e = e.Next() {
-			e.Value.Close()
+			e.Value.close()
 		}
 	}
 }
