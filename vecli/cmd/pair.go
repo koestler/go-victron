@@ -12,7 +12,7 @@ type macKeyPair struct {
 	key  []byte
 }
 
-var pairMatcher = regexp.MustCompile("^([0-9a-zA-Z\\s\\-]{1,32})=([0-9a-f]{32})$")
+var pairMatcher = regexp.MustCompile(`^([0-9a-zA-Z\s\-]{1,32})=([0-9a-f]{32})$`)
 
 var errInvalidMacKeyPairFormat = errors.New("invalid mac key pair format")
 

@@ -121,31 +121,25 @@ func (a *Adapter) scan() {
 }
 
 func (a *Adapter) run() {
-	for {
-		select {
-		case sr, ok := <-a.scanResult:
-			if !ok {
-				// terminate
-				a.logger.Printf("(*Adapter).run: scanResult channel closed")
-				return
-			}
-			manufacturerData := extractManufacturerData(sr, a.manufacturerId)
-			if manufacturerData == nil {
-				// ignore all non-victron devices
-				continue
-			}
-
-			a.logger.Printf("recieved scan result from %s, RSSI=%d, name=%s", sr.Address.String(), sr.RSSI, sr.LocalName())
-
-			name := sr.LocalName()
-			if name == "" {
-				a.logger.Printf("(*Adapter).run: ignoring device with empty name")
-				continue
-			}
-
-			a.notifyListeners(sr, manufacturerData)
+	for sr := range a.scanResult {
+		manufacturerData := extractManufacturerData(sr, a.manufacturerId)
+		if manufacturerData == nil {
+			// ignore all non-victron devices
+			continue
 		}
+
+		a.logger.Printf("recieved scan result from %s, RSSI=%d, name=%s", sr.Address.String(), sr.RSSI, sr.LocalName())
+
+		name := sr.LocalName()
+		if name == "" {
+			a.logger.Printf("(*Adapter).run: ignoring device with empty name")
+			continue
+		}
+
+		a.notifyListeners(sr, manufacturerData)
 	}
+	a.logger.Printf("(*Adapter).run: scanResult channel closed")
+
 }
 
 func (a *Adapter) notifyListeners(sr bluetooth.ScanResult, manufacturerData []byte) {
