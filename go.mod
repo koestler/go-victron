@@ -1,6 +1,6 @@
 module github.com/koestler/go-victron
 
-go 1.21.5
+go 1.23.4
 
 require (
 	github.com/muka/go-bluetooth v0.0.0-20221213043340-85dc80edc4e1
@@ -16,6 +16,7 @@ require (
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/koestler/go-list v1.0.0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/saltosystems/winrt-go v0.0.0-20240509164145-4f7860a3bd2b // indirect

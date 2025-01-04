@@ -5,50 +5,54 @@ import (
 	"context"
 	"fmt"
 	"github.com/koestler/go-victron/log"
-	"github.com/koestler/go-victron/mac"
 	"github.com/koestler/go-victron/veble"
 	"github.com/koestler/go-victron/veblerecord"
 )
 
-type Adapter interface {
-	RegisterMacListener(mac mac.MAC, l func(rssi int, localName string, data []byte))
-	UnregisterMacListener(mac mac.MAC)
-}
-
 type Api struct {
-	adapter Adapter
-	mac     mac.MAC
-	key     []byte
-	logger  log.Logger
+	adapter       *Adapter
+	name          string
+	encryptionKey []byte
+	logger        log.Logger
 }
 
-func NewApi(adapter Adapter, mac mac.MAC, key []byte, logger log.Logger) *Api {
+func NewApi(adapter *Adapter, name string, encryptionKey []byte, logger log.Logger) *Api {
 	return &Api{
-		adapter: adapter,
-		mac:     mac,
-		key:     key,
-		logger:  logger,
+		adapter:       adapter,
+		name:          name,
+		encryptionKey: encryptionKey,
+		logger:        logger,
 	}
 }
 
-func (a *Api) StreamRegisters(ctx context.Context, h func(rssi int, localName string, registers veblerecord.Registers)) {
-	var lastData []byte
-	listener := func(rssi int, localName string, victronData []byte) {
+func (a *Api) StreamRegisters(ctx context.Context, h func(rssi int, registers veblerecord.Registers)) {
+	var lastMD []byte
+
+	listener := a.adapter.RegisterNameListener(a.name)
+	// run until ctx is done
+	go func() {
+		<-ctx.Done()
+		listener.Close()
+	}()
+
+	for p := range listener.Drain() {
 		// ignore duplicate packets
-		if bytes.Equal(lastData, victronData) {
+		md := p.ManufacturerData()
+
+		if bytes.Equal(lastMD, md) {
 			return
 		}
-		lastData = victronData
+		lastMD = md
 
-		ef, err := veble.DecodeFrame(victronData, a.logger)
+		ef, err := veble.DecodeFrame(md, a.logger)
 		if err != nil {
 			fmt.Println("error decoding frame:", err)
 			return
 		}
 
-		fmt.Printf("received packet MAC=%s, RSSI=%d, name=%s, IV=%d\n", a.mac, rssi, localName, ef.IV)
+		fmt.Printf("received packet from address=%s, RSSI=%d, name=%s, IV=%d\n", p.Name(), p.RSSI(), p.Name(), ef.IV)
 
-		df, err := veble.DecryptFrame(ef, a.key, a.logger)
+		df, err := veble.DecryptFrame(ef, a.encryptionKey, a.logger)
 		if err != nil {
 			fmt.Println("error decrypting frame:", err)
 			return
@@ -60,12 +64,6 @@ func (a *Api) StreamRegisters(ctx context.Context, h func(rssi int, localName st
 			return
 		}
 
-		h(rssi, localName, registers)
+		h(p.RSSI(), registers)
 	}
-
-	a.adapter.RegisterMacListener(a.mac, listener)
-	defer a.adapter.UnregisterMacListener(a.mac)
-
-	// run until context is canceled
-	<-ctx.Done()
 }

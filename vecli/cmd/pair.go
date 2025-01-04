@@ -3,32 +3,30 @@ package cmd
 import (
 	"encoding/hex"
 	"errors"
-	"github.com/koestler/go-victron/mac"
+	"log"
 	"regexp"
 )
 
 type macKeyPair struct {
-	mac mac.MAC
-	key []byte
+	name string
+	key  []byte
 }
 
-var pairMatcher = regexp.MustCompile("^([0-9a-f]{12})=([0-9a-f]{32})$")
+var pairMatcher = regexp.MustCompile("^([0-9a-zA-Z\\s\\-]{1,32})=([0-9a-f]{32})$")
 
 var errInvalidMacKeyPairFormat = errors.New("invalid mac key pair format")
 
 func parseMacKeyPair(arg string) (p macKeyPair, err error) {
+	log.Printf("parsing mac key pair: %s", arg)
+
 	m := pairMatcher.FindStringSubmatch(arg)
 	if m == nil {
 		return p, errInvalidMacKeyPairFormat
 	}
-	macStr := m[1]
+	nameStr := m[1]
 	keyStr := m[2]
 
-	p.mac, err = mac.ParseCompactMAC(macStr)
-	if err != nil {
-		return p, err
-	}
-
+	p.name = nameStr
 	p.key, err = hex.DecodeString(keyStr)
 	if err != nil {
 		return p, err
