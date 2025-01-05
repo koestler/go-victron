@@ -2,7 +2,7 @@ package vebleapi
 
 import (
 	"github.com/koestler/go-list"
-	"github.com/koestler/go-victron/log"
+	"github.com/koestler/go-victron/velog"
 	"sync"
 	"tinygo.org/x/bluetooth"
 )
@@ -35,7 +35,7 @@ func (p Packet) ManufacturerData() []byte {
 // manufacturer data, and then calls a mac specific listener or a default listener.
 type Adapter struct {
 	manufacturerId uint16
-	logger         log.Logger
+	logger         velog.Logger
 	adapter        *bluetooth.Adapter
 
 	scanResult chan bluetooth.ScanResult
@@ -46,7 +46,7 @@ type Adapter struct {
 
 // NewDefaultAdapter creates a new Adapter with the default bluetooth adapter.
 // It can only be called once.
-func NewDefaultAdapter(manufacturerId uint16, logger log.Logger) (*Adapter, error) {
+func NewDefaultAdapter(manufacturerId uint16, logger velog.Logger) (*Adapter, error) {
 	a := &Adapter{
 		manufacturerId: manufacturerId,
 		logger:         logger,

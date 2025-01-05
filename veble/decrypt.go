@@ -7,8 +7,8 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/veconst"
+	"github.com/koestler/go-victron/velog"
 )
 
 type DecryptedFrame struct {
@@ -18,7 +18,7 @@ type DecryptedFrame struct {
 
 var ErrInvalidEncryptionKey = errors.New("invalid encryption key")
 
-func DecryptFrame(ef EncryptedFrame, encryptionKey []byte, l log.Logger) (df DecryptedFrame, error error) {
+func DecryptFrame(ef EncryptedFrame, encryptionKey []byte, l velog.Logger) (df DecryptedFrame, error error) {
 	l.Printf("decrypt frame len=%d, encryptedBytes=%x", len(ef.EncryptedBytes), ef.EncryptedBytes)
 
 	// decrypt rawBytes using aes-ctr algorithm

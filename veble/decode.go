@@ -3,8 +3,8 @@ package veble
 import (
 	"encoding/binary"
 	"errors"
-	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/veconst"
+	"github.com/koestler/go-victron/velog"
 	"github.com/koestler/go-victron/veproduct"
 )
 
@@ -17,7 +17,7 @@ type EncryptedFrame struct {
 
 var ErrInputTooShort = errors.New("inp too short")
 
-func DecodeFrame(rawBytes []byte, l log.Logger) (ef EncryptedFrame, error error) {
+func DecodeFrame(rawBytes []byte, l velog.Logger) (ef EncryptedFrame, error error) {
 	l.Printf("decode frame len=%d, rawBytes=%x", len(rawBytes), rawBytes)
 
 	if len(rawBytes) < 9 {

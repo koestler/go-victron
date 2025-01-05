@@ -1,8 +1,8 @@
-package log
+package velog
 
 import "log"
 
-// Logger is the interface for a logger. It is implemented by e.g. log.Logger.
+// Logger is the interface for a logger. It is implemented by e.g. velog.Logger.
 type Logger interface {
 	Printf(format string, a ...any)
 }

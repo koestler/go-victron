@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/koestler/go-victron/log"
 	"github.com/koestler/go-victron/vebleapi"
 	"github.com/koestler/go-victron/veblerecord"
 	"github.com/koestler/go-victron/veconst"
+	"github.com/koestler/go-victron/velog"
 	"github.com/spf13/cobra"
 	"os"
 	"os/signal"
@@ -45,14 +45,14 @@ Supply arguments in the form MAC=KEY as shown in the Victron Energy App. E.g. e6
 	Run:  runDecode,
 }
 
-func getLogger(cmd *cobra.Command) log.Logger {
+func getLogger(cmd *cobra.Command) velog.Logger {
 	if verbose, err := cmd.Flags().GetBool("verbose"); err == nil && verbose {
-		return log.DefaultLogger{
+		return velog.DefaultLogger{
 			Prefix: "ble: ",
 		}
 	}
 
-	return log.NoOppLogger{}
+	return velog.NoOppLogger{}
 }
 
 func runScan(cmd *cobra.Command, _ []string) {

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/koestler/go-victron/log"
+	"github.com/koestler/go-victron/velog"
 	"github.com/koestler/go-victron/veble"
 	"github.com/koestler/go-victron/veblerecord"
 )
@@ -13,10 +13,10 @@ type Api struct {
 	adapter       *Adapter
 	name          string
 	encryptionKey []byte
-	logger        log.Logger
+	logger        velog.Logger
 }
 
-func NewApi(adapter *Adapter, name string, encryptionKey []byte, logger log.Logger) *Api {
+func NewApi(adapter *Adapter, name string, encryptionKey []byte, logger velog.Logger) *Api {
 	return &Api{
 		adapter:       adapter,
 		name:          name,
