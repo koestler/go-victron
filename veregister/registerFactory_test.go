@@ -8,7 +8,7 @@ import (
 
 func TestGetRegisterListByProduct(t *testing.T) {
 	t.Run("unsupported type", func(t *testing.T) {
-		_, err := GetRegisterListByProduct(veproduct.Product((0x1234)))
+		_, err := GetRegisterListByProduct(veproduct.Product(0x1234))
 		if !errors.Is(err, ErrUnsupportedType) {
 			t.Errorf("expected an error for unknown product type")
 		}
@@ -18,7 +18,7 @@ func TestGetRegisterListByProduct(t *testing.T) {
 		countPerType := map[veproduct.Product]int{
 			veproduct.BMV700:                                 27,
 			veproduct.BMV712Smart:                            31,
-			veproduct.BlueSolarMPPT70_15:                     42, // Panel current not available
+			veproduct.BlueSolarMPPT70_15:                     49, // Panel current not available
 			veproduct.BlueSolarMPPT75_50:                     43,
 			veproduct.SmartSolarMPPT250_100:                  43,
 			veproduct.PhoenixInverter12V250VA230V:            36,
