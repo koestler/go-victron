@@ -608,10 +608,10 @@ func AppendSolarLoadData(rl *RegisterList) {
 	const catSort = 500
 	rl.AppendNumberRegisterStruct(
 		newNumberRegisterStruct(
-			"Load",
+			"Essential",
 			"LoadCurrent",
 			"Load Current",
-			catSort,
+			10,
 			0xEDAD,
 			false,
 			false,
@@ -624,7 +624,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 			"Load",
 			"LoadOffsetVoltage",
 			"Load Offset Voltage",
-			catSort+1,
+			catSort,
 			0xEDAC,
 			false,
 			false,
@@ -637,7 +637,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 			"Load",
 			"LoadOutputVoltage",
 			"Load Output Voltage",
-			catSort+2,
+			catSort+1,
 			0xEDA9,
 			false,
 			false,
@@ -649,10 +649,10 @@ func AppendSolarLoadData(rl *RegisterList) {
 	)
 	rl.AppendEnumRegisterStruct(
 		newEnumRegisterStruct(
-			"Load",
+			"Essential",
 			"LoadOutputState",
 			"Load Output State",
-			catSort+3,
+			11,
 			0xEDA8,
 			false,
 			false,
@@ -664,7 +664,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 			"Load",
 			"LoadSwitchHighLevel",
 			"Load Switch High Level",
-			catSort+4,
+			catSort+2,
 			0xED9D,
 			false,
 			false,
@@ -677,7 +677,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 			"Load",
 			"LoadSwitchLowLevel",
 			"Load Switch Low Level",
-			catSort+5,
+			catSort+3,
 			0xED9C,
 			false,
 			false,
@@ -685,18 +685,6 @@ func AppendSolarLoadData(rl *RegisterList) {
 			100,
 			0,
 			"v",
-		),
-	)
-	rl.AppendEnumRegisterStruct(
-		newEnumRegisterStruct(
-			"Load",
-			"LoadOffReason",
-			"Load Off Reason",
-			catSort+6,
-			0xED91,
-			false,
-			false,
-			veconst.SolarChargerLoadOffReasonFactory,
 		),
 	)
 }
