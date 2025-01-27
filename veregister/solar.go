@@ -11,16 +11,18 @@ func AppendSolar(rl *RegisterList) {
 	AppendSolarSettings(rl)
 	AppendSolarChargerData(rl)
 	AppendSolarPanelData(rl)
+	AppendSolarLoadData(rl)
 }
 
 // AppendSolarProduct appends all registers of the Product category to the given RegisterList.
 func AppendSolarProduct(rl *RegisterList) {
+	const catSort = 300
 	rl.AppendNumberRegisterStruct(
 		newNumberRegisterStruct(
 			"Product",
 			"ProductId",
 			"Product id",
-			300,
+			catSort,
 			0x0100,
 			true,
 			false,
@@ -33,7 +35,7 @@ func AppendSolarProduct(rl *RegisterList) {
 			"Product",
 			"GroupId",
 			"Group id",
-			301,
+			catSort+1,
 			0x0104,
 			true,
 			false,
@@ -48,7 +50,7 @@ func AppendSolarProduct(rl *RegisterList) {
 			"Product",
 			"SerialNumber",
 			"Serial number",
-			302,
+			catSort+2,
 			0x010A,
 			true,
 			false,
@@ -57,7 +59,7 @@ func AppendSolarProduct(rl *RegisterList) {
 			"Product",
 			"ModelName",
 			"Model name",
-			303,
+			catSort+3,
 			0x010B,
 			true,
 			false,
@@ -68,12 +70,13 @@ func AppendSolarProduct(rl *RegisterList) {
 
 // AppendSolarGeneric appends all registers of the Generic category to the given RegisterList.
 func AppendSolarGeneric(rl *RegisterList) {
+	const catSort = 400
 	rl.AppendEnumRegisterStruct(
 		newEnumRegisterStruct(
 			"Generic",
 			"DeviceMode",
 			"Device mode",
-			400,
+			catSort,
 			0x0200,
 			false,
 			false,
@@ -96,7 +99,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 			"Generic",
 			"OffReason",
 			"Device off reasons",
-			401,
+			catSort+1,
 			0x0207,
 			false,
 			false,
@@ -107,12 +110,13 @@ func AppendSolarGeneric(rl *RegisterList) {
 
 // AppendSolarSettings appends all registers of the Settings category to the given RegisterList.
 func AppendSolarSettings(rl *RegisterList) {
+	const catSort = 600
 	rl.AppendEnumRegisterStruct(
 		newEnumRegisterStruct(
 			"Settings",
 			"AdaptiveMode",
 			"Adaptive mode",
-			500,
+			catSort,
 			0xEDFE,
 			true,
 			false,
@@ -124,7 +128,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"AutomaticEqualisationMode",
 			"Automatic equalisation mode",
-			501,
+			catSort+1,
 			0xEDFD,
 			true,
 			false,
@@ -137,7 +141,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryAbsorptionTimeLimit",
 			"Battery absorption time limit",
-			502,
+			catSort+2,
 			0xEDFB,
 			true,
 			false,
@@ -150,7 +154,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryAbsorptionVoltage",
 			"Battery absorption voltage",
-			503,
+			catSort+3,
 			0xEDF7,
 			true,
 			false,
@@ -163,7 +167,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryFloatVoltage",
 			"Battery float voltage",
-			504,
+			catSort+4,
 			0xEDF6,
 			true,
 			false,
@@ -176,7 +180,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryEqualisationVoltage",
 			"Battery equalisation voltage",
-			505,
+			catSort+5,
 			0xEDF4,
 			true,
 			false,
@@ -189,7 +193,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryTempCompensation",
 			"Battery temperature compensation",
-			506,
+			catSort+6,
 			0xEDF2,
 			true,
 			false,
@@ -204,7 +208,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryType",
 			"Battery type",
-			507,
+			catSort+7,
 			0xEDF1,
 			false,
 			false,
@@ -216,7 +220,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryMaximumCurrent",
 			"Battery maximum current",
-			508,
+			catSort+8,
 			0xEDF0,
 			true,
 			false,
@@ -229,7 +233,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryVoltage",
 			"Battery voltage",
-			509,
+			catSort+9,
 			0xEDEF,
 			true,
 			false,
@@ -244,7 +248,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryVoltageSetting",
 			"Battery voltage setting",
-			511,
+			catSort+11,
 			0xEDEA,
 			false,
 			false,
@@ -254,7 +258,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BmsPresent",
 			"BMS present",
-			512,
+			catSort+12,
 			0xEDE8,
 			false,
 			false,
@@ -266,7 +270,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"TailCurrent",
 			"Tail current",
-			513,
+			catSort+13,
 			0xEDE7,
 			true,
 			false,
@@ -279,7 +283,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"LowTempCurrent",
 			"Low temperature charge current",
-			514,
+			catSort+14,
 			0xEDE6,
 			true,
 			false,
@@ -294,7 +298,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"AutoEqualiseStop",
 			"Auto equalise stop on voltage",
-			515,
+			catSort+15,
 			0xEDE5,
 			false,
 			false,
@@ -306,7 +310,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"EqualisationCurrentLevel",
 			"Equalisation current level",
-			516,
+			catSort+16,
 			0xEDE4,
 			true,
 			false,
@@ -319,7 +323,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"EqualisationDuration",
 			"Equalisation duration",
-			517,
+			catSort+17,
 			0xEDE3,
 			true,
 			false,
@@ -332,7 +336,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"ReBulkVoltageOffset",
 			"Re-bulk voltage offset",
-			518,
+			catSort+18,
 			0xED2E,
 			true,
 			false,
@@ -345,7 +349,7 @@ func AppendSolarSettings(rl *RegisterList) {
 			"Settings",
 			"BatteryLowTemperatureLevel",
 			"Battery low temperature level",
-			519,
+			catSort+19,
 			0xEDE0,
 			true,
 			false,
@@ -359,6 +363,7 @@ func AppendSolarSettings(rl *RegisterList) {
 
 // AppendSolarChargerData appends all registers of the Charger category to the given RegisterList.
 func AppendSolarChargerData(rl *RegisterList) {
+	const catSort = 200
 	rl.AppendNumberRegisterStruct(
 		newNumberRegisterStruct(
 			"Essential",
@@ -377,7 +382,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"Charger",
 			"ChargerMaximumCurrent",
 			"Charger maximum current",
-			201,
+			catSort+1,
 			0xEDDF,
 			false,
 			false,
@@ -390,7 +395,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"Charger",
 			"SystemYield",
 			"System yield",
-			202,
+			catSort+2,
 			0xEDDD,
 			false,
 			false,
@@ -403,7 +408,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"Charger",
 			"SystemYieldResettable",
 			"System yield (resettable)",
-			203,
+			catSort+3,
 			0xEDDC,
 			false,
 			false,
@@ -416,7 +421,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"Charger",
 			"ChargerInternalTemperature",
 			"Charger internal temperature",
-			204,
+			catSort+4,
 			0xEDDB,
 			false,
 			false,
@@ -483,7 +488,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"Charger",
 			"MaximumPowerToday",
 			"Maximum power today",
-			205,
+			catSort+5,
 			0xEDD2,
 			false,
 			false,
@@ -509,7 +514,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"Charger",
 			"MaximumPowerYesterday",
 			"Maximum power yesterday",
-			207,
+			catSort+7,
 			0xEDD0,
 			false,
 			false,
@@ -528,6 +533,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 
 // AppendSolarPanelData appends all registers of the Panel category to the given RegisterList.
 func AppendSolarPanelData(rl *RegisterList) {
+	const catSort = 100
 	rl.AppendNumberRegisterStruct(
 		newNumberRegisterStruct(
 			"Essential",
@@ -546,7 +552,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			"Panel",
 			"PanelVoltage",
 			"Panel voltage",
-			100,
+			catSort,
 			0xEDBB,
 			false,
 			false,
@@ -559,7 +565,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			"Panel",
 			"PanelCurrent",
 			"Panel current",
-			101,
+			catSort+1,
 			0xEDBD,
 			false,
 			false,
@@ -573,7 +579,7 @@ func AppendSolarPanelData(rl *RegisterList) {
 			"Panel",
 			"PanelMaximumVoltage",
 			"Panel maximum voltage",
-			102,
+			catSort+2,
 			0xEDB8,
 			true,
 			false,
@@ -588,11 +594,109 @@ func AppendSolarPanelData(rl *RegisterList) {
 			"Panel",
 			"TrackerMode",
 			"Tracker mode",
-			103,
+			catSort+3,
 			0xEDB3,
 			false,
 			false,
 			veconst.SolarChargerTrackerModeFactory,
+		),
+	)
+}
+
+// AppendSolarLoadData appends all registers of the Load category to the given RegisterList.
+func AppendSolarLoadData(rl *RegisterList) {
+	const catSort = 500
+	rl.AppendNumberRegisterStruct(
+		newNumberRegisterStruct(
+			"Load",
+			"LoadCurrent",
+			"Load Current",
+			catSort,
+			0xEDAD,
+			false,
+			false,
+			false,
+			10,
+			0,
+			"A",
+		),
+		newNumberRegisterStruct(
+			"Load",
+			"LoadOffsetVoltage",
+			"Load Offset Voltage",
+			catSort+1,
+			0xEDAC,
+			false,
+			false,
+			false,
+			100,
+			0,
+			"V",
+		),
+		newNumberRegisterStruct(
+			"Load",
+			"LoadOutputVoltage",
+			"Load Output Voltage",
+			catSort+2,
+			0xEDA9,
+			false,
+			false,
+			false,
+			100,
+			0,
+			"V",
+		),
+	)
+	rl.AppendEnumRegisterStruct(
+		newEnumRegisterStruct(
+			"Load",
+			"LoadOutputState",
+			"Load Output State",
+			catSort+3,
+			0xEDA8,
+			false,
+			false,
+			veconst.BooleanOffOnFactory,
+		),
+	)
+	rl.AppendNumberRegisterStruct(
+		newNumberRegisterStruct(
+			"Load",
+			"LoadSwitchHighLevel",
+			"Load Switch High Level",
+			catSort+4,
+			0xED9D,
+			false,
+			false,
+			false,
+			100,
+			0,
+			"v",
+		),
+		newNumberRegisterStruct(
+			"Load",
+			"LoadSwitchLowLevel",
+			"Load Switch Low Level",
+			catSort+5,
+			0xED9C,
+			false,
+			false,
+			false,
+			100,
+			0,
+			"v",
+		),
+	)
+	rl.AppendEnumRegisterStruct(
+		newEnumRegisterStruct(
+			"Load",
+			"LoadOffReason",
+			"Load Off Reason",
+			catSort+6,
+			0xED91,
+			false,
+			false,
+			veconst.SolarChargerLoadOffReasonFactory,
 		),
 	)
 }

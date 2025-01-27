@@ -28,11 +28,17 @@ func GetRegisterListByProduct(p veproduct.Product) (rl RegisterList, err error) 
 			"Description",
 		)
 	case veproduct.TypeBlueSolarMPPT, veproduct.TypeSmartSolarMPPT:
-		AppendSolar(&rl)
+		AppendSolarProduct(&rl)
+		AppendSolarGeneric(&rl)
+		AppendSolarSettings(&rl)
+		AppendSolarChargerData(&rl)
+		AppendSolarPanelData(&rl)
 
 		// The panel current is not available in the 10A/15A/20A chargers
+		// Instead they have a load output.
 		if c := p.MaxPanelCurrent(); c == 10 || c == 15 || c == 20 {
 			rl.FilterByName("PanelCurrent")
+			AppendSolarLoadData(&rl)
 		}
 	case veproduct.TypePhoenixInverter, veproduct.TypePhoenixInverterSmart:
 		AppendInverter(&rl)
