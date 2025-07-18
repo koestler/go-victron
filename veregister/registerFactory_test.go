@@ -16,7 +16,8 @@ func TestGetRegisterListByProduct(t *testing.T) {
 
 	t.Run("supported types", func(t *testing.T) {
 		countPerType := map[veproduct.Product]int{
-			veproduct.BMV700:                                 27,
+			veproduct.BMV700:                                 25,
+			veproduct.BMV712SmartRev2:                        31,
 			veproduct.BMV712Smart:                            31,
 			veproduct.BlueSolarMPPT70_15:                     48, // Panel current not available
 			veproduct.BlueSolarMPPT75_50:                     43,

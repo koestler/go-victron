@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1
+- veregister: filter unavailable ProductRevision and Description registers for BMV700,BMV702,BMV700H
+
 ## 0.2.0
 - veregister: add solar load registers for 10/15/20A solar chargers.
 

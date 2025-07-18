@@ -21,6 +21,13 @@ func GetRegisterListByProduct(p veproduct.Product) (rl RegisterList, err error) 
 			"AuxVoltageMinimum",
 			"AuxVoltageMaximum",
 		)
+		switch p {
+		case veproduct.BMV700, veproduct.BMV702, veproduct.BMV700H:
+			rl.FilterByName(
+				"ProductRevision",
+				"Description",
+			)
+		}
 	case veproduct.TypeBMVSmart, veproduct.TypeSmartShunt:
 		AppendBmv(&rl)
 		rl.FilterByName(
