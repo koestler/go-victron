@@ -37,7 +37,7 @@ func (vd *Vedirect) recvUntil(needle byte) (data []byte, err error) {
 	return
 }
 
-// FlushReceiver flushes the underlying receiver buffer. This after some inactivity since some devices
+// FlushReceiver flushes the underlying receiver buffer. This is needed after some inactivity since some devices
 // like the BMV will start sending asynchronous messages after a while.
 func (vd *Vedirect) flushReceiver() {
 	if vd.cfg.DebugLogger != nil {

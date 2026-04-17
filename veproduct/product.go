@@ -4,7 +4,7 @@
 package veproduct
 
 // Product defines the exact model of a Victron Energy product.
-// It is different for different product lines,, different power / voltage options and hardware revisions.
+// It is different for different product lines, different power / voltage options and hardware revisions.
 type Product uint16
 
 const (
@@ -62,7 +62,7 @@ const (
 	BlueSolarMPPT150_60rev2                Product = 0xA070
 	BlueSolarMPPT150_70rev2                Product = 0xA071
 	BlueSolarMPPT150_45rev3                Product = 0xA072
-	SmatrtSolarMPPT150_45rev3              Product = 0xA073
+	SmartSolarMPPT150_45rev3              Product = 0xA073
 	SmartSolarMPPT70_10rev2                Product = 0xA074
 	SmartSolarMPPT75_15rev2                Product = 0xA075
 	BlueSolarMPPT100_30rev3                Product = 0xA076
@@ -222,7 +222,7 @@ var idStringMap = map[Product]struct {
 	BlueSolarMPPT150_60rev2:                {"150|60 rev2", TypeBlueSolarMPPT, 150, 60},
 	BlueSolarMPPT150_70rev2:                {"150|70 rev2", TypeBlueSolarMPPT, 150, 70},
 	BlueSolarMPPT150_45rev3:                {"150|45 rev3", TypeBlueSolarMPPT, 150, 45},
-	SmatrtSolarMPPT150_45rev3:              {"150|45 rev3", TypeSmartSolarMPPT, 150, 45},
+	SmartSolarMPPT150_45rev3:              {"150|45 rev3", TypeSmartSolarMPPT, 150, 45},
 	SmartSolarMPPT70_10rev2:                {"70|10 rev2", TypeSmartSolarMPPT, 70, 10},
 	SmartSolarMPPT75_15rev2:                {"75|15 rev2", TypeSmartSolarMPPT, 75, 15},
 	BlueSolarMPPT100_30rev3:                {"100|30 rev3", TypeBlueSolarMPPT, 100, 30},

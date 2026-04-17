@@ -5,7 +5,7 @@ import (
 	"github.com/koestler/go-victron/veproduct"
 )
 
-var ErrUnsupportedType = fmt.Errorf("unsuported product type")
+var ErrUnsupportedType = fmt.Errorf("unsupported product type")
 
 func GetRegisterListByProduct(p veproduct.Product) (rl RegisterList, err error) {
 	rl = NewRegisterList()

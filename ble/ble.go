@@ -184,7 +184,7 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	}
 
 	if len(rawBytes) < 9 {
-		log.Printf("ble[%s]->%s: len(rawBytes) is to low",
+		log.Printf("ble[%s]->%s: len(rawBytes) is too low",
 			ble.cfg.Name(), deviceConfig.Name(),
 		)
 		return
