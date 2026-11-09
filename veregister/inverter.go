@@ -13,7 +13,6 @@ func AppendInverter(rl *RegisterList) {
 	AppendInverterAcOutControl(rl)
 	AppendInverterBatteryControl(rl)
 	AppendInverterDynamicCutoff(rl)
-	// appendInverterRelayControl(rl)
 }
 
 // Registers not implemented (see VE.Direct-HEX-Protocol-Phoenix-Inverter.pdf for details):

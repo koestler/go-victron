@@ -94,7 +94,7 @@ func AppendBmvProduct(rl *RegisterList) {
 //   - 0xEEFC, 0x0320..0x0332, 0x031F Alarm settings and acknowledge
 //   - 0x034F, 0x034D, 0x034E, 0x100A, 0x100B, 0x0350..0x0362 Relay settings
 
-// AppendBmvMonitor appends all registers of the Monitor category to the given RegisterList.
+// AppendBmvMonitor appends all registers of the Essential and Monitor categories to the given RegisterList.
 func AppendBmvMonitor(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
 		newNumberRegisterStruct(
@@ -191,7 +191,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 		newNumberRegisterStruct(
 			"Essential",
 			"BatteryTemperature",
-			"Battery Temperature",
+			"Battery temperature",
 			4,
 			0xEDEC,
 			false,

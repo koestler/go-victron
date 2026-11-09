@@ -5,19 +5,19 @@ type InverterOffReasons uint32
 type InverterOffReasonsFactoryType struct{}
 
 const (
-	InverterOffReasonNoInputPower InverterOffReason = 0
-	InverterOffReasonPowerButton  InverterOffReason = 2
-	InverterOffReasonRemoteInput  InverterOffReason = 3
-	InverterOffReasonInternal     InverterOffReason = 4
-	InverterOffReasonPayGo        InverterOffReason = 5
+	InverterOffReasonNoInputPower    InverterOffReason = 0
+	InverterOffReasonSoftPowerButton InverterOffReason = 2
+	InverterOffReasonRemoteInput     InverterOffReason = 3
+	InverterOffReasonInternal        InverterOffReason = 4
+	InverterOffReasonPayGo           InverterOffReason = 5
 )
 
 var inverterOffReasonMap = map[InverterOffReason]string{
-	InverterOffReasonNoInputPower: "No input power",
-	InverterOffReasonPowerButton:  "Soft power button or SW controller",
-	InverterOffReasonRemoteInput:  "HW remote input connector",
-	InverterOffReasonInternal:     "Internal reason (see alarm reason)",
-	InverterOffReasonPayGo:        "PayGo, out of credit, need token",
+	InverterOffReasonNoInputPower:    "No input power",
+	InverterOffReasonSoftPowerButton: "Soft power button or SW controller",
+	InverterOffReasonRemoteInput:     "HW remote input connector",
+	InverterOffReasonInternal:        "Internal reason (see alarm reason)",
+	InverterOffReasonPayGo:           "PayGo, out of credit, need token",
 }
 var InverterOffReasonsFactory InverterOffReasonsFactoryType
 

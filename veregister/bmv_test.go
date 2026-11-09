@@ -15,7 +15,7 @@ func TestAppendBmv(t *testing.T) {
 		"Number: category=Essential, name=CurrentHighRes, description=Current, sort=1, address=0xED8C, static=false, writable=false, signed=true, factor=1000, offset=0.000000, unit=A",
 		"Number: category=Essential, name=MainVoltage, description=Main voltage, sort=2, address=0xED8D, static=false, writable=false, signed=true, factor=100, offset=0.000000, unit=V",
 		"Number: category=Essential, name=SOC, description=State of charge, sort=3, address=0xFFF, static=false, writable=false, signed=false, factor=100, offset=0.000000, unit=%",
-		"Number: category=Essential, name=BatteryTemperature, description=Battery Temperature, sort=4, address=0xEDEC, static=false, writable=false, signed=false, factor=100, offset=-273.150000, unit=°C",
+		"Number: category=Essential, name=BatteryTemperature, description=Battery temperature, sort=4, address=0xEDEC, static=false, writable=false, signed=false, factor=100, offset=-273.150000, unit=°C",
 		"Number: category=Monitor, name=AuxVoltage, description=Aux (starter) voltage, sort=100, address=0xED7D, static=false, writable=false, signed=true, factor=100, offset=0.000000, unit=V",
 		"Number: category=Monitor, name=Consumed, description=Consumed, sort=101, address=0xEEFF, static=false, writable=false, signed=true, factor=10, offset=0.000000, unit=Ah",
 		"Number: category=Monitor, name=TTG, description=Time to go, sort=102, address=0xFFE, static=false, writable=false, signed=false, factor=1, offset=0.000000, unit=min",

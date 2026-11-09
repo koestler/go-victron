@@ -619,7 +619,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 		newNumberRegisterStruct(
 			"Essential",
 			"LoadCurrent",
-			"Load Current",
+			"Load current",
 			10,
 			0xEDAD,
 			false,
@@ -632,7 +632,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 		newNumberRegisterStruct(
 			"Load",
 			"LoadOffsetVoltage",
-			"Load Offset Voltage",
+			"Load offset voltage",
 			catSort,
 			0xEDAC,
 			false,
@@ -645,7 +645,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 		newNumberRegisterStruct(
 			"Load",
 			"LoadOutputVoltage",
-			"Load Output Voltage",
+			"Load output voltage",
 			catSort+1,
 			0xEDA9,
 			false,
@@ -660,7 +660,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 		newEnumRegisterStruct(
 			"Essential",
 			"LoadOutputState",
-			"Load Output State",
+			"Load output state",
 			11,
 			0xEDA8,
 			false,
@@ -672,7 +672,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 		newNumberRegisterStruct(
 			"Load",
 			"LoadSwitchHighLevel",
-			"Load Switch High Level",
+			"Load switch high level",
 			catSort+2,
 			0xED9D,
 			false,
@@ -685,7 +685,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 		newNumberRegisterStruct(
 			"Load",
 			"LoadSwitchLowLevel",
-			"Load Switch Low Level",
+			"Load switch low level",
 			catSort+3,
 			0xED9C,
 			false,
