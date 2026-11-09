@@ -85,8 +85,14 @@ func AppendBmvProduct(rl *RegisterList) {
 			"s",
 		),
 	)
-	// skipped Bluetooth capabilities
+	// skipped Bluetooth capabilities (register 0x0150)
 }
+
+// Registers not implemented (see BMV-7xx-HEX-Protocol.pdf for details):
+//   - 0xED8F Current (non high-resolution, Sn16, 0.1A) - CurrentHighRes (0xED8C) is used instead
+//   - 0x1000..0x1009, 0x1034 Battery monitor settings (capacity, charged voltage, tail current, ...)
+//   - 0xEEFC, 0x0320..0x0332, 0x031F Alarm settings and acknowledge
+//   - 0x034F, 0x034D, 0x034E, 0x100A, 0x100B, 0x0350..0x0362 Relay settings
 
 // AppendBmvMonitor appends all registers of the Monitor category to the given RegisterList.
 func AppendBmvMonitor(rl *RegisterList) {
@@ -138,7 +144,7 @@ func AppendBmvMonitor(rl *RegisterList) {
 			0xED7D,
 			false,
 			false,
-			false,
+			true, // register is Sn16 per protocol doc
 			100,
 			0,
 			"V",
@@ -325,7 +331,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0x0306,
 			false,
 			false,
-			false,
+			true, // register is Sn32 per protocol doc
 			100,
 			0,
 			"V",
@@ -338,7 +344,7 @@ func AppendBmvHistoric(rl *RegisterList) {
 			0x0307,
 			false,
 			false,
-			false,
+			true, // register is Sn32 per protocol doc
 			100,
 			0,
 			"V",

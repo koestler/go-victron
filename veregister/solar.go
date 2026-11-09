@@ -65,7 +65,7 @@ func AppendSolarProduct(rl *RegisterList) {
 			false,
 		),
 	)
-	// skipped capabilities
+	// skipped capabilities (register 0x0140)
 }
 
 // AppendSolarGeneric appends all registers of the Generic category to the given RegisterList.
@@ -92,7 +92,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 			false,
 			veconst.SolarChargerStateFactory,
 		),
-		// skipped Remote control used
+		// skipped Remote control used (register 0x0202)
 	)
 	rl.AppendFieldListRegisterStruct(
 		newFieldListRegisterStruct(
@@ -359,6 +359,9 @@ func AppendSolarSettings(rl *RegisterList) {
 			"°C",
 		),
 	)
+	// Registers not implemented (see BlueSolar-HEX-protocol.pdf for details):
+	//   - 0xEDFF Batterysafe mode, 0xEDFC Battery bulk time limit, 0xEDCA Voltage compensation
+	//   - 0xD0C0 Remote input mode configuration, 0xD01F 2-wire BMS input states (MPPT RS only)
 }
 
 // AppendSolarChargerData appends all registers of the Charger category to the given RegisterList.
@@ -524,11 +527,14 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"W",
 		),
 	)
-	// skipped voltage setting range
-	// skipped history version
-	// skipped streetlight version
-	// skipped adjustable voltage minimum
-	// skipped adjustable voltage maximum
+	// skipped voltage setting range (register 0xEDCE)
+	// skipped history version (register 0xEDCD)
+	// skipped streetlight version (register 0xEDCC)
+	// skipped adjustable voltage minimum (register 0x2211)
+	// skipped adjustable voltage maximum (register 0x2212)
+	// Registers not implemented (see BlueSolar-HEX-protocol.pdf for details):
+	//   - 0xEDD4 Additional charger state info, 0xEDC7 Equalise current maximum, 0xEDC6 Equalise voltage maximum
+	//   - 0xED8B Battery ripple voltage, 0xED8D Battery voltage (replaces 0xEDD5), 0xED8F Battery current (replaces 0xEDD7)
 }
 
 // AppendSolarPanelData appends all registers of the Panel category to the given RegisterList.
@@ -601,6 +607,9 @@ func AppendSolarPanelData(rl *RegisterList) {
 			veconst.SolarChargerTrackerModeFactory,
 		),
 	)
+	// Registers not implemented (see BlueSolar-HEX-protocol.pdf for details):
+	//   - 0x0244 Number of MPPT trackers, 0xEDBF Panel maximum current, 0xEDB2 Panel starting voltage, 0xEDB1 Panel input resistance
+	//   - 0xECCB..0xECFD per-tracker panel power/voltage/current/tracker mode (MPPT RS models only)
 }
 
 // AppendSolarLoadData appends all registers of the Load category to the given RegisterList.
@@ -671,7 +680,7 @@ func AppendSolarLoadData(rl *RegisterList) {
 			false,
 			100,
 			0,
-			"v",
+			"V",
 		),
 		newNumberRegisterStruct(
 			"Load",
@@ -684,7 +693,12 @@ func AppendSolarLoadData(rl *RegisterList) {
 			false,
 			100,
 			0,
-			"v",
+			"V",
 		),
 	)
+	// Registers not implemented (see BlueSolar-HEX-protocol.pdf for details):
+	//   - 0xEDAB Load output control, 0xED91 Load output off reason, 0xED90 Load AES timer
+	//   - 0xEDD9, 0x0350..0x0353, 0xEDBA, 0xEDB9, 0x100A Relay operation mode and thresholds
+	//   - 0xEDA0..0xEDA7, 0xED9B, 0xED9A, 0xED99, 0xED96, 0xED97, 0x2030, 0x2031 Streetlight/timer registers
+	//   - 0xED9E, 0xED98 VE.Direct TX/RX port operation mode
 }

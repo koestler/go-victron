@@ -16,6 +16,10 @@ func AppendInverter(rl *RegisterList) {
 	// appendInverterRelayControl(rl)
 }
 
+// Registers not implemented (see VE.Direct-HEX-Protocol-Phoenix-Inverter.pdf for details):
+//   - 0x034E Relay control/status, 0x034F Relay mode
+//   - 0xEB99 Non-volatile memory command, 0x0004 Restore user defaults
+
 // AppendInverterProduct appends all registers of the Product category to the given RegisterList.
 func AppendInverterProduct(rl *RegisterList) {
 	rl.AppendNumberRegisterStruct(
@@ -93,7 +97,7 @@ func AppendInverterProduct(rl *RegisterList) {
 			0,
 			"VA",
 		),
-		// skipping capabilities
+		// skipping capabilities (register 0x0140, 0x0150, 0x0160)
 		newNumberRegisterStruct(
 			"Product",
 			"ACOutNomVoltage",
@@ -121,6 +125,8 @@ func AppendInverterProduct(rl *RegisterList) {
 			"V",
 		),
 	)
+	// Registers not implemented (see VE.Direct-HEX-Protocol-Phoenix-Inverter.pdf for details):
+	//   - 0x0090 BLE mode, 0xEC41 Settings changed
 }
 
 // AppendInverterGeneric appends all registers of the Generic category to the given RegisterList.
@@ -169,6 +175,8 @@ func AppendInverterGeneric(rl *RegisterList) {
 			veconst.InverterWarningReasonFactory,
 		),
 	)
+	// Registers not implemented (see VE.Direct-HEX-Protocol-Phoenix-Inverter.pdf for details):
+	//   - 0x031E Alarm reasons (same bitmask meaning as WarningReason, only the triggering reason is set)
 }
 
 // AppendInverterHistory appends all registers of the History category to the given RegisterList.
