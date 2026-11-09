@@ -115,7 +115,7 @@ func New(cfg Config) (*BleStruct, error) {
 
 						}
 					}()
-					if err = ble.connectDevice(dev, deviceConfig); err != nil {
+					if err := ble.connectDevice(dev, deviceConfig); err != nil {
 						log.Printf("ble[%s]: device %s failed: %s", ble.Name(), deviceConfig.Name(), err)
 					}
 				}()
@@ -136,11 +136,6 @@ func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConf
 	}
 
 	defer func() {
-		// re-panic so that a recovered panic is not swallowed here
-		if r := recover(); r != nil {
-			panic(r)
-		}
-
 		if err := dev.UnwatchProperties(propUpdates); err != nil {
 			log.Printf("error during unwatch: %s", err)
 		} else {
@@ -161,7 +156,13 @@ func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConf
 				)
 				continue
 			} else {
-				rawBytes = md.([]uint8)
+				var isBytes bool
+				if rawBytes, isBytes = md.([]uint8); !isBytes {
+					log.Printf("ble[%s]->%s: manufacturer data has unexpected type %T",
+						ble.cfg.Name(), deviceConfig.Name(), md,
+					)
+					continue
+				}
 			}
 
 			if bytes.Equal(rawBytes, lastRawBytes) {

@@ -25,7 +25,11 @@ func (f DcEnergyMeterAuxModeFactoryType) New(v uint8) (DcEnergyMeterAuxMode, err
 }
 
 func (f DcEnergyMeterAuxModeFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f DcEnergyMeterAuxModeFactoryType) IntToStringMap() map[int]string {

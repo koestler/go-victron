@@ -29,6 +29,11 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 			continue
 		}
 
+		if len(rawValues) < 3 {
+			err = fmt.Errorf("response too short, len(rawValues)=%d", len(rawValues))
+			continue
+		}
+
 		// check address
 		responseAddress := uint16(littleEndianBytesToUint(rawValues[0:2]))
 		if address != responseAddress {
@@ -86,7 +91,7 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 	// extract and check command
 	var response VeResponse
 	s := string(responseData[0])
-	if i, e := strconv.ParseUint(s, 16, 8); err != nil {
+	if i, e := strconv.ParseUint(s, 16, 8); e != nil {
 		err = fmt.Errorf("cannot parse response, address=0x%X, s=%q: %s", address, s, e)
 		return
 	} else {

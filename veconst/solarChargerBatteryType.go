@@ -37,7 +37,11 @@ func (f SolarChargerBatteryTypeFactoryType) New(v uint8) (SolarChargerBatteryTyp
 }
 
 func (f SolarChargerBatteryTypeFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f SolarChargerBatteryTypeFactoryType) IntToStringMap() map[int]string {

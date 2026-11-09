@@ -1,9 +1,11 @@
 package vedirectapi
 
 import (
+	"cmp"
 	"fmt"
 	"github.com/koestler/go-victron/veconst"
 	"github.com/koestler/go-victron/veregister"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -81,12 +83,17 @@ func (v FieldListValue) Value() veconst.FieldList {
 
 func (v FieldListValue) CommaString() string {
 	fields := v.value.Fields()
-	strs := make([]string, 0, len(fields))
-	for f, set := range fields {
-		if !set {
-			continue
+	set := make([]veconst.Field, 0, len(fields))
+	for f, isSet := range fields {
+		if isSet {
+			set = append(set, f)
 		}
-		strs = append(strs, f.String())
+	}
+	sort.Slice(set, func(i, j int) bool { return set[i].Idx() < set[j].Idx() })
+
+	strs := make([]string, len(set))
+	for i, f := range set {
+		strs[i] = f.String()
 	}
 	return strings.Join(strs, ", ")
 }
@@ -124,7 +131,12 @@ func (rv RegisterValues) GetList() []RegisterValue {
 		list = append(list, v)
 	}
 
-	sort.SliceStable(list, func(i, j int) bool { return list[i].Sort() < list[j].Sort() })
+	slices.SortFunc(list, func(a, b RegisterValue) int {
+		return cmp.Or(
+			cmp.Compare(a.Sort(), b.Sort()),
+			strings.Compare(a.Name(), b.Name()),
+		)
+	})
 
 	return list
 }

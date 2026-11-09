@@ -39,8 +39,9 @@ func (l *FileLogger) Println(v ...any) {
 
 // Close flushes the log file and closes it.
 func (l *FileLogger) Close() error {
-	if err := l.w.Flush(); err != nil {
-		return nil
+	flushErr := l.w.Flush()
+	if err := l.f.Close(); err != nil {
+		return err
 	}
-	return l.f.Close()
+	return flushErr
 }

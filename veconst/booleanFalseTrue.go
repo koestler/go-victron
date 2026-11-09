@@ -23,7 +23,11 @@ func (f BooleanFalseTrueFactoryType) New(v uint8) (BooleanFalseTrue, error) {
 }
 
 func (f BooleanFalseTrueFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f BooleanFalseTrueFactoryType) IntToStringMap() map[int]string {

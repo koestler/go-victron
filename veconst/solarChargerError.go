@@ -60,7 +60,11 @@ func (f SolarChargerErrorFactoryType) New(v uint8) (SolarChargerError, error) {
 }
 
 func (f SolarChargerErrorFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f SolarChargerErrorFactoryType) IntToStringMap() map[int]string {

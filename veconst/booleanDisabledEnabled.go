@@ -23,7 +23,11 @@ func (f BooleanDisabledEnabledFactoryType) New(v uint8) (BooleanDisabledEnabled,
 }
 
 func (f BooleanDisabledEnabledFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f BooleanDisabledEnabledFactoryType) IntToStringMap() map[int]string {

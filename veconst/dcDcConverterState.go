@@ -39,7 +39,11 @@ func (f DcDcConverterStateFactoryType) New(v uint8) (DcDcConverterState, error) 
 }
 
 func (f DcDcConverterStateFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f DcDcConverterStateFactoryType) IntToStringMap() map[int]string {
