@@ -17,7 +17,7 @@ import (
 // 100        | 12         | 4          | 20         | Consumed Ah           | 0.1Ah   | -104.857 .. 0Ah     | 0xFFFFF
 // 120        | 15         | 0          | 7          | Temperature           | 1°C     | -40 .. 86 °C        | 0x7F
 
-type LynxSmartBms struct {
+type LynxSmartBmsRecord struct {
 	Error          uint8   `Description:"Error"`
 	Ttg            float64 `Description:"Time to go" Unit:"s"`
 	BatteryVoltage float64 `Description:"Battery voltage" Unit:"V"`
@@ -29,7 +29,7 @@ type LynxSmartBms struct {
 	Temperature    float64 `Description:"Temperature" Unit:"°C"`
 }
 
-func DecodeLynxSmartBms(inp []byte) (ret LynxSmartBms, err error) {
+func DecodeLynxSmartBmsRecord(inp []byte) (ret LynxSmartBmsRecord, err error) {
 	if len(inp) < 16 {
 		err = ErrInputTooShort
 		return

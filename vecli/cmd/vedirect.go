@@ -15,7 +15,7 @@ var vedirectCmd = &cobra.Command{
 	Use:   "vedirect",
 	Short: "Connect to VE.Direct device.",
 	Long: `Connect to VE.Direct device, sends a ping, gets the device id and uses it to get the product type.
-Then it uses the register list to fetch all known registers and outputs it's values.`,
+Then it uses the register list to fetch all known registers and outputs its values.`,
 	Run: runVedirect,
 }
 
@@ -60,6 +60,7 @@ func runVedirect(cmd *cobra.Command, args []string) {
 	var values vedirectapi.RegisterValues
 	if rv, err := api.ReadAllRegisters(context.Background()); err != nil {
 		fmt.Printf("error fetching registers: %s\n", err)
+		return
 	} else {
 		values = rv
 	}

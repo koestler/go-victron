@@ -10,9 +10,9 @@ import (
 // Start bits | Nr of bits | Meaning               | Units   | Range               | NA value
 // 0          | 8          | Device state          |         | 0 .. 0xFE           | 0xFF
 // 8          | 8          | Charger error         |         | 0 .. 0xFE           | 0xFF
-// 16	      | 16         | Battery voltage       | 0.01V   | -327.68 .. 327.66 V | 0x7FFF
+// 16         | 16         | Battery voltage       | 0.01V   | -327.68 .. 327.66 V | 0x7FFF
 // 32         | 16         | Battery current       | 0.1A    | -3276.8 .. 3276.6 A | 0x7FFF
-// 48         | 16         | Yield today           | 0.01kWh | 0 .. 65534 W        | 0xFFFF
+// 48         | 16         | Yield today           | 0.01kWh | 0 .. 655.34 kWh     | 0xFFFF
 // 64         | 16         | PV power              | 1W      | 0 .. 65534 W        | 0xFFFF
 // 80         | 9          | Load current          | 0.1A    | 0 .. 51.0 A         | 0x1FF
 
@@ -26,7 +26,7 @@ type SolarChargerRecord struct {
 	LoadCurrent    float64                   `Description:"Load current" Unit:"A"`
 }
 
-func DecodeSolarChargeRecord(inp []byte) (ret SolarChargerRecord, err error) {
+func DecodeSolarChargerRecord(inp []byte) (ret SolarChargerRecord, err error) {
 	if len(inp) < 12 {
 		err = ErrInputTooShort
 		return

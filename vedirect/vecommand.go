@@ -17,7 +17,7 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	}
 
 	// fetch response using multiple tries to
-	// deal with old data in the tx buffer of the veproduct device and our rx buffer
+	// deal with old data in the tx buffer of the VE.Direct device and our rx buffer
 	const numbTries = 8
 	for try := 0; try < numbTries; try++ {
 		var rawValues []byte
@@ -56,7 +56,7 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	return
 }
 
-// VeCommand executes, sends the given command returns the raw response or an error.
+// VeCommand sends the given command and returns the raw response or an error.
 // address is only used for VeCommandGet and VeCommandSet commands.
 func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte, err error) {
 	if vd.cfg.DebugLogger != nil {

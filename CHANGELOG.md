@@ -12,6 +12,7 @@
   (register support is not implemented yet).
 - Veregister: fix wrong signedness of BMV AuxVoltage, MainVoltageMinimum, MainVoltageMaximum
   and wrong unit casing of solar LoadSwitchHighLevel/LoadSwitchLowLevel.
+- Rename inconsistent names (DecodeSolarChargerRecord, LynxSmartBmsRecord, InverterWarningReason*, LiFePO4) and fix typos.
 
 ## 0.3.0
 - fix exposed names:

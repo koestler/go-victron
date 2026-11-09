@@ -16,7 +16,7 @@ import (
 // 48         | 6          | 0          | 19         | Active AC in power    | 1W      | -262144 .. 262142 W | 0x7FFFF
 // 67         | 8          | 3          | 19         | AC out power          | 1W      | -262144 .. 262142 W | 0x7FFFF
 // 86         | 10         | 6          | 2          | Alarm                 |         | 0 .. 3              | 0x3
-// 88         | 11         | 0          | 7		     | Temperature           | 1°C     | -40 .. 86 °C        | 0x7F
+// 88         | 11         | 0          | 7          | Temperature           | 1°C     | -40 .. 86 °C        | 0x7F
 // 95         | 11         | 7          | 7          | Soc                   | 1%      | 0 .. 126 %          | 0x7F
 
 type VeBusRecord struct {

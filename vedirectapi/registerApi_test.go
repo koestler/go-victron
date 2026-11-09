@@ -228,7 +228,7 @@ func TestRegisterApi_ReadAllRegisters(t *testing.T) {
 			"BatteryMaximumCurrent=70.000000A",
 			"BatteryTempCompensation=0.000000mV/K",
 			"BatteryTemperature=11.500000°C",
-			"BatteryType=8:LiFEPO4 (14.2V)",
+			"BatteryType=8:LiFePO4 (14.2V)",
 			"BatteryVoltage=24.000000V",
 			"BatteryVoltageSetting=24:24V battery",
 			"BmsPresent=0:No",

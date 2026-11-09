@@ -97,7 +97,7 @@ func New(cfg Config) (*BleStruct, error) {
 				}
 
 				if cfg.LogDebug() {
-					log.Printf("ble[%s]: device recovered: path=%s, name=%s, addr=%x, rssi=%d",
+					log.Printf("ble[%s]: device discovered: path=%s, name=%s, addr=%x, rssi=%d",
 						ble.Name(), devicePath,
 						dev.Properties.Name, dev.Properties.Address, dev.Properties.RSSI,
 					)
@@ -136,7 +136,7 @@ func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConf
 	}
 
 	defer func() {
-		// unwatch properties calls recover
+		// re-panic so that a recovered panic is not swallowed here
 		if r := recover(); r != nil {
 			panic(r)
 		}
@@ -203,7 +203,7 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	productId := binary.LittleEndian.Uint16(rawBytes[2:4])
 	product := veproduct.Product(productId)
 	recordType := rawBytes[4]
-	nonce := rawBytes[5:7] // used ad iv for encryption; is only 16 bits
+	nonce := rawBytes[5:7] // used as iv for encryption; is only 16 bits
 	iv := binary.LittleEndian.Uint16(nonce)
 
 	firstByteOfEncryptionKey := rawBytes[7]
@@ -255,7 +255,7 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	switch recordType {
 	case 0x01:
 		// solar charger
-		record, err := bleparser.DecodeSolarChargeRecord(decryptedBytes)
+		record, err := bleparser.DecodeSolarChargerRecord(decryptedBytes)
 		if err != nil {
 			log.Printf("ble[%s]->%s: cannot decode solar charger record: %s",
 				ble.cfg.Name(), deviceConfig.Name(), err,
@@ -282,7 +282,7 @@ func (ble *BleStruct) getDeviceConfig(bluezAddr string) DeviceConfig {
 }
 
 // input: D4:9D:D2:92:62:02
-// output []byte{0x, 0xd4, 0x9d, 0xd2, 0x92, 0x62, 0x02}
+// output []byte{0xd4, 0x9d, 0xd2, 0x92, 0x62, 0x02}
 func bluezAddrBytes(i string) []byte {
 	b, err := hex.DecodeString(strings.ReplaceAll(i, ":", ""))
 	if err != nil {

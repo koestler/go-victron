@@ -11,7 +11,7 @@ const (
 	SolarChargerBatteryTypeTubularMode1          SolarChargerBatteryType = 5
 	SolarChargerBatteryTypeTubularMode2          SolarChargerBatteryType = 6
 	SolarChargerBatteryTypeTubularMode3          SolarChargerBatteryType = 7
-	SolarChargerBatteryTypeLiFEPO4               SolarChargerBatteryType = 8
+	SolarChargerBatteryTypeLiFePO4               SolarChargerBatteryType = 8
 	SolarChargerBatteryTypeUserDefined           SolarChargerBatteryType = 255
 )
 
@@ -23,7 +23,7 @@ var solarChargerBatteryTypeMap = map[SolarChargerBatteryType]string{
 	SolarChargerBatteryTypeTubularMode1:          "Tubular plate cyclic mode 1 (14.9V)",
 	SolarChargerBatteryTypeTubularMode2:          "Tubular plate cyclic mode 2 (15.1V)",
 	SolarChargerBatteryTypeTubularMode3:          "Tubular plate cyclic mode 3 (15.3V)",
-	SolarChargerBatteryTypeLiFEPO4:               "LiFEPO4 (14.2V)",
+	SolarChargerBatteryTypeLiFePO4:               "LiFePO4 (14.2V)",
 	SolarChargerBatteryTypeUserDefined:           "User defined",
 }
 var SolarChargerBatteryTypeFactory SolarChargerBatteryTypeFactoryType
