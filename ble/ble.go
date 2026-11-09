@@ -179,16 +179,17 @@ func (ble *BleStruct) connectDevice(dev *device.Device1, deviceConfig DeviceConf
 }
 
 func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBytes []uint8) {
-	if ble.cfg.LogDebug() {
-		log.Printf("ble[%s]->%s: handle len=%d, rawBytes=%x",
+	debug := ble.cfg.LogDebug()
+	prefixFmt := "ble[%s]->%s: "
+
+	if debug {
+		log.Printf(prefixFmt+"handle len=%d, rawBytes=%x",
 			ble.cfg.Name(), deviceConfig.Name(), len(rawBytes), rawBytes,
 		)
 	}
 
 	if len(rawBytes) < 9 {
-		log.Printf("ble[%s]->%s: len(rawBytes) is too low",
-			ble.cfg.Name(), deviceConfig.Name(),
-		)
+		log.Printf(prefixFmt+"len(rawBytes) is too low", ble.cfg.Name(), deviceConfig.Name())
 		return
 	}
 
@@ -210,67 +211,109 @@ func (ble *BleStruct) handleNewManufacturerData(deviceConfig DeviceConfig, rawBy
 	firstByteOfEncryptionKey := rawBytes[7]
 	encryptedBytes := rawBytes[8:]
 
-	log.Printf("ble[%s]->%s: prefix=%x productId=%x productString=%s recordType=%x, nonce=%d, firstByteOfEncryptionKey=%x",
-		ble.cfg.Name(), deviceConfig.Name(), prefix, productId, product.String(), recordType, nonce, firstByteOfEncryptionKey,
-	)
+	if debug {
+		log.Printf(prefixFmt+"prefix=%x productId=%x productString=%s recordType=%x, nonce=%d, firstByteOfEncryptionKey=%x",
+			ble.cfg.Name(), deviceConfig.Name(), prefix, productId, product.String(), recordType, nonce, firstByteOfEncryptionKey,
+		)
+		log.Printf(prefixFmt+"encryptedBytes=%x, len=%d",
+			ble.cfg.Name(), deviceConfig.Name(), encryptedBytes, len(encryptedBytes),
+		)
+	}
 
-	log.Printf("ble[%s]->%s: encryptedBytes=%x, len=%d",
-		ble.cfg.Name(), deviceConfig.Name(), encryptedBytes, len(encryptedBytes),
-	)
-
-	// decrypt rawBytes using aes-ctr algorithm
+	// decrypt using aes-ctr algorithm
 	// encryption key of config is fixed to 32 hex chars, so 16 bytes, so 128-bit AES is used here
-	block, err := aes.NewCipher(deviceConfig.EncryptionKey())
-	if err != nil {
-		log.Printf("ble[%s]->%s: cannot create aes cipher: %s",
-			ble.cfg.Name(), deviceConfig.Name(), err,
+	key := deviceConfig.EncryptionKey()
+	if len(key) == 0 {
+		log.Printf(prefixFmt+"no encryption key configured", ble.cfg.Name(), deviceConfig.Name())
+		return
+	}
+
+	// the advertisement contains the first byte of the key to detect a wrong key
+	if key[0] != firstByteOfEncryptionKey {
+		log.Printf(prefixFmt+"encryption key mismatch: device uses a key starting with %02x but configured key starts with %02x",
+			ble.cfg.Name(), deviceConfig.Name(), firstByteOfEncryptionKey, key[0],
 		)
 		return
 	}
 
-	paddedEncryptedBytes := PKCS7Padding(encryptedBytes, block.BlockSize())
-
-	log.Printf("ble[%s]->%s: paddedEncryptedBytes=%x, len=%d",
-		ble.cfg.Name(), deviceConfig.Name(), paddedEncryptedBytes, len(paddedEncryptedBytes),
-	)
-
-	decryptedBytes := make([]byte, len(paddedEncryptedBytes))
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		log.Printf(prefixFmt+"cannot create aes cipher: %s", ble.cfg.Name(), deviceConfig.Name(), err)
+		return
+	}
 
 	// iv needs to be 16 bytes for 128-bit AES, use nonce and pad with 0
 	ivBytes := make([]byte, 16)
 	binary.LittleEndian.PutUint16(ivBytes, iv)
 
-	log.Printf("ble[%s]->%s: iv=%d ivBytes=%x, len=%d",
-		ble.cfg.Name(), deviceConfig.Name(),
-		iv, ivBytes, len(ivBytes),
-	)
+	decryptedBytes := make([]byte, len(encryptedBytes))
+	cipher.NewCTR(block, ivBytes).XORKeyStream(decryptedBytes, encryptedBytes)
 
-	ctrStream := cipher.NewCTR(block, ivBytes)
-	ctrStream.XORKeyStream(decryptedBytes, paddedEncryptedBytes)
-
-	log.Printf("ble[%s]->%s: decryptedBytes=%x, len=%d",
-		ble.cfg.Name(), deviceConfig.Name(), decryptedBytes, len(decryptedBytes),
-	)
-
-	// handle decryptedBytes
-	switch recordType {
-	case 0x01:
-		// solar charger
-		record, err := bleparser.DecodeSolarChargerRecord(decryptedBytes)
-		if err != nil {
-			log.Printf("ble[%s]->%s: cannot decode solar charger record: %s",
-				ble.cfg.Name(), deviceConfig.Name(), err,
-			)
-			return
-		}
-		log.Printf("ble[%s]->%s: solar charger record=%#v", ble.cfg.Name(), deviceConfig.Name(), record)
+	if debug {
+		log.Printf(prefixFmt+"iv=%d ivBytes=%x, decryptedBytes=%x, len=%d",
+			ble.cfg.Name(), deviceConfig.Name(), iv, ivBytes, decryptedBytes, len(decryptedBytes),
+		)
 	}
+
+	name, record, err := decodeRecord(recordType, decryptedBytes)
+	if err != nil {
+		log.Printf(prefixFmt+"cannot decode %s record: %s", ble.cfg.Name(), deviceConfig.Name(), name, err)
+		return
+	}
+	if record == nil {
+		if debug {
+			log.Printf(prefixFmt+"unsupported record type %#x", ble.cfg.Name(), deviceConfig.Name(), recordType)
+		}
+		return
+	}
+	log.Printf(prefixFmt+"%s record=%#v", ble.cfg.Name(), deviceConfig.Name(), name, record)
 }
 
-func PKCS7Padding(ciphertext []byte, blocksize int) []byte {
-	padding := blocksize - len(ciphertext)%blocksize
-	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(ciphertext, padtext...)
+// decodeRecord decodes the decrypted data according to the record type.
+// It returns a nil record and no error for unsupported record types.
+func decodeRecord(recordType byte, data []byte) (name string, record any, err error) {
+	switch recordType {
+	case 0x01:
+		name = "solar charger"
+		record, err = bleparser.DecodeSolarChargerRecord(data)
+	case 0x02:
+		name = "battery monitor"
+		record, err = bleparser.DecodeBatteryMonitorRecord(data)
+	case 0x03:
+		name = "inverter"
+		record, err = bleparser.DecodeInverterRecord(data)
+	case 0x04:
+		name = "dc-dc converter"
+		record, err = bleparser.DecodeDcDcConverterRecord(data)
+	case 0x05:
+		name = "smart lithium"
+		record, err = bleparser.DecodeSmartLithiumRecord(data)
+	case 0x06:
+		name = "inverter rs"
+		record, err = bleparser.DecodeInverterRsRecord(data)
+	case 0x07:
+		name = "gx device"
+		record, err = bleparser.DecodeGxDeviceRecord(data)
+	case 0x08:
+		name = "ac charger"
+		record, err = bleparser.DecodeAcChargerRecord(data)
+	case 0x09:
+		name = "smart battery protect"
+		record, err = bleparser.DecodeSmartBatteryProtectRecord(data)
+	case 0x0A:
+		name = "lynx smart bms"
+		record, err = bleparser.DecodeLynxSmartBmsRecord(data)
+	case 0x0B:
+		name = "multi rs"
+		record, err = bleparser.DecodeMultiRsRecord(data)
+	case 0x0C:
+		name = "ve.bus"
+		record, err = bleparser.DecodeVeBusRecord(data)
+	case 0x0D:
+		name = "dc energy meter"
+		record, err = bleparser.DecodeDcEnergyMeterRecord(data)
+	}
+	return
 }
 
 func (ble *BleStruct) getDeviceConfig(bluezAddr string) DeviceConfig {
