@@ -74,6 +74,7 @@ func New(cfg Config) (*BleStruct, error) {
 		discovery, cancel, err := api.Discover(a, &discoveryFilter)
 		if err != nil {
 			log.Printf("ble[%s]: cannot start discovery: %s", ble.Name(), err)
+			return
 		}
 		defer cancel()
 
@@ -90,7 +91,7 @@ func New(cfg Config) (*BleStruct, error) {
 					continue
 				}
 
-				// filter out all non victoron energy devices
+				// Filter out all non-Victron devices.
 				if _, ok := dev.Properties.ManufacturerData[VictronManufacturerId]; !ok {
 					continue
 				}
