@@ -15,8 +15,7 @@
 
 ## 0.3.0
 - fix exposed names:
-  - SmatrtSolarMPPT150_45rev3 -> SmartSolarMPPT150_45rev3
-  - SmatrtSolarMPPT150_45rev3 -> SmartSolarMPPT150_45rev3
+  - Corrected the exposed name to `SmartSolarMPPT150_45rev3`.
 - fix various typos in comments
 
 ## 0.2.1
