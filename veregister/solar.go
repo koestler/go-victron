@@ -439,7 +439,7 @@ func AppendSolarChargerData(rl *RegisterList) {
 			"Generic",
 			"ChargerErrorCode",
 			"Charger error",
-			401,
+			402,
 			0xEDDA,
 			false,
 			false,
