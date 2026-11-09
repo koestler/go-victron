@@ -26,7 +26,7 @@ type RegisterApi struct {
 
 var ErrCtxDone = fmt.Errorf("context done")
 
-// NewSerialRegisterApi open the given serial device, creates a new RegisterApi instance,
+// NewSerialRegisterApi opens the given serial device, creates a new RegisterApi instance,
 // and tries to connect to the device over a serial connection.
 func NewSerialRegisterApi(serialDevice string, vdConfig vedirect.Config) (*RegisterApi, error) {
 	serialConfig := serial.Config{
