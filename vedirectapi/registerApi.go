@@ -197,7 +197,7 @@ func (sa *RegisterApi) ReadRegisterList(
 	return
 }
 
-// ValueHandler is a container for handlers for number, text and enum registers values.
+// ValueHandler is a container for handlers for number, text, enum and field list registers values.
 // This is made such that new register types can be added without breaking the api.
 type ValueHandler struct {
 	Number    func(v NumberRegisterValue)

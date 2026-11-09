@@ -2,7 +2,7 @@ package veregister
 
 import "sort"
 
-// RegisterList is a container holding {Number,Text,Enum}RegisterStructs.
+// RegisterList is a container holding {Number,Text,Enum,FieldList}RegisterStructs.
 type RegisterList struct {
 	NumberRegisters    []NumberRegisterStruct
 	TextRegisters      []TextRegisterStruct

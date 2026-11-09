@@ -357,7 +357,7 @@ func (product Product) Model() string {
 	return ""
 }
 
-// Type returns type (e.g. "BMV", "SmartSolar", "BlueSolar", "SmartShunt" etc.) of the product
+// Type returns type (e.g. "BMV", "SmartSolar MPPT", "BlueSolar MPPT", "SmartShunt" etc.) of the product
 func (product Product) Type() Type {
 	if v, ok := idStringMap[product]; ok {
 		return v.Type

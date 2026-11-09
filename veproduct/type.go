@@ -71,7 +71,7 @@ func (t Type) IsSolar() bool {
 // IsInverter returns true if the product is an inverter.
 func (t Type) IsInverter() bool {
 	switch t {
-	case TypePhoenixInverter, TypePhoenixInverterSmart, TypePhoenixSmartIP43Charger:
+	case TypePhoenixInverter, TypePhoenixInverterSmart:
 		return true
 	default:
 		return false

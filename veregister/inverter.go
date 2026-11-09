@@ -483,7 +483,7 @@ func AppendInverterBatteryControl(rl *RegisterList) {
 	)
 }
 
-// AppendInverterDynamicCutoff appends all registers of the Dynamic Cutoff category to the given RegisterList.
+// AppendInverterDynamicCutoff appends the dynamic cutoff registers (category "Dynamic Cutoff" and related "Battery settings") to the given RegisterList.
 func AppendInverterDynamicCutoff(rl *RegisterList) {
 	rl.AppendEnumRegisterStruct(
 		newEnumRegisterStruct(
