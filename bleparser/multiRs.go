@@ -11,7 +11,7 @@ import (
 // 0          | 0          | 0          | 8          | Device state          |         | 0 .. 0xFE           | 0xFF
 // 8          | 1          | 0          | 8          | Charger error         |         | 0 .. 0xFE           | 0xFF
 // 16         | 2          | 0          | 16         | Battery current       | 0.1A    | -3276.8 .. 3276.6 A | 0x7FFF
-// 32         | 4          | 0          | 14         | Battery voltage       | 0.1V    | 0 .. 163.83 V       | 0x3FFF
+// 32         | 4          | 0          | 14         | Battery voltage       | 0.01V   | 0 .. 163.83 V       | 0x3FFF
 // 46         | 5          | 6          | 2          | Active AC in          |         | 0 .. 3              | 0x3
 // 48         | 6          | 0          | 16         | Active AC in power    | 1W      | -32768 .. 32766 W   | 0x7FFF
 // 64         | 8          | 0          | 16         | AC out power          | 1W      | -32768 .. 32766 W   | 0x7FFF
@@ -31,7 +31,7 @@ type MultiRsRecord struct {
 }
 
 func DecodeMultiRsRecord(inp []byte) (ret MultiRsRecord, err error) {
-	if len(inp) < 13 {
+	if len(inp) < 14 {
 		err = ErrInputTooShort
 		return
 	}
@@ -57,7 +57,7 @@ func DecodeMultiRsRecord(inp []byte) (ret MultiRsRecord, err error) {
 	}
 
 	if v := binary.LittleEndian.Uint16(inp[4:6]) & 0x3FFF; v != 0x3FFF {
-		ret.BatteryVoltage = float64(v) / 10
+		ret.BatteryVoltage = float64(v) / 100
 	} else {
 		ret.BatteryVoltage = math.NaN()
 	}

@@ -33,7 +33,7 @@ type AcChargerRecord struct {
 }
 
 func DecodeAcChargerRecord(inp []byte) (ret AcChargerRecord, err error) {
-	if len(inp) < 12 {
+	if len(inp) < 13 {
 		err = ErrInputTooShort
 		return
 	}
@@ -56,37 +56,37 @@ func DecodeAcChargerRecord(inp []byte) (ret AcChargerRecord, err error) {
 	} else {
 		ret.BatteryVoltage1 = math.NaN()
 	}
-	if v := (binary.LittleEndian.Uint16(inp[3:5]) << 5) & 0x7FF; v != 0x7FF {
+	if v := (binary.LittleEndian.Uint16(inp[3:5]) >> 5) & 0x7FF; v != 0x7FF {
 		ret.BatteryCurrent1 = float64(v) / 10
 	} else {
 		ret.BatteryCurrent1 = math.NaN()
 	}
-	if v := binary.LittleEndian.Uint16(inp[5:7]); v != 0x1FFF {
+	if v := binary.LittleEndian.Uint16(inp[5:7]) & 0x1FFF; v != 0x1FFF {
 		ret.BatteryVoltage2 = float64(v) / 100
 	} else {
 		ret.BatteryVoltage2 = math.NaN()
 	}
-	if v := (binary.LittleEndian.Uint16(inp[6:8]) << 5) & 0x7FF; v != 0x7FF {
+	if v := (binary.LittleEndian.Uint16(inp[6:8]) >> 5) & 0x7FF; v != 0x7FF {
 		ret.BatteryCurrent2 = float64(v) / 10
 	} else {
 		ret.BatteryCurrent2 = math.NaN()
 	}
-	if v := binary.LittleEndian.Uint16(inp[8:10]); v != 0x1FFF {
+	if v := binary.LittleEndian.Uint16(inp[8:10]) & 0x1FFF; v != 0x1FFF {
 		ret.BatteryVoltage3 = float64(v) / 100
 	} else {
 		ret.BatteryVoltage3 = math.NaN()
 	}
-	if v := (binary.LittleEndian.Uint16(inp[9:11]) << 5) & 0x7FF; v != 0x7FF {
+	if v := (binary.LittleEndian.Uint16(inp[9:11]) >> 5) & 0x7FF; v != 0x7FF {
 		ret.BatteryCurrent3 = float64(v) / 10
 	} else {
 		ret.BatteryCurrent3 = math.NaN()
 	}
 	if v := binary.LittleEndian.Uint16(inp[11:13]) & 0x7F; v != 0x7F {
-		ret.Temperature = float64(int16(v) - 40)
+		ret.Temperature = float64(int(v) - 40)
 	} else {
 		ret.Temperature = math.NaN()
 	}
-	if v := (binary.LittleEndian.Uint16(inp[11:13]) << 7) & 0x1FF; v != 0x1FF {
+	if v := (binary.LittleEndian.Uint16(inp[11:13]) >> 7) & 0x1FF; v != 0x1FF {
 		ret.AcCurrent = float64(v) / 10
 	} else {
 		ret.AcCurrent = math.NaN()

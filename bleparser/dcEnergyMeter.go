@@ -43,6 +43,8 @@ func DecodeDcEnergyMeterRecord(inp []byte) (ret DcEnergyMeterRecord, err error) 
 	ret.AlarmReason = binary.LittleEndian.Uint16(inp[4:6])
 
 	ret.AuxMode = veconst.DcEnergyMeterAuxMode(inp[8] & 0x3)
+	ret.AuxVoltage = math.NaN()
+	ret.Temperature = math.NaN()
 	switch ret.AuxMode {
 	case veconst.DcEnergyMeterAuxModeAuxVoltage:
 		if v := binary.LittleEndian.Uint16(inp[6:8]); v != 0x7FFF {
@@ -59,7 +61,7 @@ func DecodeDcEnergyMeterRecord(inp []byte) (ret DcEnergyMeterRecord, err error) 
 	}
 
 	if v := (binary.LittleEndian.Uint32(inp[8:12]) >> 2) & 0x3FFFFF; v != 0x3FFFFF {
-		ret.BatteryCurrent = float64(int32(v)) / 1000
+		ret.BatteryCurrent = float64(signExtend(v, 22)) / 1000
 	} else {
 		ret.BatteryCurrent = math.NaN()
 	}

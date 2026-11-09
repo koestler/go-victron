@@ -66,13 +66,13 @@ func DecodeLynxSmartBmsRecord(inp []byte) (ret LynxSmartBmsRecord, err error) {
 	}
 
 	if v := (binary.LittleEndian.Uint32(inp[12:16]) >> 4) & 0xFFFFF; v != 0xFFFFF {
-		ret.ConsumedAh = float64(v) / 10
+		ret.ConsumedAh = -float64(v) / 10
 	} else {
 		ret.ConsumedAh = math.NaN()
 	}
 
-	if v := binary.LittleEndian.Uint16(inp[15:17]) & 0x7F; v != 0x7F {
-		ret.Temperature = float64(int16(v) - 40)
+	if v := inp[15] & 0x7F; v != 0x7F {
+		ret.Temperature = float64(int(v) - 40)
 	} else {
 		ret.Temperature = math.NaN()
 	}

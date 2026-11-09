@@ -33,7 +33,7 @@ type VeBusRecord struct {
 }
 
 func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
-	if len(inp) < 12 {
+	if len(inp) < 13 {
 		err = ErrInputTooShort
 		return
 	}
@@ -55,14 +55,14 @@ func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
 
 	ret.ActiveAcIn = veconst.MultiRsActiveInput((inp[5] >> 6) & 0x3)
 
-	if v := binary.LittleEndian.Uint32(inp[6:9]) & 0x7FFFF; v != 0x7FFFF {
-		ret.ActiveAcInPower = float64(int32(v))
+	if v := le24(inp[6:9]) & 0x7FFFF; v != 0x7FFFF {
+		ret.ActiveAcInPower = float64(signExtend(v, 19))
 	} else {
 		ret.ActiveAcInPower = math.NaN()
 	}
 
-	if v := (binary.LittleEndian.Uint32(inp[8:11]) >> 3) & 0x7FFFF; v != 0x7FFFF {
-		ret.AcOutPower = float64(int32(v))
+	if v := (le24(inp[8:11]) >> 3) & 0x7FFFF; v != 0x7FFFF {
+		ret.AcOutPower = float64(signExtend(v, 19))
 	} else {
 		ret.AcOutPower = math.NaN()
 	}
@@ -70,12 +70,12 @@ func DecodeVeBusRecord(inp []byte) (ret VeBusRecord, err error) {
 	ret.Alarm = veconst.VeBusAlarm((inp[10] >> 6) & 0x3)
 
 	if v := inp[11] & 0x7F; v != 0x7F {
-		ret.Temperature = float64(int8(v))
+		ret.Temperature = float64(int(v) - 40)
 	} else {
 		ret.Temperature = math.NaN()
 	}
 
-	if v := (binary.LittleEndian.Uint16(inp[11:12]) >> 7) & 0x7F; v != 0x7F {
+	if v := (binary.LittleEndian.Uint16(inp[11:13]) >> 7) & 0x7F; v != 0x7F {
 		ret.Soc = float64(v)
 	} else {
 		ret.Soc = math.NaN()

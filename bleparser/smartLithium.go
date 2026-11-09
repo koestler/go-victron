@@ -55,7 +55,7 @@ func DecodeSmartLithiumRecord(inp []byte) (ret SmartLithiumRecord, err error) {
 	ret.Cell7 = decodeCellVoltage(inp, 11, 2)
 	ret.Cell8 = decodeCellVoltage(inp, 12, 1)
 
-	if v := binary.LittleEndian.Uint16(inp[13:15]); v != 0x0FFF {
+	if v := binary.LittleEndian.Uint16(inp[13:15]) & 0x0FFF; v != 0x0FFF {
 		ret.BatteryVoltage = float64(v) / 100
 	} else {
 		ret.BatteryVoltage = math.NaN()
@@ -64,7 +64,7 @@ func DecodeSmartLithiumRecord(inp []byte) (ret SmartLithiumRecord, err error) {
 	ret.BalancerStatus = inp[14] >> 4 & 0x0F
 
 	if v := inp[15] & 0x7F; v != 0x7F {
-		ret.BatteryTemperature = float64(int8(v))
+		ret.BatteryTemperature = float64(int(v) - 40)
 	} else {
 		ret.BatteryTemperature = math.NaN()
 	}

@@ -73,7 +73,7 @@ func DecodeBatteryMonitorRecord(inp []byte) (ret BatteryMonitorRecord, err error
 	}
 
 	if v := (binary.LittleEndian.Uint32(inp[8:12]) >> 2) & 0x3FFFFF; v != 0x3FFFFF && v != 0x1FFFFF {
-		ret.BatteryCurrent = float64(int32(v)) / 1000
+		ret.BatteryCurrent = float64(signExtend(v, 22)) / 1000
 	} else {
 		ret.BatteryCurrent = math.NaN()
 	}

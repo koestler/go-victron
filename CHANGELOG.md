@@ -15,6 +15,7 @@
 - Require Go 1.22 (previously 1.21).
 - Rename inconsistent names (DecodeSolarChargerRecord, LynxSmartBmsRecord, InverterWarningReason*, LiFePO4) and fix typos.
 - vedirect/vedirectapi/veconst/ble bugs: Improve error handling, fix possible panics, make ordering deterministic, check for enum overflow
+- bleparser: fix various decoder byte offset errors
 
 ## 0.3.0
 - fix exposed names:
