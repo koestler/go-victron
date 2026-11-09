@@ -103,7 +103,7 @@ func AppendSolarGeneric(rl *RegisterList) {
 			0x0207,
 			false,
 			false,
-			veconst.InverterOffReasonsFactory,
+			veconst.SolarOffReasonsFactory,
 		),
 	)
 }

@@ -1,5 +1,6 @@
 package veconst
 
+// SolarChargerError is a solar charger error code.
 type SolarChargerError uint8
 type SolarChargerErrorFactoryType struct{}
 
