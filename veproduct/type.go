@@ -15,6 +15,7 @@ const (
 	TypePhoenixInverterSmart
 	TypePhoenixSmartIP43Charger
 	TypeSmartShunt
+	TypeOrionXS
 )
 
 // String returns a human-readable string for the product type (e.g. "SmartSolar MPPT").
@@ -40,6 +41,8 @@ func (t Type) String() string {
 		return "Phoenix Smart IP43 Charger"
 	case TypeSmartShunt:
 		return "SmartShunt"
+	case TypeOrionXS:
+		return "Orion XS"
 	default:
 		return ""
 	}

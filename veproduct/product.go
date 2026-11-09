@@ -1,6 +1,12 @@
 // Package veproduct provides a list of Victron Energy products, their device id, and their names as string.
 //
-// The source of the list is: https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.33.pdf
+// The source of the list is:
+// https://www.victronenergy.com/upload/documents/VE.Direct-Protocol-3.34.pdf
+// Phoenix Inverters:
+// https://www.victronenergy.com/upload/documents/VE.Direct-HEX-Protocol-Phoenix-Inverter.pdf
+//
+// Note: the first generation "32k" Phoenix Inverters are marked as phased out / obsolete
+// in the VE.Direct protocol documentation and are left out here.
 package veproduct
 
 // Product defines the exact model of a Victron Energy product.
@@ -62,8 +68,8 @@ const (
 	BlueSolarMPPT150_60rev2                Product = 0xA070
 	BlueSolarMPPT150_70rev2                Product = 0xA071
 	BlueSolarMPPT150_45rev3                Product = 0xA072
-	SmartSolarMPPT150_45rev3              Product = 0xA073
-	SmartSolarMPPT70_10rev2                Product = 0xA074
+	SmartSolarMPPT150_45rev3               Product = 0xA073
+	SmartSolarMPPT75_10rev2                Product = 0xA074
 	SmartSolarMPPT75_15rev2                Product = 0xA075
 	BlueSolarMPPT100_30rev3                Product = 0xA076
 	BlueSolarMPPT100_50rev3                Product = 0xA077
@@ -71,6 +77,12 @@ const (
 	BlueSolarMPPT75_10rev2                 Product = 0xA079
 	BlueSolarMPPT75_15rev2                 Product = 0xA07A
 	BlueSolarMPPT100_15rev2                Product = 0xA07B
+	BlueSolarMPPT75_10rev3                 Product = 0xA07C
+	BlueSolarMPPT75_15rev3                 Product = 0xA07D
+	SmartSolarMPPT100_30_12V               Product = 0xA07E
+	AllInOneSmartSolarMPPT75_15_12V        Product = 0xA07F
+	SmartSolarMPPT250_60rev3               Product = 0xA080
+	SmartSolarMPPT250_70rev3               Product = 0xA081
 	SmartSolarMPPTVECan150_70              Product = 0xA102
 	SmartSolarMPPTVECan150_45              Product = 0xA103
 	SmartSolarMPPTVECan150_60              Product = 0xA104
@@ -121,15 +133,15 @@ const (
 	PhoenixInverter12V1200VA120V           Product = 0xA279
 	PhoenixInverter24V1200VA120V           Product = 0xA27A
 	PhoenixInverter48V1200VA120V           Product = 0xA27C
-	PhoenixInverter12V1600VA230V           Product = 0xA281
-	PhoenixInverter24V1600VA230V           Product = 0xA282
-	PhoenixInverter48V1600VA230V           Product = 0xA284
-	PhoenixInverter12V2000VA230V           Product = 0xA291
-	PhoenixInverter24V2000VA230V           Product = 0xA292
-	PhoenixInverter48V2000VA230V           Product = 0xA294
-	PhoenixInverter12V3000VA230V           Product = 0xA2A1
-	PhoenixInverter24V3000VA230V           Product = 0xA2A2
-	PhoenixInverter48V3000VA230V           Product = 0xA2A4
+	PhoenixInverterSmart12V1600VA230Vac64k Product = 0xA281
+	PhoenixInverterSmart24V1600VA230Vac64k Product = 0xA282
+	PhoenixInverterSmart48V1600VA230Vac64k Product = 0xA284
+	PhoenixInverterSmart12V2000VA230Vac64k Product = 0xA291
+	PhoenixInverterSmart24V2000VA230Vac64k Product = 0xA292
+	PhoenixInverterSmart48V2000VA230Vac64k Product = 0xA294
+	PhoenixInverterSmart12V3000VA230Vac64k Product = 0xA2A1
+	PhoenixInverterSmart24V3000VA230Vac64k Product = 0xA2A2
+	PhoenixInverterSmart48V3000VA230Vac64k Product = 0xA2A4
 	PhoenixInverterSmart12V5000VA230Vac64k Product = 0xA2B1
 	PhoenixInverterSmart24V5000VA230Vac64k Product = 0xA2B2
 	PhoenixInverterSmart48V5000VA230Vac64k Product = 0xA2B4
@@ -159,6 +171,8 @@ const (
 	SmartShunt500A_50mV                    Product = 0xA389
 	SmartShunt1000A_50mV                   Product = 0xA38A
 	SmartShunt2000A_50mV                   Product = 0xA38B
+	OrionXS12V_12V_50A                     Product = 0xA3F0
+	OrionXS1400                            Product = 0xA3F1
 )
 
 // idStringMap is const and therefore only copies are exposed.
@@ -222,8 +236,8 @@ var idStringMap = map[Product]struct {
 	BlueSolarMPPT150_60rev2:                {"150|60 rev2", TypeBlueSolarMPPT, 150, 60},
 	BlueSolarMPPT150_70rev2:                {"150|70 rev2", TypeBlueSolarMPPT, 150, 70},
 	BlueSolarMPPT150_45rev3:                {"150|45 rev3", TypeBlueSolarMPPT, 150, 45},
-	SmartSolarMPPT150_45rev3:              {"150|45 rev3", TypeSmartSolarMPPT, 150, 45},
-	SmartSolarMPPT70_10rev2:                {"70|10 rev2", TypeSmartSolarMPPT, 70, 10},
+	SmartSolarMPPT150_45rev3:               {"150|45 rev3", TypeSmartSolarMPPT, 150, 45},
+	SmartSolarMPPT75_10rev2:                {"75|10 rev2", TypeSmartSolarMPPT, 75, 10},
 	SmartSolarMPPT75_15rev2:                {"75|15 rev2", TypeSmartSolarMPPT, 75, 15},
 	BlueSolarMPPT100_30rev3:                {"100|30 rev3", TypeBlueSolarMPPT, 100, 30},
 	BlueSolarMPPT100_50rev3:                {"100|50 rev3", TypeBlueSolarMPPT, 100, 50},
@@ -231,6 +245,12 @@ var idStringMap = map[Product]struct {
 	BlueSolarMPPT75_10rev2:                 {"75|10 rev2", TypeBlueSolarMPPT, 75, 10},
 	BlueSolarMPPT75_15rev2:                 {"75|15 rev2", TypeBlueSolarMPPT, 75, 15},
 	BlueSolarMPPT100_15rev2:                {"100|15 rev2", TypeBlueSolarMPPT, 100, 15},
+	BlueSolarMPPT75_10rev3:                 {"75|10 rev3", TypeBlueSolarMPPT, 75, 10},
+	BlueSolarMPPT75_15rev3:                 {"75|15 rev3", TypeBlueSolarMPPT, 75, 15},
+	SmartSolarMPPT100_30_12V:               {"100|30 12V", TypeSmartSolarMPPT, 100, 30},
+	AllInOneSmartSolarMPPT75_15_12V:        {"75|15 12V", TypeSmartSolarMPPT, 75, 15},
+	SmartSolarMPPT250_60rev3:               {"250|60 rev3", TypeSmartSolarMPPT, 250, 60},
+	SmartSolarMPPT250_70rev3:               {"250|70 rev3", TypeSmartSolarMPPT, 250, 70},
 	SmartSolarMPPTVECan150_70:              {"150/70", TypeSmartSolarMPPTVECan, 150, 70},
 	SmartSolarMPPTVECan150_45:              {"150/45", TypeSmartSolarMPPTVECan, 150, 45},
 	SmartSolarMPPTVECan150_60:              {"150/60", TypeSmartSolarMPPTVECan, 150, 60},
@@ -281,15 +301,15 @@ var idStringMap = map[Product]struct {
 	PhoenixInverter12V1200VA120V:           {"12V 1200VA 120V", TypePhoenixInverter, -1, -1},
 	PhoenixInverter24V1200VA120V:           {"24V 1200VA 120V", TypePhoenixInverter, -1, -1},
 	PhoenixInverter48V1200VA120V:           {"48V 1200VA 120V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter12V1600VA230V:           {"12V 1600VA 230V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter24V1600VA230V:           {"24V 1600VA 230V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter48V1600VA230V:           {"48V 1600VA 230V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter12V2000VA230V:           {"12V 2000VA 230V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter24V2000VA230V:           {"24V 2000VA 230V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter48V2000VA230V:           {"48V 2000VA 230V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter12V3000VA230V:           {"12V 3000VA 230V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter24V3000VA230V:           {"24V 3000VA 230V", TypePhoenixInverter, -1, -1},
-	PhoenixInverter48V3000VA230V:           {"48V 3000VA 230V", TypePhoenixInverter, -1, -1},
+	PhoenixInverterSmart12V1600VA230Vac64k: {"12V 1600VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
+	PhoenixInverterSmart24V1600VA230Vac64k: {"24V 1600VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
+	PhoenixInverterSmart48V1600VA230Vac64k: {"48V 1600VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
+	PhoenixInverterSmart12V2000VA230Vac64k: {"12V 2000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
+	PhoenixInverterSmart24V2000VA230Vac64k: {"24V 2000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
+	PhoenixInverterSmart48V2000VA230Vac64k: {"48V 2000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
+	PhoenixInverterSmart12V3000VA230Vac64k: {"12V 3000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
+	PhoenixInverterSmart24V3000VA230Vac64k: {"24V 3000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
+	PhoenixInverterSmart48V3000VA230Vac64k: {"48V 3000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
 	PhoenixInverterSmart12V5000VA230Vac64k: {"12V 5000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
 	PhoenixInverterSmart24V5000VA230Vac64k: {"24V 5000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
 	PhoenixInverterSmart48V5000VA230Vac64k: {"48V 5000VA 230Vac 64k", TypePhoenixInverterSmart, -1, -1},
@@ -319,6 +339,8 @@ var idStringMap = map[Product]struct {
 	SmartShunt500A_50mV:                    {"500A/50mV", TypeSmartShunt, -1, -1},
 	SmartShunt1000A_50mV:                   {"1000A/50mV", TypeSmartShunt, -1, -1},
 	SmartShunt2000A_50mV:                   {"2000A/50mV", TypeSmartShunt, -1, -1},
+	OrionXS12V_12V_50A:                     {"12V/12V-50A", TypeOrionXS, -1, -1},
+	OrionXS1400:                            {"1400", TypeOrionXS, -1, -1},
 }
 
 // Exists returns true if the product is known
