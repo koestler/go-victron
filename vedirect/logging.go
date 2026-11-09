@@ -16,7 +16,7 @@ func (vd *Vedirect) debugPrintf(format string, v ...interface{}) {
 	}
 
 	s := fmt.Sprintf(format, v...)
-	s = strings.Replace(s, "\n", "\\n", -1)
+	s = strings.ReplaceAll(s, "\n", "\\n")
 
 	vd.cfg.DebugLogger.Println(strings.Repeat("  ", vd.logDebugIndent), s)
 

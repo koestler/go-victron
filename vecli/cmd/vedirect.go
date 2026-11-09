@@ -43,7 +43,7 @@ func runVedirect(cmd *cobra.Command, args []string) {
 			fmt.Printf("error creating io log file: %s\n", err)
 			return
 		}
-		defer fl.Close()
+		defer fl.Close() //nolint:errcheck
 		vdConfig.IoLogger = fl
 	}
 
@@ -53,7 +53,7 @@ func runVedirect(cmd *cobra.Command, args []string) {
 		fmt.Printf("error creating api: %s\n", err)
 		return
 	}
-	defer api.Close()
+	defer api.Close() //nolint:errcheck
 
 	time1 := time.Now()
 

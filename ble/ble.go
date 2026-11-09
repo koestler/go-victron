@@ -51,7 +51,7 @@ func New(cfg Config) (*BleStruct, error) {
 
 	go func() {
 		//clean up connection on exit
-		defer api.Exit()
+		defer api.Exit() //nolint:errcheck
 
 		a, err := adapter.GetAdapter(adapterID)
 		if err != nil {

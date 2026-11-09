@@ -21,7 +21,7 @@ func runNewRegisterApiTest(t *testing.T, ioMap map[string]string, expected strin
 		t.Errorf("cannot create api: %v", err)
 		return
 	}
-	defer api.Close()
+	defer api.Close() //nolint:errcheck
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
