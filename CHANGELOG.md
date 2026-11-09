@@ -1,15 +1,8 @@
 # Changelog
 
 ## 0.4.0
-- Veproduct: fix SmartSolarMPPT70_10rev2 (0xA074), renamed to SmartSolarMPPT75_10rev2.
-- Veproduct: fix PhoenixInverter{12V,24V,48V}{1600,2000,3000}VA230V, renamed to
-  PhoenixInverterSmart{12V,24V,48V}{1600,2000,3000}VA230Vac64k and changed their type from
-  TypePhoenixInverter to TypePhoenixInverterSmart.
-- Veproduct: add ids BlueSolarMPPT75_10rev3 (0xA07C), BlueSolarMPPT75_15rev3 (0xA07D),
-  SmartSolarMPPT100_30_12V (0xA07E), AllInOneSmartSolarMPPT75_15_12V (0xA07F),
-  SmartSolarMPPT250_60rev3 (0xA080), SmartSolarMPPT250_70rev3 (0xA081).
-- Veproduct: add new TypeOrionXS and ids OrionXS12V_12V_50A (0xA3F0) and OrionXS1400 (0xA3F1)
-  (register support is not implemented yet).
+- Veproduct: renamed SmartSolarMPPT70_10rev2 (0xA074), PhoenixInverter{12V,24V,48V}{1600,2000,3000}VA230V
+- Veproduct: Add various new BlueSolarMPPT devices, add TypeOrionXS 
 - Veregister: fix wrong signedness of BMV AuxVoltage, MainVoltageMinimum, MainVoltageMaximum
   and wrong unit casing of solar LoadSwitchHighLevel/LoadSwitchLowLevel.
 - Require Go 1.22 (previously 1.21).
@@ -17,6 +10,7 @@
 - vedirect/vedirectapi/veconst/ble bugs: Improve error handling, fix possible panics, make ordering deterministic, check for enum overflow
 - bleparser: fix various decoder byte offset errors
 - vedirect: fix command checksum being sent with a single hex digit when below 0x10.
+- veregister: fix duplicate sort value
 
 ## 0.3.0
 - fix exposed names:
