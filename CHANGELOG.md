@@ -16,6 +16,7 @@
 - Rename inconsistent names (DecodeSolarChargerRecord, LynxSmartBmsRecord, InverterWarningReason*, LiFePO4) and fix typos.
 - vedirect/vedirectapi/veconst/ble bugs: Improve error handling, fix possible panics, make ordering deterministic, check for enum overflow
 - bleparser: fix various decoder byte offset errors
+- vedirect: fix command checksum being sent with a single hex digit when below 0x10.
 
 ## 0.3.0
 - fix exposed names:

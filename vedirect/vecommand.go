@@ -167,7 +167,7 @@ func (vd *Vedirect) sendCommand(cmd VeCommand, data []byte) (err error) {
 	}
 
 	checksum := computeChecksum(byte(cmd), data)
-	str := fmt.Sprintf(":%X%X%X\n", cmd, data, checksum)
+	str := fmt.Sprintf(":%X%X%02X\n", cmd, data, checksum)
 	_, err = vd.write([]byte(str))
 	return
 }
