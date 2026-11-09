@@ -50,6 +50,19 @@ func runNewRegisterApiTest(t *testing.T, ioMap map[string]string, expected strin
 	}
 }
 
+func TestNewRegisterApiUnknownProductClosesPort(t *testing.T) {
+	io := vetest.NewLookupIOPort(t, map[string]string{
+		":154\n": ":51641F9\n",
+		":451\n": ":1FFA0B5\n",
+	})
+
+	_, err := NewRegisterApi(io, vedirect.Config{})
+	if err == nil || !strings.Contains(err.Error(), "unknown product id 0xA0FF") {
+		t.Fatalf("expected unknown-product error, got %v", err)
+	}
+	io.CheckClosed()
+}
+
 func TestRegisterApi_ReadAllRegisters(t *testing.T) {
 	t.Run("Solar Lab", func(t *testing.T) {
 		ioMap := map[string]string{

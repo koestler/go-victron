@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// RegisterValue is a common interface for Number, Text and Enum Registers and their values.
+// RegisterValue is a common interface for register values, including number, text, enum, and field-list values.
 type RegisterValue interface {
 	veregister.Register
 	GenericValue() interface{}
@@ -99,7 +99,7 @@ func (v FieldListValue) String() string {
 	return fmt.Sprintf("%s=%s", v.Name(), v.CommaString())
 }
 
-// RegisterValues is a container for Number, Text and Enum Registers and their values.
+// RegisterValues contains the values of number, text, enum, and field-list registers.
 type RegisterValues struct {
 	NumberValues    map[string]NumberRegisterValue
 	TextValues      map[string]TextRegisterValue

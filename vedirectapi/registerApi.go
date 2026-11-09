@@ -4,6 +4,7 @@ package vedirectapi
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/koestler/go-victron/veconst"
 	"github.com/koestler/go-victron/vedirect"
@@ -15,7 +16,7 @@ import (
 )
 
 // RegisterApi is the main struct for the VE.Direct serial protocol api. It allows to communicate with the device
-// by reading the device id, using it to get the list of available registers and than allow to read those registers.
+// by reading the device ID, using it to get the list of available registers, and then allowing them to be read.
 type RegisterApi struct {
 	ioPort    vedirect.IOPort
 	Vd        *vedirect.Vedirect
@@ -45,8 +46,17 @@ func NewSerialRegisterApi(serialDevice string, vdConfig vedirect.Config) (*Regis
 // - sends a ping
 // - gets the device id and uses it to get the product type
 // - gets the register list for the product type
-// Make sure to defer RegisterApi.Close() after creating a new RegisterApi instance.
-func NewRegisterApi(ioPort vedirect.IOPort, vdConfig vedirect.Config) (*RegisterApi, error) {
+// The supplied port is closed if initialization fails. Defer RegisterApi.Close() after successful initialization.
+func NewRegisterApi(ioPort vedirect.IOPort, vdConfig vedirect.Config) (_ *RegisterApi, retErr error) {
+	defer func() {
+		if retErr == nil {
+			return
+		}
+		if err := ioPort.Close(); err != nil {
+			retErr = errors.Join(retErr, fmt.Errorf("closing port after initialization failed: %w", err))
+		}
+	}()
+
 	sa := RegisterApi{
 		ioPort: ioPort,
 	}
@@ -69,7 +79,7 @@ func NewRegisterApi(ioPort vedirect.IOPort, vdConfig vedirect.Config) (*Register
 		// get Product
 		sa.Product = veproduct.Product(deviceId)
 		if !sa.Product.Exists() {
-			return nil, fmt.Errorf("unknown Product: %w", err)
+			return nil, fmt.Errorf("unknown product id 0x%X", deviceId)
 		}
 	}
 
