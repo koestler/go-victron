@@ -4,6 +4,10 @@
 
 A Go implementation of Victron Energy's VE.Direct and BLE protocols.
 
+## Status
+- VE.Direct: tested and production ready.
+- BLE: still in development; the API and behaviour may change.
+
 ## Usage
 See https://pkg.go.dev/github.com/koestler/go-victron for documentation.
 
