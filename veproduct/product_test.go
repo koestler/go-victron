@@ -78,6 +78,58 @@ func Benchmark_String(b *testing.B) {
 	b.Logf("errCnt: %d", errCnt)
 }
 
+func TestProduct_MaxPanelVoltage(t *testing.T) {
+	if expect, got := -1, BMV700.MaxPanelVoltage(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := -1, PhoenixSmartIP43Charger24_16_3.MaxPanelVoltage(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := -1, Product(0x1234).MaxPanelVoltage(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := 75, BlueSolarMPPT75_15.MaxPanelVoltage(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := 150, SmartSolarMPPT150_100rev2.MaxPanelVoltage(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := 250, SmartSolarMPPTVECan250_85rev2.MaxPanelVoltage(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+}
+
+func TestProduct_MaxPanelCurrent(t *testing.T) {
+	if expect, got := -1, BMV700.MaxPanelCurrent(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := -1, PhoenixSmartIP43Charger24_16_3.MaxPanelCurrent(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := -1, Product(0x1234).MaxPanelCurrent(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := 15, BlueSolarMPPT75_15.MaxPanelCurrent(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := 100, SmartSolarMPPT150_100rev2.MaxPanelCurrent(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+
+	if expect, got := 85, SmartSolarMPPTVECan250_85rev2.MaxPanelCurrent(); expect != got {
+		t.Errorf("expect %#v but got %#v", expect, got)
+	}
+}
+
 func TestGetStringMap(t *testing.T) {
 	if expect, got := "BMV 700", GetStringMap()[BMV700]; expect != got {
 		t.Errorf("expect %#v but got %#v", expect, got)

@@ -25,7 +25,11 @@ func (f SolarChargerTrackerModeFactoryType) New(v uint8) (SolarChargerTrackerMod
 }
 
 func (f SolarChargerTrackerModeFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f SolarChargerTrackerModeFactoryType) IntToStringMap() map[int]string {

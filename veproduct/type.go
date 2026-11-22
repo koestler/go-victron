@@ -15,6 +15,7 @@ const (
 	TypePhoenixInverterSmart
 	TypePhoenixSmartIP43Charger
 	TypeSmartShunt
+	TypeOrionXS
 )
 
 // String returns a human-readable string for the product type (e.g. "SmartSolar MPPT").
@@ -40,7 +41,39 @@ func (t Type) String() string {
 		return "Phoenix Smart IP43 Charger"
 	case TypeSmartShunt:
 		return "SmartShunt"
+	case TypeOrionXS:
+		return "Orion XS"
 	default:
 		return ""
+	}
+}
+
+// IsBMV returns true if the product is a BMV (Battery Monitor).
+func (t Type) IsBMV() bool {
+	switch t {
+	case TypeBMV, TypeBMVSmart, TypeSmartShunt:
+		return true
+	default:
+		return false
+	}
+}
+
+// IsSolar returns true if the product is a solar charger.
+func (t Type) IsSolar() bool {
+	switch t {
+	case TypeBlueSolarMPPT, TypeSmartSolarMPPT, TypeBlueSolarMPPTVECan, TypeSmartSolarMPPTVECan:
+		return true
+	default:
+		return false
+	}
+}
+
+// IsInverter returns true if the product is an inverter.
+func (t Type) IsInverter() bool {
+	switch t {
+	case TypePhoenixInverter, TypePhoenixInverterSmart:
+		return true
+	default:
+		return false
 	}
 }

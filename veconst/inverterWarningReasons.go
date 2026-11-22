@@ -5,25 +5,25 @@ type InverterWarningReasons uint16
 type InverterWarningReasonsFactoryType struct{}
 
 const (
-	DeviceWarningReasonLowBatVoltage  InverterWarningReason = 0
-	DeviceWarningReasonHighBatVoltage InverterWarningReason = 1
-	DeviceWarningReasonLowTemp        InverterWarningReason = 5
-	DeviceWarningReasonHighTemp       InverterWarningReason = 6
-	DeviceWarningReasonOverload       InverterWarningReason = 8
-	DeviceWarningReasonPoorDC         InverterWarningReason = 9
-	DeviceWarningReasonLowAcVoltage   InverterWarningReason = 10
-	DeviceWarningReasonHighAcVoltage  InverterWarningReason = 11
+	InverterWarningReasonLowBatVoltage  InverterWarningReason = 0
+	InverterWarningReasonHighBatVoltage InverterWarningReason = 1
+	InverterWarningReasonLowTemp        InverterWarningReason = 5
+	InverterWarningReasonHighTemp       InverterWarningReason = 6
+	InverterWarningReasonOverload       InverterWarningReason = 8
+	InverterWarningReasonPoorDC         InverterWarningReason = 9
+	InverterWarningReasonLowAcVoltage   InverterWarningReason = 10
+	InverterWarningReasonHighAcVoltage  InverterWarningReason = 11
 )
 
 var inverterWarningReasonMap = map[InverterWarningReason]string{
-	DeviceWarningReasonLowBatVoltage:  "Low battery voltage",
-	DeviceWarningReasonHighBatVoltage: "High battery voltage",
-	DeviceWarningReasonLowTemp:        "Low temperature",
-	DeviceWarningReasonHighTemp:       "High temperature",
-	DeviceWarningReasonOverload:       "Overload",
-	DeviceWarningReasonPoorDC:         "Poor DC connection",
-	DeviceWarningReasonLowAcVoltage:   "Low AC-output voltage",
-	DeviceWarningReasonHighAcVoltage:  "High AC-output voltage",
+	InverterWarningReasonLowBatVoltage:  "Low battery voltage",
+	InverterWarningReasonHighBatVoltage: "High battery voltage",
+	InverterWarningReasonLowTemp:        "Low temperature",
+	InverterWarningReasonHighTemp:       "High temperature",
+	InverterWarningReasonOverload:       "Overload",
+	InverterWarningReasonPoorDC:         "Poor DC connection",
+	InverterWarningReasonLowAcVoltage:   "Low AC-output voltage",
+	InverterWarningReasonHighAcVoltage:  "High AC-output voltage",
 }
 var InverterWarningReasonFactory InverterWarningReasonsFactoryType
 

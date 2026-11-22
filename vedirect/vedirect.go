@@ -98,7 +98,7 @@ func (vd *Vedirect) GetUint(address uint16) (value uint64, err error) {
 		vd.debugPrintf("GetUint(address=0x%X) begin", address)
 		defer func() {
 			vd.ioLoggerLineEnd("GetUint(0x%X) = %d", address, value)
-			vd.debugPrintf("GetUint end value=%d end=%v", value, err)
+			vd.debugPrintf("GetUint end value=%d err=%v", value, err)
 		}()
 	}
 

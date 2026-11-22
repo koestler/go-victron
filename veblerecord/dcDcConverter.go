@@ -10,7 +10,7 @@ import (
 // Start bits | Nr of bits | Meaning               | Units   | Range               | NA value
 // 0          | 8          | Device state          |         | 0 .. 0xFE           | 0xFF
 // 8          | 8          | Charger error         |         | 0 .. 0xFE           | 0xFF
-// 16	      | 16         | Input voltage         | 0.01V   | 0 .. 655.34 V       | 0xFFFF
+// 16         | 16         | Input voltage         | 0.01V   | 0 .. 655.34 V       | 0xFFFF
 // 32         | 16         | Output voltage        | 0.01V   | -327.68 .. 327.66 V | 0x7FFF
 // 48         | 32         | Off reason            |         | 0 .. 0xFFFFFFFF     |
 

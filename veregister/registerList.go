@@ -2,7 +2,7 @@ package veregister
 
 import "sort"
 
-// RegisterList is a container holding {Number,Text,Enum}RegisterStructs.
+// RegisterList is a container holding {Number,Text,Enum,FieldList}RegisterStructs.
 type RegisterList struct {
 	NumberRegisters    []NumberRegisterStruct
 	TextRegisters      []TextRegisterStruct
@@ -45,7 +45,7 @@ func (rl *RegisterList) AppendFieldListRegisterStruct(r ...FieldListRegisterStru
 	rl.FieldListRegisters = append(rl.FieldListRegisters, r...)
 }
 
-// FilterRegister removes all registers from the list for which the filter function return false.
+// FilterRegister removes all registers from the list for which the filter function returns false.
 // This is useful since the user does not need to care about the different register types.
 func (rl *RegisterList) FilterRegister(f func(r Register) bool) {
 	rl.NumberRegisters = filterRegisters(rl.NumberRegisters, f)

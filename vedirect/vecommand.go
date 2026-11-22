@@ -17,15 +17,20 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 	}
 
 	// fetch response using multiple tries to
-	// deal with old data in the tx buffer of the veproduct device and our rx buffer
-	const numbTries = 8
-	for try := 0; try < numbTries; try++ {
+	// deal with old data in the tx buffer of the VE.Direct device and our rx buffer
+	const numTries = 8
+	for try := 0; try < numTries; try++ {
 		var rawValues []byte
 		rawValues, err = vd.VeCommand(VeCommandGet, address)
 		if err != nil {
 			if try > 0 {
 				vd.debugPrintf("retry try=%d err=%v", try, err)
 			}
+			continue
+		}
+
+		if len(rawValues) < 3 {
+			err = fmt.Errorf("response too short, len(rawValues)=%d", len(rawValues))
 			continue
 		}
 
@@ -52,11 +57,11 @@ func (vd *Vedirect) VeCommandGet(address uint16) (value []byte, err error) {
 		return
 	}
 
-	err = fmt.Errorf("gave up after %d tries, last err=%v", numbTries, err)
+	err = fmt.Errorf("gave up after %d tries, last err=%v", numTries, err)
 	return
 }
 
-// VeCommand executes, sends the given command returns the raw response or an error.
+// VeCommand sends the given command and returns the raw response or an error.
 // address is only used for VeCommandGet and VeCommandSet commands.
 func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte, err error) {
 	if vd.cfg.DebugLogger != nil {
@@ -86,7 +91,7 @@ func (vd *Vedirect) VeCommand(command VeCommand, address uint16) (values []byte,
 	// extract and check command
 	var response VeResponse
 	s := string(responseData[0])
-	if i, e := strconv.ParseUint(s, 16, 8); err != nil {
+	if i, e := strconv.ParseUint(s, 16, 8); e != nil {
 		err = fmt.Errorf("cannot parse response, address=0x%X, s=%q: %s", address, s, e)
 		return
 	} else {
@@ -162,7 +167,7 @@ func (vd *Vedirect) sendCommand(cmd VeCommand, data []byte) (err error) {
 	}
 
 	checksum := computeChecksum(byte(cmd), data)
-	str := fmt.Sprintf(":%X%X%X\n", cmd, data, checksum)
+	str := fmt.Sprintf(":%X%X%02X\n", cmd, data, checksum)
 	_, err = vd.write([]byte(str))
 	return
 }

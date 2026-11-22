@@ -21,7 +21,7 @@ func runNewRegisterApiTest(t *testing.T, ioMap map[string]string, expected strin
 		t.Errorf("cannot create api: %v", err)
 		return
 	}
-	defer api.Close()
+	defer api.Close() //nolint:errcheck
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
@@ -48,6 +48,19 @@ func runNewRegisterApiTest(t *testing.T, ioMap map[string]string, expected strin
 			diff,
 		)
 	}
+}
+
+func TestNewRegisterApiUnknownProductClosesPort(t *testing.T) {
+	io := vetest.NewLookupIOPort(t, map[string]string{
+		":154\n": ":51641F9\n",
+		":451\n": ":1FFA0B5\n",
+	})
+
+	_, err := NewRegisterApi(io, vedirect.Config{})
+	if err == nil || !strings.Contains(err.Error(), "unknown product id 0xA0FF") {
+		t.Fatalf("expected unknown-product error, got %v", err)
+	}
+	io.CheckClosed()
 }
 
 func TestRegisterApi_ReadAllRegisters(t *testing.T) {
@@ -215,7 +228,7 @@ func TestRegisterApi_ReadAllRegisters(t *testing.T) {
 			"BatteryMaximumCurrent=70.000000A",
 			"BatteryTempCompensation=0.000000mV/K",
 			"BatteryTemperature=11.500000°C",
-			"BatteryType=8:LiFEPO4 (14.2V)",
+			"BatteryType=8:LiFePO4 (14.2V)",
 			"BatteryVoltage=24.000000V",
 			"BatteryVoltageSetting=24:24V battery",
 			"BmsPresent=0:No",

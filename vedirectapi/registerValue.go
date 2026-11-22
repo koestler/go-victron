@@ -1,14 +1,16 @@
 package vedirectapi
 
 import (
+	"cmp"
 	"fmt"
 	"github.com/koestler/go-victron/veconst"
 	"github.com/koestler/go-victron/veregister"
+	"slices"
 	"sort"
 	"strings"
 )
 
-// RegisterValue is a common interface for Number, Text and Enum Registers and their values.
+// RegisterValue is a common interface for register values, including number, text, enum, and field-list values.
 type RegisterValue interface {
 	veregister.Register
 	GenericValue() interface{}
@@ -81,12 +83,17 @@ func (v FieldListValue) Value() veconst.FieldList {
 
 func (v FieldListValue) CommaString() string {
 	fields := v.value.Fields()
-	strs := make([]string, 0, len(fields))
-	for f, set := range fields {
-		if !set {
-			continue
+	set := make([]veconst.Field, 0, len(fields))
+	for f, isSet := range fields {
+		if isSet {
+			set = append(set, f)
 		}
-		strs = append(strs, f.String())
+	}
+	sort.Slice(set, func(i, j int) bool { return set[i].Idx() < set[j].Idx() })
+
+	strs := make([]string, len(set))
+	for i, f := range set {
+		strs[i] = f.String()
 	}
 	return strings.Join(strs, ", ")
 }
@@ -99,7 +106,7 @@ func (v FieldListValue) String() string {
 	return fmt.Sprintf("%s=%s", v.Name(), v.CommaString())
 }
 
-// RegisterValues is a container for Number, Text and Enum Registers and their values.
+// RegisterValues contains the values of number, text, enum, and field-list registers.
 type RegisterValues struct {
 	NumberValues    map[string]NumberRegisterValue
 	TextValues      map[string]TextRegisterValue
@@ -124,7 +131,12 @@ func (rv RegisterValues) GetList() []RegisterValue {
 		list = append(list, v)
 	}
 
-	sort.SliceStable(list, func(i, j int) bool { return list[i].Sort() < list[j].Sort() })
+	slices.SortFunc(list, func(a, b RegisterValue) int {
+		return cmp.Or(
+			cmp.Compare(a.Sort(), b.Sort()),
+			strings.Compare(a.Name(), b.Name()),
+		)
+	})
 
 	return list
 }

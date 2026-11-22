@@ -23,7 +23,11 @@ func (f InverterFrequencyFactoryType) New(v uint8) (InverterFrequency, error) {
 }
 
 func (f InverterFrequencyFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f InverterFrequencyFactoryType) IntToStringMap() map[int]string {

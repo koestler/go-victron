@@ -27,7 +27,11 @@ func (f VeBusAlarmFactoryType) New(v uint8) (VeBusAlarm, error) {
 }
 
 func (f VeBusAlarmFactoryType) NewEnum(v int) (Enum, error) {
-	return f.New(uint8(v))
+	u, err := enumIdxToUint8(v)
+	if err != nil {
+		return nil, err
+	}
+	return f.New(u)
 }
 
 func (f VeBusAlarmFactoryType) IntToStringMap() map[int]string {

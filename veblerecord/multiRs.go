@@ -8,7 +8,7 @@ import (
 
 // Multi RS
 // Start bits | Start byte | Bit offset | Nr of bits | Meaning               | Units   | Range               | NA value
-// 0          | 0          | 0          | 8		     | Device state          |         | 0 .. 0xFE           | 0xFF
+// 0          | 0          | 0          | 8          | Device state          |         | 0 .. 0xFE           | 0xFF
 // 8          | 1          | 0          | 8          | Charger error         |         | 0 .. 0xFE           | 0xFF
 // 16         | 2          | 0          | 16         | Battery current       | 0.1A    | -3276.8 .. 3276.6 A | 0x7FFF
 // 32         | 4          | 0          | 14         | Battery voltage       | 0.1V    | 0 .. 163.83 V       | 0x3FFF

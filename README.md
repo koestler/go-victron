@@ -2,7 +2,11 @@
 [![Audit & Test](https://github.com/koestler/go-victron/actions/workflows/audit.yml/badge.svg)](https://github.com/koestler/go-victron/actions/workflows/audit.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/koestler/go-victron.svg)](https://pkg.go.dev/github.com/koestler/go-victron)
 
-A go implementation of Victron Energy's VE.Direct and BLE protocols.
+A Go implementation of Victron Energy's VE.Direct and BLE protocols.
+
+## Status
+- VE.Direct: tested and production ready.
+- BLE: still in development; the API and behaviour may change.
 
 ## Usage
 See https://pkg.go.dev/github.com/koestler/go-victron for documentation.
@@ -16,8 +20,6 @@ go install github.com/koestler/go-victron/vecli@latest
 
 Install local dependencies / build tools:
 ```bash
-go install github.com/swaggo/swag/cmd/swag@latest
-go install go.uber.org/mock/mockgen@latest
 go install honnef.co/go/tools/cmd/staticcheck@latest
 ```
 
@@ -26,9 +28,8 @@ Run the cli:
 go run vecli/main.go
 ```
 
-Build test and audit the code:
+Build, test, and audit the code:
 ```bash
-go generate ./...
 go build ./...
 go vet ./...
 go test ./...

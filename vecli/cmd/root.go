@@ -9,7 +9,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "vecli",
 	Short: "Simple CLI for the go-victron library",
-	Long: `This is a simple command line interface to connect to victron devices over VE.Direct and BLE.
+	Long: `This is a simple command line interface to connect to Victron devices over VE.Direct.
 It is mainly intended to be used for debugging and testing purposes.`,
 }
 

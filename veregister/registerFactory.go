@@ -5,12 +5,12 @@ import (
 	"github.com/koestler/go-victron/veproduct"
 )
 
-var ErrUnsupportedType = fmt.Errorf("unsuported product type")
+var ErrUnsupportedType = fmt.Errorf("unsupported product type")
 
-func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error) {
+func GetRegisterListByProduct(p veproduct.Product) (rl RegisterList, err error) {
 	rl = NewRegisterList()
 
-	switch t {
+	switch p.Type() {
 	case veproduct.TypeBMV:
 		AppendBmv(&rl)
 		rl.FilterByName(
@@ -21,6 +21,13 @@ func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error)
 			"AuxVoltageMinimum",
 			"AuxVoltageMaximum",
 		)
+		switch p {
+		case veproduct.BMV700, veproduct.BMV702, veproduct.BMV700H:
+			rl.FilterByName(
+				"ProductRevision",
+				"Description",
+			)
+		}
 	case veproduct.TypeBMVSmart, veproduct.TypeSmartShunt:
 		AppendBmv(&rl)
 		rl.FilterByName(
@@ -28,7 +35,18 @@ func GetRegisterListByProductType(t veproduct.Type) (rl RegisterList, err error)
 			"Description",
 		)
 	case veproduct.TypeBlueSolarMPPT, veproduct.TypeSmartSolarMPPT:
-		AppendSolar(&rl)
+		AppendSolarProduct(&rl)
+		AppendSolarGeneric(&rl)
+		AppendSolarSettings(&rl)
+		AppendSolarChargerData(&rl)
+		AppendSolarPanelData(&rl)
+
+		// The panel current is not available in the 10A/15A/20A chargers
+		// Instead they have a load output.
+		if c := p.MaxPanelCurrent(); c == 10 || c == 15 || c == 20 {
+			rl.FilterByName("PanelCurrent")
+			AppendSolarLoadData(&rl)
+		}
 	case veproduct.TypePhoenixInverter, veproduct.TypePhoenixInverterSmart:
 		AppendInverter(&rl)
 	default:

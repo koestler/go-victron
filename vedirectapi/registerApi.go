@@ -1,9 +1,10 @@
 // Package vedirectapi implements an easy to use api to connect to VE.Direct devices and read their values.
-// It utilizes the low level vedirect, veregister and veproduct packages and intatiates a connection using the serial package.
+// It utilizes the low level vedirect, veregister and veproduct packages and initiates a connection using the serial package.
 package vedirectapi
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/koestler/go-victron/veconst"
 	"github.com/koestler/go-victron/vedirect"
@@ -15,7 +16,7 @@ import (
 )
 
 // RegisterApi is the main struct for the VE.Direct serial protocol api. It allows to communicate with the device
-// by reading the device id, using it to get the list of available registers and than allow to read those registers.
+// by reading the device ID, using it to get the list of available registers, and then allowing them to be read.
 type RegisterApi struct {
 	ioPort    vedirect.IOPort
 	Vd        *vedirect.Vedirect
@@ -25,7 +26,7 @@ type RegisterApi struct {
 
 var ErrCtxDone = fmt.Errorf("context done")
 
-// NewSerialRegisterApi open the given serial device, creates a new RegisterApi instance,
+// NewSerialRegisterApi opens the given serial device, creates a new RegisterApi instance,
 // and tries to connect to the device over a serial connection.
 func NewSerialRegisterApi(serialDevice string, vdConfig vedirect.Config) (*RegisterApi, error) {
 	serialConfig := serial.Config{
@@ -45,8 +46,17 @@ func NewSerialRegisterApi(serialDevice string, vdConfig vedirect.Config) (*Regis
 // - sends a ping
 // - gets the device id and uses it to get the product type
 // - gets the register list for the product type
-// Make sure to defer RegisterApi.Close() after creating a new RegisterApi instance.
-func NewRegisterApi(ioPort vedirect.IOPort, vdConfig vedirect.Config) (*RegisterApi, error) {
+// The supplied port is closed if initialization fails. Defer RegisterApi.Close() after successful initialization.
+func NewRegisterApi(ioPort vedirect.IOPort, vdConfig vedirect.Config) (_ *RegisterApi, retErr error) {
+	defer func() {
+		if retErr == nil {
+			return
+		}
+		if err := ioPort.Close(); err != nil {
+			retErr = errors.Join(retErr, fmt.Errorf("closing port after initialization failed: %w", err))
+		}
+	}()
+
 	sa := RegisterApi{
 		ioPort: ioPort,
 	}
@@ -69,12 +79,12 @@ func NewRegisterApi(ioPort vedirect.IOPort, vdConfig vedirect.Config) (*Register
 		// get Product
 		sa.Product = veproduct.Product(deviceId)
 		if !sa.Product.Exists() {
-			return nil, fmt.Errorf("unknown Product: %w", err)
+			return nil, fmt.Errorf("unknown product id 0x%X", deviceId)
 		}
 	}
 
 	// get register list
-	if rl, err := veregister.GetRegisterListByProductType(sa.Product.Type()); err != nil {
+	if rl, err := veregister.GetRegisterListByProduct(sa.Product); err != nil {
 		return nil, fmt.Errorf("cannot get register list: %w", err)
 	} else {
 		sa.Registers = rl
@@ -187,7 +197,7 @@ func (sa *RegisterApi) ReadRegisterList(
 	return
 }
 
-// ValueHandler is a container for handlers for number, text and enum registers values.
+// ValueHandler is a container for handlers for number, text, enum and field list registers values.
 // This is made such that new register types can be added without breaking the api.
 type ValueHandler struct {
 	Number    func(v NumberRegisterValue)
