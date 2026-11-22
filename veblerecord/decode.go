@@ -2,6 +2,7 @@ package veblerecord
 
 import (
 	"errors"
+
 	"github.com/koestler/go-victron/veconst"
 )
 
@@ -10,7 +11,7 @@ var ErrUnsupportedRecordType = errors.New("unsupported record type")
 func Decode(recordType veconst.BleRecordType, decryptedBytes []byte) (Registers, error) {
 	switch recordType {
 	case veconst.BleSolarCharger:
-		return DecodeSolarCharge(decryptedBytes)
+		return DecodeSolarCharger(decryptedBytes)
 	case veconst.BleBatteryMonitor:
 		return DecodeBatteryMonitor(decryptedBytes)
 	case veconst.BleInverter:

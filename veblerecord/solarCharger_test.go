@@ -2,15 +2,16 @@ package veblerecord
 
 import (
 	"encoding/hex"
-	"github.com/koestler/go-victron/veconst"
 	"math"
 	"testing"
+
+	"github.com/koestler/go-victron/veconst"
 )
 
 // this test is based on https://github.com/keshavdv/victron-ble/blob/e28c5f8cc5f9f3062a2f36c2115d38214c07e741/tests/test_solar_charger.py
 
 func TestDecodeSolarChargerRecord(t *testing.T) {
-	cases := map[string]SolarChargerRecord{
+	cases := map[string]SolarCharger{
 		"04006c050e000300130000fe409ac069": {
 			DeviceState:    veconst.SolarChargerStateAbsorptionCharging,
 			ChargerError:   veconst.SolarChargerErrorNoError,

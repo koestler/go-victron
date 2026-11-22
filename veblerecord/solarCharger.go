@@ -2,8 +2,9 @@ package veblerecord
 
 import (
 	"encoding/binary"
-	"github.com/koestler/go-victron/veconst"
 	"math"
+
+	"github.com/koestler/go-victron/veconst"
 )
 
 // Solar Charger
@@ -16,7 +17,7 @@ import (
 // 64         | 16         | PV power              | 1W      | 0 .. 65534 W        | 0xFFFF
 // 80         | 9          | Load current          | 0.1A    | 0 .. 51.0 A         | 0x1FF
 
-type SolarChargerRecord struct {
+type SolarCharger struct {
 	DeviceState    veconst.SolarChargerState `Description:"Device state"`
 	ChargerError   veconst.SolarChargerError `Description:"Charger error"`
 	BatteryVoltage float64                   `Description:"Battery voltage" Unit:"V"`
@@ -26,7 +27,7 @@ type SolarChargerRecord struct {
 	LoadCurrent    float64                   `Description:"Load current" Unit:"A"`
 }
 
-func DecodeSolarChargerRecord(inp []byte) (ret SolarChargerRecord, err error) {
+func DecodeSolarCharger(inp []byte) (ret SolarCharger, err error) {
 	if len(inp) < 12 {
 		err = ErrInputTooShort
 		return
@@ -74,7 +75,7 @@ func DecodeSolarChargerRecord(inp []byte) (ret SolarChargerRecord, err error) {
 	return
 }
 
-func (r SolarChargerRecord) NumberRegisters() []NumberRegister {
+func (r SolarCharger) NumberRegisters() []NumberRegister {
 	return []NumberRegister{
 		{
 			Register: Register{
@@ -119,7 +120,7 @@ func (r SolarChargerRecord) NumberRegisters() []NumberRegister {
 	}
 }
 
-func (r SolarChargerRecord) EnumRegisters() []EnumRegister {
+func (r SolarCharger) EnumRegisters() []EnumRegister {
 	return []EnumRegister{
 		{
 			Register: Register{
@@ -138,6 +139,6 @@ func (r SolarChargerRecord) EnumRegisters() []EnumRegister {
 	}
 }
 
-func (r SolarChargerRecord) FieldListRegisters() []FieldListRegister {
+func (r SolarCharger) FieldListRegisters() []FieldListRegister {
 	return []FieldListRegister{}
 }

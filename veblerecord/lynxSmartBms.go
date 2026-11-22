@@ -29,7 +29,7 @@ type LynxSmartBms struct {
 	Temperature    float64 `Description:"Temperature" Unit:"°C"`
 }
 
-func DecodeLynxSmartBmsRecord(inp []byte) (ret LynxSmartBmsRecord, err error) {
+func DecodeLynxSmartBms(inp []byte) (ret LynxSmartBms, err error) {
 	if len(inp) < 16 {
 		err = ErrInputTooShort
 		return
