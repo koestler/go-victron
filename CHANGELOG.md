@@ -11,8 +11,6 @@
 - bleparser: fix various decoder byte offset errors
 - vedirect: fix command checksum being sent with a single hex digit when below 0x10.
 - veregister: fix duplicate sort value
-- ble: remove PKCS7 padding, verify first key byte, gate debug logs, decode all record types.
-- Rename `InverterOffReasonPowerButton` to `InverterOffReasonSoftPowerButton`; unify register description capitalisation (BMV battery temperature, solar load registers).
 
 ## 0.3.0
 - fix exposed names:
